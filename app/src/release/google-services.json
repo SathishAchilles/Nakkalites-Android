@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "629973922500",
+    "firebase_url": "https://nakkalites-android.firebaseio.com",
+    "project_id": "nakkalites-android",
+    "storage_bucket": "nakkalites-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629973922500:android:a6b24fd0e6c19a433b8f91",
+        "android_client_info": {
+          "package_name": "in.nakkalites.mediaclient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "629973922500-cf2dvnhlj9svk5bgurvimomk7pvo0ij2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkeefmwcEeLaVSJlfQzesPsl2HVr9xWf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "629973922500-cf2dvnhlj9svk5bgurvimomk7pvo0ij2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

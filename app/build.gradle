@@ -1,13 +1,27 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 apply from: '../dependencies.gradle'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('../debug.keystore')
+            storePassword 'android'
+        }
+        release {
+            keyAlias 'NakkalitesAndroidKey'
+            keyPassword 'nakkalitesapp'
+            storeFile file('../release.jks')
+            storePassword 'nakkalitesapp'
+        }
+    }
     compileSdkVersion versions.compileSdk
+    buildToolsVersion = versions.buildTools
     defaultConfig {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
@@ -17,20 +31,50 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources false
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationIdSuffix '.debug'
+            versionNameSuffix ' debug'
         }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
 dependencies {
+    implementation project(':logging')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin.stdlib
     implementation deps.androidX.appCompat
     implementation deps.androidX.constraintLayout
     implementation deps.androidX.core
+    implementation deps.androidX.viewModel
+    implementation deps.androidX.liveData
+    implementation deps.firebase.analytics
+    implementation deps.firebase.crashlytics
+    implementation deps.picasso
+    implementation deps.playServices.auth
+    implementation deps.koin.lib
+    implementation deps.koin.android
+    implementation deps.koin.scope
+    implementation deps.koin.viewModel
 
     testImplementation deps.junit
     androidTestImplementation deps.androidX.espressoCore
 }
+
+apply plugin: 'com.google.gms.google-services'
