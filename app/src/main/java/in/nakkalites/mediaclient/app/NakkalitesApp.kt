@@ -7,6 +7,7 @@ import io.fabric.sdk.android.Fabric
 import `in`.nakkalites.logging.initDebugLogs
 import `in`.nakkalites.mediaclient.app.di.applicationModule
 import `in`.nakkalites.mediaclient.app.di.netModule
+import `in`.nakkalites.mediaclient.app.di.picassoModule
 import `in`.nakkalites.mediaclient.app.di.viewModelModule
 import com.facebook.stetho.Stetho
 import org.koin.android.ext.koin.androidContext
@@ -21,7 +22,7 @@ class NakkalitesApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@NakkalitesApp)
-            modules(listOf(applicationModule, viewModelModule, netModule))
+            modules(listOf(applicationModule, viewModelModule, netModule, picassoModule))
         }
         if (!debug) {
             Fabric.with(this, Crashlytics())

@@ -10,6 +10,8 @@ import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -75,4 +77,11 @@ val netModule = module {
     }
 
     single { get<Retrofit>().create(UserService::class.java) }
+}
+
+val picassoModule = module {
+    single {
+        val downloader = OkHttp3Downloader(get<OkHttpClient>())
+        Picasso.Builder(androidContext()).downloader(downloader)
+    }
 }
