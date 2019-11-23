@@ -35,14 +35,16 @@ android {
             minifyEnabled false
             shrinkResources false
             debuggable true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix '.debug'
             versionNameSuffix ' debug'
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
             shrinkResources true
             debuggable false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -66,12 +68,23 @@ dependencies {
     implementation deps.androidX.liveData
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
+    implementation deps.moshi.core
+    implementation deps.moshi.kotlin
+    implementation deps.okHttp
     implementation deps.picasso
     implementation deps.playServices.auth
-    implementation deps.koin.lib
+    implementation deps.retrofit.core
+    implementation deps.retrofit.moshiConvertor
+    implementation deps.retrofit.rxJavaAdapter
+    implementation deps.rx.core
+    implementation deps.rx.android
+    implementation deps.rx.kotlin
+    implementation deps.koin.core
     implementation deps.koin.android
     implementation deps.koin.scope
     implementation deps.koin.viewModel
+    implementation deps.stetho.core
+    implementation deps.stetho.okHttp
 
     testImplementation deps.junit
     androidTestImplementation deps.androidX.espressoCore

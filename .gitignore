@@ -68,3 +68,4 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+app/release/app-release.apk
