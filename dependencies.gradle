@@ -36,7 +36,8 @@ ext.deps = [
                 core            : "androidx.core:core-ktx:${versions.androidX}",
                 espressoCore    : "androidx.test.espresso:espresso-core:${versions.espressoCore}",
                 viewModel       : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
-                liveData        : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}"
+                liveData        : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
+                recyclerView     : "androidx.recyclerview:recyclerview:${versions.androidX}"
         ],
         firebase    : [
                 analytics  : "com.google.firebase:firebase-analytics:${versions.firebase}",

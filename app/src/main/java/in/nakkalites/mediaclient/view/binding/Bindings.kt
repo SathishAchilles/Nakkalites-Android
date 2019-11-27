@@ -1,4 +1,4 @@
-package `in`.nakkalites.mediaclient.app.binding
+package `in`.nakkalites.mediaclient.view.binding
 
 import android.graphics.Bitmap
 import android.net.Uri

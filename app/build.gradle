@@ -66,6 +66,7 @@ dependencies {
     implementation deps.androidX.core
     implementation deps.androidX.viewModel
     implementation deps.androidX.liveData
+    implementation deps.androidX.recyclerView
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
     implementation deps.moshi.core
