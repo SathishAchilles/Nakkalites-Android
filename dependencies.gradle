@@ -26,7 +26,8 @@ ext.versions = [
         rxJava              : '2.2.14',
         rxKotlin            : '2.4.0',
         stetho              : '1.5.1',
-        timber              : '4.7.1'
+        timber              : '4.7.1',
+        viewPager           : '1.0.0'
 ]
 
 ext.deps = [
@@ -35,9 +36,10 @@ ext.deps = [
                 constraintLayout: "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
                 core            : "androidx.core:core-ktx:${versions.androidX}",
                 espressoCore    : "androidx.test.espresso:espresso-core:${versions.espressoCore}",
+                viewPager       : "androidx.viewpager2:viewpager2:${versions.viewPager}",
                 viewModel       : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
                 liveData        : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
-                recyclerView     : "androidx.recyclerview:recyclerview:${versions.androidX}"
+                recyclerView    : "androidx.recyclerview:recyclerview:${versions.androidX}"
         ],
         firebase    : [
                 analytics  : "com.google.firebase:firebase-analytics:${versions.firebase}",
@@ -79,8 +81,9 @@ ext.deps = [
                 okHttp: "com.facebook.stetho:stetho-okhttp3:${versions.stetho}",
         ],
         moshi       : [
-                core  : "com.squareup.moshi:moshi:${versions.moshi}",
-                kotlin: "com.squareup.moshi:moshi-kotlin:${versions.moshi}"
+                core   : "com.squareup.moshi:moshi:${versions.moshi}",
+                kotlin : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
+                codeGen: "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}"
         ],
         okHttp      : "com.squareup.okhttp3:okhttp:${versions.okHttp}"
 ]

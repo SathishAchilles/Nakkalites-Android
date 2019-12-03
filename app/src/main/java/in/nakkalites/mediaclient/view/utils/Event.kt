@@ -1,5 +1,7 @@
 package `in`.nakkalites.mediaclient.view.utils
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
 /**
@@ -41,4 +43,12 @@ class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) : Obser
             onEventUnhandledContent(it)
         }
     }
+}
+
+fun <T : Any?> LiveData<T>.observeNonNull(owner: LifecycleOwner, observer: (T) -> Unit) {
+    observe(owner, Observer { value ->
+        if (value != null) {
+            observer(value)
+        }
+    })
 }

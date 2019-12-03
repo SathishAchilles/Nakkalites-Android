@@ -97,3 +97,6 @@
 
 #RxJava
 -dontwarn java.util.concurrent.Flow*
+
+#Google Auth
+-keep class com.google.** {*;}

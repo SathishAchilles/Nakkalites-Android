@@ -67,10 +67,13 @@ dependencies {
     implementation deps.androidX.viewModel
     implementation deps.androidX.liveData
     implementation deps.androidX.recyclerView
+    implementation deps.androidX.viewPager
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
     implementation deps.moshi.core
     implementation deps.moshi.kotlin
+    kapt deps.moshi.codeGen
+
     implementation deps.okHttp
     implementation deps.picasso
     implementation deps.playServices.auth

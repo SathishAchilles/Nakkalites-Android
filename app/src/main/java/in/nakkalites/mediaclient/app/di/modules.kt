@@ -3,14 +3,18 @@ package `in`.nakkalites.mediaclient.app.di
 import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.constants.HttpConstants
+import `in`.nakkalites.mediaclient.data.user.UserDataStore
+import `in`.nakkalites.mediaclient.data.user.UserManager
 import `in`.nakkalites.mediaclient.data.user.UserService
-import `in`.nakkalites.mediaclient.data.videogroup.VideGroupService
-import `in`.nakkalites.mediaclient.view.splash.SplashActivity
+import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
+import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Context
-import android.os.Build
+import android.content.SharedPreferences
 import android.os.StatFs
+import android.preference.PreferenceManager
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -22,7 +26,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -33,19 +36,37 @@ import kotlin.math.max
 import kotlin.math.min
 
 val applicationModule = module {
-    scope(named<SplashActivity>()) {
-        scoped { SplashVm() }
+
+    single<SharedPreferences> {
+        PreferenceManager.getDefaultSharedPreferences(androidContext())
+    }
+
+    single {
+        UserDataStore(get(), get())
+    }
+
+    single {
+        UserManager(get(), get())
+    }
+
+    single {
+        LoginDomain(get())
     }
 }
 
 val viewModelModule = module {
-    viewModel { SplashVm() }
-    viewModel { LoginVm() }
+    viewModel { SplashVm(get()) }
+    viewModel { LoginVm(get()) }
+    viewModel { HomeVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {
     single {
         StethoInterceptor()
+    }
+
+    single {
+        HeadersInterceptor()
     }
 
     single {
@@ -81,7 +102,7 @@ fun netModule(serverUrl: String) = module {
 
     single { get<Retrofit>().create(UserService::class.java) }
 
-    single { get<Retrofit>().create(VideGroupService::class.java) }
+    single { get<Retrofit>().create(VideoGroupService::class.java) }
 
     single {
         val downloader = OkHttp3Downloader(get<OkHttpClient>())
@@ -90,8 +111,7 @@ fun netModule(serverUrl: String) = module {
 }
 
 private fun getOkHttpBuilder(
-    context: Context,
-    interceptors: List<Interceptor>
+    context: Context, interceptors: List<Interceptor>
 ): OkHttpClient.Builder {
     val okHttpClientBuilder = StethoHelper.injectStethoIfDebug(context, OkHttpClient.Builder())
         .cache(createDefaultCache(context))

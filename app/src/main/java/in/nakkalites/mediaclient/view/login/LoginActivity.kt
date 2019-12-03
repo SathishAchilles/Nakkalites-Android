@@ -5,24 +5,54 @@ import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
+import `in`.nakkalites.mediaclient.view.home.HomeActivity
+import `in`.nakkalites.mediaclient.view.utils.EventObserver
+import `in`.nakkalites.mediaclient.view.utils.Result
+import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class LoginActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var googleSignInClient: GoogleSignInClient
+    val vm: LoginVm by viewModel()
+
+    companion object {
+        private const val RC_SIGN_IN = 9001
+
+        @JvmStatic
+        fun createIntent(ctx: Context) =
+            Intent(ctx, LoginActivity::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.onSignUpClick = onSignUpClick
         setupGoogleSignInOptions()
+        vm.viewStates().observe(this, EventObserver {
+            when (it) {
+                is Result.Success -> goToHome()
+                is Result.Error -> {
+                    Timber.e(it.throwable)
+                    showError(it.throwable.message)
+                }
+            }
+        })
+    }
+
+    private fun showError(message: String?) {
+        Toast.makeText(this, message ?: "Error", Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -31,7 +61,8 @@ class LoginActivity : BaseActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                loge("Logged in ${account?.zac()}")
+                vm.login(account)
+                loge("Logged in ${account?.email} ${account?.displayName} ${account?.account}")
             } catch (e: ApiException) {
                 logThrowable(e)
             }
@@ -52,7 +83,7 @@ class LoginActivity : BaseActivity() {
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    companion object {
-        private const val RC_SIGN_IN = 9001
+    private fun goToHome() {
+        startActivity(HomeActivity.createIntent(this))
     }
 }

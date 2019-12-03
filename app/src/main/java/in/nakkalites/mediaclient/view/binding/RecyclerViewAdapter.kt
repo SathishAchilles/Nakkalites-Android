@@ -57,8 +57,7 @@ class RecyclerViewAdapter<T : ViewModel>(
 
         companion object {
             fun <T : ViewDataBinding> create(
-                parent: ViewGroup,
-                @LayoutRes layoutId: Int
+                parent: ViewGroup, @LayoutRes layoutId: Int
             ): DataBindingViewHolder<T> {
                 val binding = DataBindingUtil.inflate<T>(
                     LayoutInflater.from(parent.context), layoutId, parent, false
