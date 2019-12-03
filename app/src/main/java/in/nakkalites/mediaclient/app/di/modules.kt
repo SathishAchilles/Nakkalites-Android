@@ -2,7 +2,7 @@ package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
-import `in`.nakkalites.mediaclient.app.constants.HttpConstants
+import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.user.UserDataStore
 import `in`.nakkalites.mediaclient.data.user.UserManager
 import `in`.nakkalites.mediaclient.data.user.UserService

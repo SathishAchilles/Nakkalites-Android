@@ -14,7 +14,7 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
     }
 
     fun getUser(): User? {
-//        return User("123", "Pavan", "thynameisp1@gmail.com")
+        return User("123", "Pavan", "thynameisp1@gmail.com")
         //TODO remove this
         return try {
             val userJson = prefs.getString(PrefsConstants.USER, null) ?: return null

@@ -1,4 +1,4 @@
-package `in`.nakkalites.mediaclient.app.constants
+package `in`.nakkalites.mediaclient.data
 
 object HttpConstants {
     const val TIMEOUT: Long = 30

@@ -2,13 +2,12 @@ package `in`.nakkalites.mediaclient.app
 
 import `in`.nakkalites.logging.initDebugLogs
 import `in`.nakkalites.mediaclient.BuildConfig
-import `in`.nakkalites.mediaclient.app.constants.HttpConstants
+import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.app.di.applicationModule
 import `in`.nakkalites.mediaclient.app.di.netModule
 import `in`.nakkalites.mediaclient.app.di.viewModelModule
 import android.app.Application
 import com.crashlytics.android.Crashlytics
-import com.facebook.stetho.Stetho
 import io.fabric.sdk.android.Fabric
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
