@@ -1,1 +1,7 @@
-<resources></resources>
+<resources>
+    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="linear_layout_manager" translatable="false">androidx.recyclerview.widget.LinearLayoutManager
+    </string>
+    <string name="all">All</string>
+    <string name="web_series">Web series</string>
+</resources>

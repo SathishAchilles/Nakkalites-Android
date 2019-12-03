@@ -63,6 +63,7 @@ dependencies {
     implementation deps.kotlin.stdlib
     implementation deps.androidX.appCompat
     implementation deps.androidX.constraintLayout
+    implementation deps.androidX.coordinatorlayout
     implementation deps.androidX.core
     implementation deps.androidX.viewModel
     implementation deps.androidX.liveData
@@ -70,6 +71,7 @@ dependencies {
     implementation deps.androidX.viewPager
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
+    implementation deps.google.design
     implementation deps.moshi.core
     implementation deps.moshi.kotlin
     kapt deps.moshi.codeGen

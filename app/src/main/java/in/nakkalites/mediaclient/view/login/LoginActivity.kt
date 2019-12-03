@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -60,10 +61,10 @@ class LoginActivity : BaseActivity() {
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                val account = task.getResult(ApiException::class.java)
+                val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
                 vm.login(account)
-                loge("Logged in ${account?.email} ${account?.displayName} ${account?.account}")
-            } catch (e: ApiException) {
+                loge("Logged in ${account?.email} ${account?.displayName} ${account?.account} ${account?.photoUrl}")
+            } catch (e: Throwable) {
                 logThrowable(e)
             }
         }

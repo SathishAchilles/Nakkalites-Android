@@ -11,3 +11,7 @@ private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.meeshoapi\\.com
 fun Request.isValidApiUrl(): Boolean {
     return apiRegex.matches(url.host)
 }
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun argumentError(message: Any? = null): Nothing =
+    throw IllegalArgumentException(message?.toString())

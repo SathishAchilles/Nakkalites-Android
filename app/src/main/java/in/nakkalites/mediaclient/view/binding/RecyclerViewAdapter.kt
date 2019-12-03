@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.view.binding
 
+import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -10,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 
 
-class RecyclerViewAdapter<T : ViewModel>(
+class RecyclerViewAdapter<T : BaseViewModel>(
     private val viewModels: ObservableList<T>, private val viewProvider: ViewProvider,
     private val binder: ViewModelBinder
 ) : RecyclerView.Adapter<RecyclerViewAdapter.DataBindingViewHolder<ViewDataBinding>>() {

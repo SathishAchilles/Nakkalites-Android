@@ -5,6 +5,9 @@ import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.databinding.BindingMethod
+import androidx.databinding.BindingMethods
+import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 
@@ -16,11 +19,13 @@ object Bindings {
         setOnClickListener { onClickRunnable?.invoke() }
     }
 
+    @JvmStatic
     @BindingAdapter("android:visibility")
     fun View.bindVisibility(visibleOrGone: Boolean) {
         visibility = if (visibleOrGone) View.VISIBLE else View.GONE
     }
 
+    @JvmStatic
     @BindingAdapter(
         value = ["imageUrl", "imageUri", "fit", "resizeWidth",
             "resizeHeight", "centerCrop", "centerInside", "imageTransforms", "bitmapConfig"],
@@ -57,4 +62,20 @@ object Bindings {
         }
         rc.into(this)
     }
+
+    @JvmStatic
+    @BindingAdapter("bringToFront")
+    fun View.bindBringToFront(bringToFront: Boolean) {
+        if (bringToFront) bringToFront()
+    }
+
+    @BindingMethods(
+        BindingMethod(
+            type = TabLayout::class,
+            attribute = "onTabSelect",
+            method = "addOnTabSelectedListener"
+        )
+    )
+    class TabLayoutBindingAdapter
+
 }

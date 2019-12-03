@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.data.user
 
+import android.net.Uri
 import io.reactivex.Single
 
 class UserManager(private val userService: UserService, private val userDataStore: UserDataStore) {
@@ -9,7 +10,9 @@ class UserManager(private val userService: UserService, private val userDataStor
         userDataStore.setUser(user)
     }
 
-    fun login(id: String, displayName: String, email: String): Single<UserResponse> {
+    fun login(
+        id: String, displayName: String, email: String, photoUrl: Uri?
+    ): Single<UserResponse> {
 //        return Single.just(UserResponse(UserEntity("123", "Pavan", "thynameisp1@gmail.com")))
         return userService.login()
             .doOnSuccess { setUser(it.user) }
