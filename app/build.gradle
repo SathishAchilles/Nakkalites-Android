@@ -69,6 +69,7 @@ dependencies {
     implementation deps.androidX.liveData
     implementation deps.androidX.recyclerView
     implementation deps.androidX.viewPager
+    implementation deps.dotsIndicator
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
     implementation deps.google.design
@@ -84,6 +85,8 @@ dependencies {
     implementation deps.retrofit.rxJavaAdapter
     implementation deps.rx.core
     implementation deps.rx.android
+    implementation deps.rx.binding
+    implementation deps.rx.bindingRecyclerView
     implementation deps.rx.kotlin
     implementation deps.koin.core
     implementation deps.koin.android

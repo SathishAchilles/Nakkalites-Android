@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.view.binding
 
+import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.viewpager.widget.PagerAdapter
 
 
-class BindingPagerAdapter<T : BaseViewModel>(
+class BindingPagerAdapter<T : BaseModel>(
     private val items: ObservableList<T>?, private val viewProvider: ViewProvider,
     private val viewModelBinder: ViewModelBinder
 ) : PagerAdapter() {

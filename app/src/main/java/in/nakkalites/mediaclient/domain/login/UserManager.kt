@@ -1,13 +1,16 @@
-package `in`.nakkalites.mediaclient.data.user
+package `in`.nakkalites.mediaclient.domain.login
 
+import `in`.nakkalites.mediaclient.data.user.UserEntity
+import `in`.nakkalites.mediaclient.data.user.UserResponse
+import `in`.nakkalites.mediaclient.data.user.UserService
+import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Single
 
 class UserManager(private val userService: UserService, private val userDataStore: UserDataStore) {
 
     fun setUser(userEntity: UserEntity) {
-        val user = User(userEntity.id, userEntity.name, userEntity.email)
-        userDataStore.setUser(user)
+        userDataStore.setUser(User.map(userEntity))
     }
 
     fun login(

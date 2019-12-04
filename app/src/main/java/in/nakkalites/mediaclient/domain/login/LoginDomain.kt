@@ -1,9 +1,8 @@
 package `in`.nakkalites.mediaclient.domain.login
 
-import `in`.nakkalites.mediaclient.data.user.User
 import `in`.nakkalites.mediaclient.data.user.UserEntity
-import `in`.nakkalites.mediaclient.data.user.UserManager
 import `in`.nakkalites.mediaclient.domain.BaseDomain
+import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Single
 

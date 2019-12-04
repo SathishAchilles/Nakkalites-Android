@@ -1,4 +1,4 @@
-package `in`.nakkalites.mediaclient.view.ui
+package `in`.nakkalites.mediaclient.view.widgets
 
 import `in`.nakkalites.mediaclient.R
 import android.content.Context

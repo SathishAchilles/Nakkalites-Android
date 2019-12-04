@@ -1,10 +1,10 @@
 package `in`.nakkalites.mediaclient.viewmodel.splash
 
-import `in`.nakkalites.mediaclient.data.user.UserManager
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.NoUserFoundException
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -19,7 +19,9 @@ class SplashVm(private val userManager: UserManager) : BaseViewModel() {
         if (userManager.isUserLoggedIn()) {
             splashViewState.value = Event(Result.Success(Unit))
         } else {
-            splashViewState.value = Event(Result.Error(Unit, NoUserFoundException()))
+            splashViewState.value = Event(Result.Error(Unit,
+                NoUserFoundException()
+            ))
         }
     }
 }

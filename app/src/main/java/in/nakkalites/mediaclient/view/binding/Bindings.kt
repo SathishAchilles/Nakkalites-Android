@@ -1,9 +1,14 @@
 package `in`.nakkalites.mediaclient.view.binding
 
+import `in`.nakkalites.logging.loge
 import android.graphics.Bitmap
 import android.net.Uri
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.Px
+import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
@@ -36,6 +41,7 @@ object Bindings {
         centerCrop: Boolean, centerInside: Boolean, transforms: List<Transformation>?,
         bitmapConfig: Bitmap.Config?
     ) {
+        loge("Image ${url} ${uri}")
         if (url == null && uri == null) {
             return
         }
@@ -61,6 +67,7 @@ object Bindings {
             rc.config(bitmapConfig)
         }
         rc.into(this)
+        loge("Image loaded")
     }
 
     @JvmStatic
@@ -78,4 +85,29 @@ object Bindings {
     )
     class TabLayoutBindingAdapter
 
+    @JvmStatic
+    @BindingAdapter("width")
+    fun View.bindWidth(@Px width: Int) {
+        val lp = layoutParams
+        lp.width = width
+        layoutParams = lp
+    }
+
+    @JvmStatic
+    @BindingAdapter("height")
+    fun View.bindHeight(height: Float) {
+        if (height >= ViewGroup.LayoutParams.WRAP_CONTENT) {
+            val lp = layoutParams
+            lp.height = height.toInt()
+            layoutParams = lp
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["textRes"])
+    fun TextView.bindTextWithFormat(@StringRes stringRes: Int?) {
+        if (stringRes != null) {
+            text = context.getString(stringRes)
+        }
+    }
 }

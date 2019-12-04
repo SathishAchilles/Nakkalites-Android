@@ -3,12 +3,15 @@ package `in`.nakkalites.mediaclient.app.di
 import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.data.HttpConstants
-import `in`.nakkalites.mediaclient.data.user.UserDataStore
-import `in`.nakkalites.mediaclient.data.user.UserManager
+import `in`.nakkalites.mediaclient.domain.login.UserDataStore
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
+import `in`.nakkalites.mediaclient.viewmodel.home.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Context
@@ -36,46 +39,44 @@ import kotlin.math.max
 import kotlin.math.min
 
 val applicationModule = module {
-
     single<SharedPreferences> {
         PreferenceManager.getDefaultSharedPreferences(androidContext())
     }
-
     single {
         UserDataStore(get(), get())
     }
-
     single {
         UserManager(get(), get())
     }
-
     single {
         LoginDomain(get())
+    }
+    single {
+        VideoGroupDomain(get())
     }
 }
 
 val viewModelModule = module {
     viewModel { SplashVm(get()) }
     viewModel { LoginVm(get()) }
-    viewModel { HomeVm(get()) }
+    viewModel { AllVideoGroupsVm(get()) }
+    viewModel { WebSeriesListVm() }
+    viewModel { HomeVm(get(), get(), get()) }
 }
 
 fun netModule(serverUrl: String) = module {
     single {
         StethoInterceptor()
     }
-
     single {
         HeadersInterceptor()
     }
-
     single {
         getOkHttpBuilder(
             androidContext(),
             listOf(get<HeadersInterceptor>(), get<StethoInterceptor>())
         )
     }
-
     single {
         StethoHelper.injectStethoIfDebug(androidContext(), get())
             .connectTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
@@ -83,13 +84,11 @@ fun netModule(serverUrl: String) = module {
             .writeTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
             .build()
     }
-
     single {
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
     }
-
     single {
         Retrofit.Builder()
             .client(get())
@@ -99,11 +98,8 @@ fun netModule(serverUrl: String) = module {
             .client(get<OkHttpClient>())
             .build()
     }
-
     single { get<Retrofit>().create(UserService::class.java) }
-
     single { get<Retrofit>().create(VideoGroupService::class.java) }
-
     single {
         val downloader = OkHttp3Downloader(get<OkHttpClient>())
         Picasso.Builder(androidContext()).downloader(downloader).build()

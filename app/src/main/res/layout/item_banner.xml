@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.viewmodel.home.BannerVm" />
+
+        <variable
+            name="onBannerClick"
+            type="kotlin.jvm.functions.Function0" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> onBannerClick.invoke()}"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/cyan_400"
+            app:centerCrop="@{true}"
+            app:fit="@{true}"
+            app:imageUrl="@{vm.thumbnail}" />
+    </LinearLayout>
+</layout>

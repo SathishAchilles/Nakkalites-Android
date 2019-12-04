@@ -1,12 +1,12 @@
 package `in`.nakkalites.mediaclient.viewmodel.login
 
-import `in`.nakkalites.mediaclient.data.user.User
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.asResult
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.NoUserFoundException
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -37,7 +37,9 @@ class LoginVm(private val loginDomain: LoginDomain) : BaseViewModel() {
                     }
                 )
         } else {
-            loginState.value = Event(Result.Error<User>(null, NoUserFoundException()))
+            loginState.value = Event(Result.Error<User>(null,
+                NoUserFoundException()
+            ))
         }
     }
 }

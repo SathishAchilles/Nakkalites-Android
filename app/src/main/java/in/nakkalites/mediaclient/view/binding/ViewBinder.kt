@@ -1,15 +1,15 @@
 package `in`.nakkalites.mediaclient.view.binding
 
-import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
+import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import androidx.annotation.LayoutRes
 
 
 interface ViewProvider {
     @LayoutRes
-    fun getView(vm: BaseViewModel): Int
+    fun getView(vm: BaseModel): Int
 }
 
-fun viewProvider(provider: (BaseViewModel) -> Int): ViewProvider =
+fun viewProvider(provider: (BaseModel) -> Int): ViewProvider =
     object : ViewProvider {
-        override fun getView(vm: BaseViewModel): Int = provider(vm)
+        override fun getView(vm: BaseModel): Int = provider(vm)
     }

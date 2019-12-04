@@ -1,6 +1,7 @@
-package `in`.nakkalites.mediaclient.data.user
+package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.data.PrefsConstants
+import `in`.nakkalites.mediaclient.domain.models.User
 import android.content.SharedPreferences
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
