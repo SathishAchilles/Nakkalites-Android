@@ -1,17 +1,16 @@
 package `in`.nakkalites.mediaclient.view.home
 
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
-import `in`.nakkalites.mediaclient.databinding.ActivityHomeBinding
-import `in`.nakkalites.mediaclient.databinding.ItemBannerBinding
-import `in`.nakkalites.mediaclient.databinding.ItemBannersBinding
-import `in`.nakkalites.mediaclient.databinding.PageHomeBinding
+import `in`.nakkalites.mediaclient.databinding.*
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.BindingPagerAdapter.PageTitles
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.dummyViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.progressViewProvider
 import `in`.nakkalites.mediaclient.view.utils.argumentError
+import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
 import `in`.nakkalites.mediaclient.view.utils.setDefaultColors
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
@@ -22,6 +21,7 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -103,10 +103,8 @@ class HomeActivity : BaseActivity() {
         progressViewProvider(), dummyViewProvider(), viewProvider { vm1: BaseModel ->
             when (vm1) {
                 is BannersVm -> R.layout.item_banners
-                else -> {
-                    loge("No View binding $vm1")
-                    argumentError()
-                }
+                is VideoGroupVm -> R.layout.item_video_group
+                else -> argumentError()
             }
         })
 
@@ -120,15 +118,37 @@ class HomeActivity : BaseActivity() {
                     )
                 }
             }
+            is VideoGroupVm -> {
+                val binding = (itemBinding as ItemVideoGroupBinding)
+                val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+                val viewAdapter = RecyclerViewAdapter(vm1.items, videoProvider, videoBinder)
+                with(binding.recyclerView) {
+                    layoutManager = linearLayoutManager
+                    adapter = viewAdapter
+                }
+            }
         }
     }
     private val bannerProvider = viewProvider { R.layout.item_banner }
     private val bannerBinder = viewModelBinder { viewDataBinding, vm ->
+        viewDataBinding.setVariable(BR.vm, vm)
         when (vm) {
-            is BannerVm ->
+            is BannerVm -> {
                 (viewDataBinding as ItemBannerBinding).onBannerClick =
                     { loge("Banner clicked ${vm.name}") }
-
+                viewDataBinding.transformations = getDefaultTransformations()
+            }
+        }
+    }
+    private val videoProvider = viewProvider { R.layout.item_video }
+    private val videoBinder = viewModelBinder { viewDataBinding, vm ->
+        viewDataBinding.setVariable(BR.vm, vm)
+        when (vm) {
+            is VideoVm -> {
+                (viewDataBinding as ItemVideoBinding).onVideoClick =
+                    { loge("Video clicked ${vm.name}") }
+                viewDataBinding.transformations = getDefaultTransformations()
+            }
         }
     }
 }

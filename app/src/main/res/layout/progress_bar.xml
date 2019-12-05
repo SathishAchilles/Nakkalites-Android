@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
-        <variable name="vm" type="in.nakkalites.mediaclient.view.binding.ProgressBarVm"/>
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.view.binding.ProgressBarVm" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         app:height="@{vm.isFullHeight ? -1f : @dimen/progress_bar_row_height}">
 
-        <ProgressBar
-            style="@style/ProgressBar"/>
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/cyan_400" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,10 +31,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            app:textRes="@{vm.textRes}"
-            android:textSize="14sp"
             android:textColor="@color/white"
+            android:textSize="14sp"
             android:visibility="@{vm.textRes != null}"
-            tools:text="Please wait"/>
+            app:textRes="@{vm.textRes}"
+            tools:text="Please wait" />
     </LinearLayout>
 </layout>

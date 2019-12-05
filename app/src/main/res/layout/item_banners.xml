@@ -24,12 +24,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp"
             app:dotsColor="@color/white"
-            app:dotsStrokeColor="@color/cyan_400"
             app:dotsCornerRadius="8dp"
             app:dotsSize="16dp"
             app:dotsSpacing="4dp"
+            app:dotsStrokeColor="@color/cyan_400"
             app:dotsStrokeWidth="2dp"
             app:viewPager="@{viewPager}" />
     </LinearLayout>

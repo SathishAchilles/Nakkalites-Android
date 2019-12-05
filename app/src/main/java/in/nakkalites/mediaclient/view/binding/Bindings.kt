@@ -1,14 +1,19 @@
 package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.Px
 import androidx.annotation.StringRes
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
@@ -17,7 +22,6 @@ import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 
 object Bindings {
-
     @JvmStatic
     @BindingAdapter("android:onClick")
     fun View.bindOnClick(onClickRunnable: Function0<Unit>?) {
@@ -41,7 +45,6 @@ object Bindings {
         centerCrop: Boolean, centerInside: Boolean, transforms: List<Transformation>?,
         bitmapConfig: Bitmap.Config?
     ) {
-        loge("Image ${url} ${uri}")
         if (url == null && uri == null) {
             return
         }
@@ -78,9 +81,7 @@ object Bindings {
 
     @BindingMethods(
         BindingMethod(
-            type = TabLayout::class,
-            attribute = "onTabSelect",
-            method = "addOnTabSelectedListener"
+            type = TabLayout::class, attribute = "onTabSelect", method = "addOnTabSelectedListener"
         )
     )
     class TabLayoutBindingAdapter
@@ -106,8 +107,40 @@ object Bindings {
     @JvmStatic
     @BindingAdapter(value = ["textRes"])
     fun TextView.bindTextWithFormat(@StringRes stringRes: Int?) {
-        if (stringRes != null) {
-            text = context.getString(stringRes)
+        stringRes?.let {
+            text = context.getString(it)
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter(
+        value = ["android:drawableLeft", "android:drawableTop", "android:drawableRight", "android:drawableBottom", "android:drawableTint"],
+        requireAll = false
+    )
+    fun TextView.bindCompoundDrawables(
+        left: Drawable, top: Drawable, right: Drawable, bottom: Drawable, @ColorInt color: Int
+    ) {
+        val input =
+            arrayOf(left, top, right, bottom)
+        val output: Array<Drawable?> =
+            input.map { drawable -> tintDrawable(drawable, color) }.toTypedArray()
+        setCompoundDrawablesWithIntrinsicBounds(output[0], output[1], output[2], output[3])
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:layout_marginStart")
+    fun View.bindMarginLeft(marginStart: Int) {
+        val lp = layoutParams as MarginLayoutParams
+        lp.leftMargin = marginStart
+        layoutParams = lp
+    }
+
+    private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {
+        if (drawable != null && color != 0) {
+            val wrapped = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrapped.mutate(), color)
+            return wrapped
+        }
+        return drawable
     }
 }

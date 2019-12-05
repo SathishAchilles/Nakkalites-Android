@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.home.BannerVm" />
+            type="in.nakkalites.mediaclient.viewmodel.home.VideoVm" />
 
         <variable
-            name="onBannerClick"
+            name="onVideoClick"
             type="kotlin.jvm.functions.Function0" />
 
         <variable
@@ -18,18 +19,21 @@
     </data>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
-        android:onClick="@{() -> onBannerClick.invoke()}"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="@{() -> onVideoClick.invoke()}"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:padding="10dp"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
             app:fit="@{true}"
             app:imageTransforms="@{transformations}"
-            app:imageUrl="@{vm.thumbnail}" />
+            app:imageUrl="@{vm.thumbnail}"
+            tools:src="@drawable/ic_launcher_background" />
     </LinearLayout>
 </layout>

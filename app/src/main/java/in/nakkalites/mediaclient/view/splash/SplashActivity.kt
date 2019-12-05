@@ -8,6 +8,7 @@ import `in`.nakkalites.mediaclient.view.login.LoginActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
+import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,11 +31,17 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun goToLogin() {
-        startActivity(LoginActivity.createIntent(this))
+        LoginActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
     }
 
     private fun goToHome() {
-        startActivity(HomeActivity.createIntent(this))
+        HomeActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
     }
 
     private fun showLoading() {

@@ -16,10 +16,10 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
 class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
-    internal val isRefreshing = ObservableBoolean()
-    internal val isLoading = ObservableBoolean()
-    val items = ObservableArrayList<BaseModel>()
     private lateinit var pagingBody: PagingBody
+    val isRefreshing = ObservableBoolean()
+    val items = ObservableArrayList<BaseModel>()
+    private val isLoading = ObservableBoolean()
 
     internal fun initPagingBody(pagingCallback: PagingCallback) {
         pagingBody = PagingBody(pagingCallback = pagingCallback)
@@ -30,12 +30,20 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
             .doAfterSuccess {
                 pagingBody.onNextPage(it.second.size, it.third)
             }
+            .map {
+                listOf(BannersVm(it.first)) +
+                        it.second.map { videoGroup -> VideoGroupVm(videoGroup) }
+            }
+            .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))
+            .doFinally {
+                isRefreshing.set(false)
+            }
             .subscribeBy(
                 onSuccess = {
-                    val list = listOf(BannersVm(it.first))
-                    items.addAll(list)
+                    items.addAll(it)
+                    loge("items $it")
                 },
                 onError = {
                     loge("Error $it")
@@ -47,14 +55,14 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
     fun loading() = isLoading.get()
 
     fun refreshList() {
-
+        items.clear()
+        pagingBody.reset()
+        fetchVideoGroups()
     }
 
     private fun handleEmptyPage(viewModels: MutableList<BaseModel>): List<BaseModel> {
-        if (pagingBody.isFirstPage()) {
-            viewModels.add(
-                DummyVm(R.layout.empty_state_home)
-            )
+        if (pagingBody.isFirstPage() && viewModels.isEmpty()) {
+            viewModels.add(DummyVm(R.layout.empty_state_home))
         }
         return viewModels
     }

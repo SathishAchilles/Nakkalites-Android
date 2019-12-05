@@ -29,6 +29,7 @@ ext.versions = [
         rxBinding           : '3.1.0',
         rxJava              : '2.2.14',
         rxKotlin            : '2.4.0',
+        spinKit             : '1.4.0',
         stetho              : '1.5.1',
         timber              : '4.7.1',
         viewPager           : '1.0.0'
@@ -87,6 +88,7 @@ ext.deps = [
                 binding            : "com.jakewharton.rxbinding3:rxbinding:${versions.rxBinding}",
                 bindingRecyclerView: "com.jakewharton.rxbinding3:rxbinding-recyclerview:${versions.rxBinding}",
         ],
+        spinKit      : "com.github.ybq:Android-SpinKit:${versions.spinKit}",
         stetho       : [
                 core  : "com.facebook.stetho:stetho:${versions.stetho}",
                 okHttp: "com.facebook.stetho:stetho-okhttp3:${versions.stetho}",

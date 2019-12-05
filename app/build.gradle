@@ -28,6 +28,8 @@ android {
         targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+        vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -92,6 +94,7 @@ dependencies {
     implementation deps.koin.android
     implementation deps.koin.scope
     implementation deps.koin.viewModel
+    implementation deps.spinKit
     implementation deps.stetho.core
     implementation deps.stetho.okHttp
 

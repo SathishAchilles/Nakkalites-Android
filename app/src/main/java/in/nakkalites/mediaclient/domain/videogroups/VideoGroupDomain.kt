@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.domain.models.Banner
 import `in`.nakkalites.mediaclient.domain.models.VideoGroup
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import io.reactivex.Single
+import timber.log.Timber
 
 class VideoGroupDomain(private val videoGroupService: VideoGroupService) : BaseDomain {
 
@@ -14,6 +15,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService) : BaseD
         loge(pagingBody.toMap().toString())
         return videoGroupService.getVideoGroups(pagingBody.toMap())
             .map { response ->
+                Timber.e(response.toString())
                 Triple(
                     response.banners.map { entity -> Banner.map(entity) },
                     response.videoGroups.map { entity -> VideoGroup.map(entity) },
