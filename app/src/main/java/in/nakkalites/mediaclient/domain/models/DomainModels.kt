@@ -32,12 +32,10 @@ data class WebSeries(
     val id: String, val titleName: String, val name: String, val thumbnailImage: String
 ) {
     companion object {
-        fun map(webSeriesEntity: WebSeriesEntity?): WebSeries? = webSeriesEntity?.let {
-            WebSeries(
-                webSeriesEntity.id, webSeriesEntity.titleName, webSeriesEntity.name,
-                webSeriesEntity.thumbnail
-            )
-        }
+        fun map(webSeriesEntity: WebSeriesEntity): WebSeries = WebSeries(
+            webSeriesEntity.id, webSeriesEntity.titleName, webSeriesEntity.name,
+            webSeriesEntity.thumbnail
+        )
     }
 }
 

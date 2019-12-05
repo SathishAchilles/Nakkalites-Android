@@ -7,10 +7,10 @@
 
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.home.VideoVm" />
+            type="in.nakkalites.mediaclient.viewmodel.home.WebSeriesVm" />
 
         <variable
-            name="onVideoClick"
+            name="onWebSeriesClick"
             type="kotlin.jvm.functions.Function0" />
 
         <variable
@@ -19,18 +19,18 @@
     </data>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@{vm.marginStart}"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical">
+        android:gravity="center">
 
         <ImageView
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:onClick="@{() -> onVideoClick.invoke()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> onWebSeriesClick.invoke()}"
             app:fit="@{true}"
             app:imageTransforms="@{transformations}"
             app:imageUrl="@{vm.thumbnail}"

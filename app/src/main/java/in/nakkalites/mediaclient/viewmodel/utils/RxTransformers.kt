@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.utils
 
-import `in`.nakkalites.mediaclient.view.binding.ProgressBarVm
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import androidx.databinding.ObservableBoolean
 import io.reactivex.Single
@@ -25,7 +24,7 @@ object RxTransformers {
     ): SingleTransformer<T, T> {
         return SingleTransformer { upstream: Single<T> ->
             upstream
-                .doOnSubscribe { disposable: Disposable? ->
+                .doOnSubscribe {
                     isDataLoading?.set(true)
                     items.add(ProgressBarVm(fullScreenLoader || items.isEmpty()))
                 }

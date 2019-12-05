@@ -1,6 +1,8 @@
 package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.viewmodel.utils.DummyVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.ProgressBarVm
 
 /** Common implementations of [ViewProvider]. */
 object ViewProviders {

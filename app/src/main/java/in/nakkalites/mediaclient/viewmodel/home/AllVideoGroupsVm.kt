@@ -5,9 +5,9 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
-import `in`.nakkalites.mediaclient.view.binding.DummyVm
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
+import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
@@ -62,7 +62,7 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
 
     private fun handleEmptyPage(viewModels: MutableList<BaseModel>): List<BaseModel> {
         if (pagingBody.isFirstPage() && viewModels.isEmpty()) {
-            viewModels.add(DummyVm(R.layout.empty_state_home))
+            viewModels.add(EmptyStateVm(R.layout.empty_state_home))
         }
         return viewModels
     }

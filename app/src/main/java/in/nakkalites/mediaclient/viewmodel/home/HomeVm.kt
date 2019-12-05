@@ -19,6 +19,5 @@ class HomeVm(
     fun setSelectedTab(position: Int) {
         selectedTab = HomeTab.fromPosition(position)
     }
-
 }
 

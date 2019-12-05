@@ -1,8 +1,8 @@
-package `in`.nakkalites.mediaclient.view.binding
+package `in`.nakkalites.mediaclient.viewmodel.utils
 
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 
-class DummyVm(val layoutId: Int) : BaseModel {
+open class DummyVm(val layoutId: Int) : BaseModel {
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o == null || javaClass != o.javaClass) return false

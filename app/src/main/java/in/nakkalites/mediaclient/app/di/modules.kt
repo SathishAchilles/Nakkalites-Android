@@ -60,7 +60,7 @@ val viewModelModule = module {
     viewModel { SplashVm(get()) }
     viewModel { LoginVm(get()) }
     viewModel { AllVideoGroupsVm(get()) }
-    viewModel { WebSeriesListVm() }
+    viewModel { WebSeriesListVm(get()) }
     viewModel { HomeVm(get(), get(), get()) }
 }
 

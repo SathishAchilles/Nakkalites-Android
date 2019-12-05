@@ -15,11 +15,15 @@ import `in`.nakkalites.mediaclient.view.utils.setDefaultColors
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.home.*
+import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.ProgressBarVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -30,6 +34,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeActivity : BaseActivity() {
     private lateinit var binding: ActivityHomeBinding
     val vm: HomeVm by viewModel()
+    val SPAN_COUNT = 2
 
     companion object {
         @JvmStatic
@@ -77,7 +82,8 @@ class HomeActivity : BaseActivity() {
                     { vm1.loading() }, false
                 )
                 val linearLayoutManager = LinearLayoutManager(this)
-                val viewAdapter = RecyclerViewAdapter(vm1.items, itemViewProvider, itemVmBinder)
+                val viewAdapter =
+                    RecyclerViewAdapter(vm1.items, videoGroupViewProvider, videoGroupVmBinder)
                 with(recyclerView) {
                     layoutManager = linearLayoutManager
                     adapter = viewAdapter
@@ -87,19 +93,40 @@ class HomeActivity : BaseActivity() {
                 vm1.fetchVideoGroups()
                 binding1.swipeRefresh.setDefaultColors()
                 binding1.swipeRefresh.setOnRefreshListener {
-                    vm1.fetchVideoGroups()
                     vm1.refreshList()
                 }
                 binding1.isRefreshing = vm1.isRefreshing
+                binding1.spanSizeLookup = null
+
             }
             is WebSeriesListVm -> {
-                (binding1 as PageHomeBinding).isRefreshing = vm1.isRefreshing
+                val recyclerView = (binding1 as PageHomeBinding).recyclerView
+                val scrollPager = RecyclerViewScrollPager(this,
+                    { recyclerView }, Runnable { vm1.fetchWebSeriesList() },
+                    { vm1.loading() }, false
+                )
+                val gridLayoutManager = GridLayoutManager(this, SPAN_COUNT)
+                val viewAdapter =
+                    RecyclerViewAdapter(vm1.items, webSeriesViewProvider, webSeriesVmBinder)
+                with(recyclerView) {
+                    layoutManager = gridLayoutManager
+                    adapter = viewAdapter
+                }
+                scrollPager.attachScrollEvent()
+                vm1.initPagingBody(scrollPager.pagingCallback)
+                vm1.fetchWebSeriesList()
+                binding1.swipeRefresh.setDefaultColors()
+                binding1.swipeRefresh.setOnRefreshListener {
+                    vm1.refreshList()
+                }
+                binding1.isRefreshing = vm1.isRefreshing
+                binding1.spanSizeLookup = spanSizeLookup(vm1.items)
             }
             else -> argumentError()
         }
     }
 
-    private val itemViewProvider = ViewProviders.wrapSequentially(
+    private val videoGroupViewProvider = ViewProviders.wrapSequentially(
         progressViewProvider(), dummyViewProvider(), viewProvider { vm1: BaseModel ->
             when (vm1) {
                 is BannersVm -> R.layout.item_banners
@@ -108,7 +135,7 @@ class HomeActivity : BaseActivity() {
             }
         })
 
-    private val itemVmBinder = viewModelBinder { itemBinding, vm1 ->
+    private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is BannersVm -> {
                 val viewPager: ViewPager = (itemBinding as ItemBannersBinding).viewPager
@@ -151,4 +178,33 @@ class HomeActivity : BaseActivity() {
             }
         }
     }
+    private val webSeriesViewProvider = ViewProviders.wrapSequentially(
+        progressViewProvider(), dummyViewProvider(), viewProvider { vm1: BaseModel ->
+            when (vm1) {
+                is WebSeriesVm -> R.layout.item_web_series
+                else -> argumentError()
+            }
+        })
+
+    private val webSeriesVmBinder = viewModelBinder { viewDataBinding, vm1 ->
+        when (vm1) {
+            is WebSeriesVm -> {
+                (viewDataBinding as ItemWebSeriesBinding).onWebSeriesClick =
+                    { loge("Web Series clicked ${vm1.name}") }
+                viewDataBinding.transformations = getDefaultTransformations()
+            }
+        }
+    }
+
+    private fun spanSizeLookup(items: ObservableArrayList<BaseModel>) =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val vm1 = items[position]
+                return if (vm1 is ProgressBarVm || vm1 is EmptyStateVm) {
+                    SPAN_COUNT
+                } else {
+                    SPAN_COUNT / 2
+                }
+            }
+        }
 }

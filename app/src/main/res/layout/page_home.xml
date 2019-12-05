@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="isRefreshing" type="androidx.databinding.ObservableBoolean"/>
+
+        <variable
+            name="isRefreshing"
+            type="androidx.databinding.ObservableBoolean" />
+
+        <variable
+            name="spanSizeLookup"
+            type="androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup" />
     </data>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
@@ -24,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 app:hasFixedSize="@{true}"
-                app:layoutManager="@string/linear_layout_manager"/>
+                app:spanSizeLookup="@{spanSizeLookup}"/>
         </FrameLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

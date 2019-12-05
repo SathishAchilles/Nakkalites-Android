@@ -10,6 +10,12 @@ import retrofit2.http.QueryMap
 
 interface VideoGroupService {
     @GET(HttpConstants.HOME)
-    @Headers("Content-Type:application/json", "x-api-key:PMAK-5de80ebba02a48003620e12a-5dd8c491cd75f1ffbf9c7c4fb32270fee6")
-    fun getVideoGroups( @QueryMap paging: StringAnyMap): Single<VideoGroupResponse>
+    @Headers(
+        "Content-Type:application/json",
+        "x-api-key:PMAK-5de80ebba02a48003620e12a-5dd8c491cd75f1ffbf9c7c4fb32270fee6"
+    )
+    fun getVideoGroups(@QueryMap paging: StringAnyMap): Single<VideoGroupResponse>
+
+    @GET(HttpConstants.WEBSERIES)
+    fun getWebSeriesList(@QueryMap paging: StringAnyMap): Single<WebSeriesListResponse>
 }

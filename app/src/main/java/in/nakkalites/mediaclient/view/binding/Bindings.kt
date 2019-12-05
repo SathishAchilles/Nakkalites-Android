@@ -1,7 +1,6 @@
 package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.logging.loge
-import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -11,12 +10,16 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.annotation.DimenRes
 import androidx.annotation.Px
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
@@ -129,10 +132,19 @@ object Bindings {
 
     @JvmStatic
     @BindingAdapter("android:layout_marginStart")
-    fun View.bindMarginLeft(marginStart: Int) {
+    fun View.bindMarginStart(@DimenRes marginStart: Int) {
         val lp = layoutParams as MarginLayoutParams
-        lp.leftMargin = marginStart
+        lp.leftMargin = context.resources.getDimension(marginStart).toInt()
         layoutParams = lp
+    }
+
+    @JvmStatic
+    @BindingAdapter(value = ["spanSizeLookup"])
+    fun RecyclerView.bindSpanSizeLookup(spanSizeLookup: SpanSizeLookup?) {
+        spanSizeLookup?.apply {
+            val gridLm = layoutManager as GridLayoutManager
+            gridLm.spanSizeLookup = this
+        }
     }
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {

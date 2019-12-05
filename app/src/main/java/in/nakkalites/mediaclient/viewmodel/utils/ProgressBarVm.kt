@@ -1,4 +1,4 @@
-package `in`.nakkalites.mediaclient.view.binding
+package `in`.nakkalites.mediaclient.viewmodel.utils
 
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 
