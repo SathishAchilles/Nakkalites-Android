@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.viewmodel.home.VideoGroupVm" />
+
+        <variable
+            name="onVideoGroupClick"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <LinearLayout
@@ -19,10 +23,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             android:drawableEnd="@{@drawable/ic_chevron_right_black_24dp}"
             android:fontFamily="@font/medium"
+            android:onClick="@{() -> onVideoGroupClick.invoke()}"
             android:paddingTop="10dp"
             android:paddingBottom="12dp"
             android:text="@{vm.name}"
@@ -35,8 +40,8 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_video"
-            android:orientation="horizontal" />
+            tools:listitem="@layout/item_video" />
     </LinearLayout>
 </layout>

@@ -15,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
-class WebSeriesListVm(val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     internal val isRefreshing = ObservableBoolean()
     internal val isLoading = ObservableBoolean()
     private lateinit var pagingBody: PagingBody

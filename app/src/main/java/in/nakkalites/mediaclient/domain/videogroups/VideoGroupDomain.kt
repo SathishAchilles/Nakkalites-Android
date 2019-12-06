@@ -28,6 +28,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService) : BaseD
     fun getWebSeriesList(pagingBody: PagingBody): Single<Pair<List<WebSeries>, String?>> {
         return videoGroupService.getWebSeriesList(pagingBody.toMap())
             .map { response ->
+                Timber.e(response.toString())
                 Pair(response.webSeriesList.map { WebSeries.map(it) }, response.cursor)
             }
     }
