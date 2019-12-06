@@ -8,6 +8,8 @@ import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
 import `in`.nakkalites.mediaclient.view.utils.argumentError
+import `in`.nakkalites.mediaclient.view.utils.displayWidth
+import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.ProgressBarVm
@@ -46,6 +48,7 @@ class VideoGroupListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_group_list)
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = false)
+        binding.vm = vm
         vm.setArgs(videoGroupId, videoGroupName)
         init()
     }
@@ -57,9 +60,11 @@ class VideoGroupListActivity : BaseActivity() {
             { vm.loading() }, false
         )
         val gridLayoutManager = GridLayoutManager(this, spanCount)
-        val viewAdapter = RecyclerViewAdapter(
+        val viewAdapter = RecyclerViewAdapter<BaseModel>(
             vm.items, videoViewProvider,
-            ViewModelBinders.videoViewModelProvider(this, 115, -1, onVideoClick)
+            ViewModelBinders.videoViewModelProvider(
+                this, dpToPx(115), (displayWidth() - dpToPx(40)) / (spanCount), onVideoClick
+            )
         )
         recyclerView.adapter = viewAdapter
         binding.spanCount = spanCount

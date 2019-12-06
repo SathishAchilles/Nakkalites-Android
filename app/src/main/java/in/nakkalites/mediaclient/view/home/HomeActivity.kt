@@ -150,7 +150,7 @@ class HomeActivity : BaseActivity() {
                 val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
                 val viewAdapter = RecyclerViewAdapter(
                     vm1.items, videoItemViewProvider(),
-                    videoViewModelProvider(this, 150, 250, onVideoClick)
+                    videoViewModelProvider(this, dpToPx(150), dpToPx(250), onVideoClick)
                 )
                 with(binding.recyclerView) {
                     layoutManager = linearLayoutManager

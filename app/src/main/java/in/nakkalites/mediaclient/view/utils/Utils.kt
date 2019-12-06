@@ -2,7 +2,9 @@ package `in`.nakkalites.mediaclient.view.utils
 
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.view.widgets.RoundedCornersTransformation
+import android.app.Activity
 import android.content.Context
+import android.graphics.Point
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Transformation
@@ -33,3 +35,12 @@ fun Context.dpToPx(dp: Int): Int {
     val density = resources.displayMetrics.density
     return (dp * density).toInt()
 }
+
+fun Activity.displayDimens() =
+    Point().apply {
+        this@displayDimens.windowManager.defaultDisplay.getSize(this)
+    }
+
+fun Activity.displayWidth() = displayDimens().x
+
+fun Activity.displayHeight() = displayDimens().y

@@ -53,7 +53,7 @@ val applicationModule = module {
         LoginDomain(get())
     }
     single {
-        VideoGroupDomain(get())
+        VideoGroupDomain(get(), get())
     }
 }
 

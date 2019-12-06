@@ -90,17 +90,15 @@ object Bindings {
     @JvmStatic
     @BindingAdapter("width")
     fun View.bindWidth(@Px width: Int) {
-        if (width >= ViewGroup.LayoutParams.WRAP_CONTENT && width != -1) {
-            val lp = layoutParams
-            lp.width = width
-            layoutParams = lp
-        }
+        val lp = layoutParams
+        lp.width = width
+        layoutParams = lp
     }
 
     @JvmStatic
     @BindingAdapter("height")
-    fun View.bindHeight(height: Float) {
-        if (height >= ViewGroup.LayoutParams.WRAP_CONTENT && height != -1F) {
+    fun View.bindHeight(@Px height: Float) {
+        if (height >= ViewGroup.LayoutParams.WRAP_CONTENT) {
             val lp = layoutParams
             lp.height = height.toInt()
             layoutParams = lp
