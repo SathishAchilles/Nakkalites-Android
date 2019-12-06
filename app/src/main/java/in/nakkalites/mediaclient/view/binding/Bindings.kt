@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.binding
 
-import `in`.nakkalites.logging.loge
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -73,7 +72,6 @@ object Bindings {
             rc.config(bitmapConfig)
         }
         rc.into(this)
-        loge("Image loaded")
     }
 
     @JvmStatic
@@ -92,15 +90,17 @@ object Bindings {
     @JvmStatic
     @BindingAdapter("width")
     fun View.bindWidth(@Px width: Int) {
-        val lp = layoutParams
-        lp.width = width
-        layoutParams = lp
+        if (width >= ViewGroup.LayoutParams.WRAP_CONTENT && width != -1) {
+            val lp = layoutParams
+            lp.width = width
+            layoutParams = lp
+        }
     }
 
     @JvmStatic
     @BindingAdapter("height")
     fun View.bindHeight(height: Float) {
-        if (height >= ViewGroup.LayoutParams.WRAP_CONTENT) {
+        if (height >= ViewGroup.LayoutParams.WRAP_CONTENT && height != -1F) {
             val lp = layoutParams
             lp.height = height.toInt()
             layoutParams = lp
@@ -110,8 +110,8 @@ object Bindings {
     @JvmStatic
     @BindingAdapter(value = ["textRes"])
     fun TextView.bindTextWithFormat(@StringRes stringRes: Int?) {
-        stringRes?.let {
-            text = context.getString(it)
+        stringRes?.apply {
+            text = context.getString(this)
         }
     }
 
@@ -145,6 +145,13 @@ object Bindings {
             val gridLm = layoutManager as GridLayoutManager
             gridLm.spanSizeLookup = this
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("spanCount")
+    fun RecyclerView.bindSpanCount(spanCount: Int) {
+        val gridLm = layoutManager as GridLayoutManager
+        gridLm.spanCount = spanCount
     }
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {

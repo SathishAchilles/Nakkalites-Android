@@ -11,9 +11,10 @@ import `in`.nakkalites.mediaclient.domain.login.LoginDomain
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
-import `in`.nakkalites.mediaclient.viewmodel.home.WebSeriesListVm
+import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
@@ -62,6 +63,7 @@ val viewModelModule = module {
     viewModel { AllVideoGroupsVm(get()) }
     viewModel { WebSeriesListVm(get()) }
     viewModel { HomeVm(get(), get(), get()) }
+    viewModel { VideoGroupListVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {

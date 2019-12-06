@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.home.VideoGroupVm" />
+            type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm" />
 
         <variable
             name="onVideoGroupClick"

@@ -5,13 +5,23 @@
 
     <data>
 
+        <import type="in.nakkalites.mediaclient.viewmodel.video.VideoVm" />
+
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.home.VideoVm" />
+            type="VideoVm" />
+
+        <variable
+            name="height"
+            type="Integer" />
+
+        <variable
+            name="width"
+            type="Integer" />
 
         <variable
             name="onVideoClick"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1&lt;VideoVm,kotlin.Unit&gt;" />
 
         <variable
             name="transformations"
@@ -28,12 +38,14 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:onClick="@{() -> onVideoClick.invoke()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> onVideoClick.invoke(vm)}"
             app:fit="@{true}"
+            app:height="@{height}"
             app:imageTransforms="@{transformations}"
             app:imageUrl="@{vm.thumbnail}"
+            app:width="@{width}"
             tools:src="@drawable/ic_launcher_background" />
     </LinearLayout>
 </layout>

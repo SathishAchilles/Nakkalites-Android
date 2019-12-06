@@ -9,6 +9,7 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -37,9 +38,7 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))
-            .doFinally {
-                isRefreshing.set(false)
-            }
+            .doFinally { isRefreshing.set(false) }
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
@@ -55,6 +54,7 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
     fun loading() = isLoading.get()
 
     fun refreshList() {
+        isRefreshing.set(true)
         items.clear()
         pagingBody.reset()
         fetchVideoGroups()

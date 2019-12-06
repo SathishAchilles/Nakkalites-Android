@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.home.WebSeriesVm" />
+            type="in.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm" />
 
         <variable
             name="onWebSeriesClick"

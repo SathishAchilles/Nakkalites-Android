@@ -4,6 +4,7 @@ import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.BaseDomain
 import `in`.nakkalites.mediaclient.domain.models.Banner
+import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.domain.models.VideoGroup
 import `in`.nakkalites.mediaclient.domain.models.WebSeries
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
@@ -30,6 +31,14 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService) : BaseD
             .map { response ->
                 Timber.e(response.toString())
                 Pair(response.webSeriesList.map { WebSeries.map(it) }, response.cursor)
+            }
+    }
+
+    fun getVideos(videoGroupId: String, pagingBody: PagingBody): Single<Pair<VideoGroup, String?>> {
+        return videoGroupService.getVideosOfVideoGroup(videoGroupId, pagingBody.toMap())
+            .map { response ->
+                Timber.e(response.toString())
+                Pair(VideoGroup.map(response.videoGroup), response.cursor)
             }
     }
 }

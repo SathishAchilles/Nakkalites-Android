@@ -1,4 +1,4 @@
-package `in`.nakkalites.mediaclient.viewmodel.home
+package `in`.nakkalites.mediaclient.viewmodel.webseries
 
 import `in`.nakkalites.mediaclient.domain.models.WebSeries
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel

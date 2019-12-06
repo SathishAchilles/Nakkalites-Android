@@ -1,18 +1,18 @@
-package `in`.nakkalites.mediaclient.viewmodel.home
+package `in`.nakkalites.mediaclient.viewmodel.video
 
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import androidx.annotation.DimenRes
 
-class VideoVm(position: Int, video: Video) : BaseModel {
+class VideoVm(position: Int, video: Video, addMarginStart: Boolean = false) : BaseModel {
     val id = video.id
     val name = video.videoName
     val url = video.url
     val thumbnail = video.thumbnailImage
     @DimenRes
     val marginStart =
-        if (position == 0) {
+        if (position == 0 && addMarginStart) {
             R.dimen.horizontal_list_margin_start_initial
         } else {
             R.dimen.horizontal_list_margin_start_default

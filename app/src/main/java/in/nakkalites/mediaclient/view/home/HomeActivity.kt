@@ -7,14 +7,22 @@ import `in`.nakkalites.mediaclient.databinding.*
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.BindingPagerAdapter.PageTitles
+import `in`.nakkalites.mediaclient.view.binding.ViewModelBinders.videoViewModelProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.dummyViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.progressViewProvider
+import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
 import `in`.nakkalites.mediaclient.view.utils.argumentError
+import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
 import `in`.nakkalites.mediaclient.view.utils.setDefaultColors
+import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.home.*
+import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
+import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
+import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -91,7 +99,6 @@ class HomeActivity : BaseActivity() {
                     vm1.refreshList()
                 }
                 binding1.isRefreshing = vm1.isRefreshing
-
             }
             is WebSeriesListVm -> {
                 val recyclerView = (binding1 as PageHomeBinding).recyclerView
@@ -141,15 +148,23 @@ class HomeActivity : BaseActivity() {
             is VideoGroupVm -> {
                 val binding = (itemBinding as ItemVideoGroupBinding)
                 val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-                val viewAdapter = RecyclerViewAdapter(vm1.items, videoProvider, videoBinder)
+                val viewAdapter = RecyclerViewAdapter(
+                    vm1.items, videoItemViewProvider(),
+                    videoViewModelProvider(this, 150, 250, onVideoClick)
+                )
                 with(binding.recyclerView) {
                     layoutManager = linearLayoutManager
                     adapter = viewAdapter
                 }
-                binding.onVideoGroupClick = { loge("Video Group clicked ${vm1.name}") }
+                binding.onVideoGroupClick = {
+                    loge("Video Group clicked ${vm1.name}")
+                    startActivity(VideoGroupListActivity.createIntent(this, vm1.id, vm1.name))
+                }
             }
         }
     }
+
+    private val onVideoClick = { vm: VideoVm -> loge("Video clicked ${vm.name}") }
 
     private val bannerProvider = viewProvider { R.layout.item_banner }
 
@@ -159,19 +174,6 @@ class HomeActivity : BaseActivity() {
             is BannerVm -> {
                 (viewDataBinding as ItemBannerBinding).onBannerClick =
                     { loge("Banner clicked ${vm.name}") }
-                viewDataBinding.transformations = getDefaultTransformations()
-            }
-        }
-    }
-
-    private val videoProvider = viewProvider { R.layout.item_video }
-
-    private val videoBinder = viewModelBinder { viewDataBinding, vm ->
-        viewDataBinding.setVariable(BR.vm, vm)
-        when (vm) {
-            is VideoVm -> {
-                (viewDataBinding as ItemVideoBinding).onVideoClick =
-                    { loge("Video clicked ${vm.name}") }
                 viewDataBinding.transformations = getDefaultTransformations()
             }
         }

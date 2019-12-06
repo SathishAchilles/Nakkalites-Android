@@ -14,6 +14,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:supportsRtl">
+        <activity android:name=".view.videogroup.VideoGroupListActivity"></activity>
         <activity android:name=".view.home.HomeActivity" />
         <activity android:name=".view.login.LoginActivity" />
         <activity android:name=".view.splash.SplashActivity">

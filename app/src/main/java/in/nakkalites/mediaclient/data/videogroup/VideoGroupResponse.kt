@@ -43,3 +43,10 @@ data class WebSeriesEntity(
     @field:Json(name = "name") val name: String,
     @field:Json(name = "thumbnail_image") val thumbnail: String
 )
+
+@JsonClass(generateAdapter = true)
+data class VideosResponse(
+    @field:Json(name = "video_group") val videoGroup: VideoGroupEntity
+) : Page() {
+    override val pageSize = videoGroup.videos.size
+}

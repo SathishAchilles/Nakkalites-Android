@@ -1,4 +1,4 @@
-package `in`.nakkalites.mediaclient.viewmodel.home
+package `in`.nakkalites.mediaclient.viewmodel.webseries
 
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
@@ -17,9 +17,9 @@ import io.reactivex.rxkotlin.subscribeBy
 
 class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     internal val isRefreshing = ObservableBoolean()
-    internal val isLoading = ObservableBoolean()
-    private lateinit var pagingBody: PagingBody
     val items = ObservableArrayList<BaseModel>()
+    private val isLoading = ObservableBoolean()
+    private lateinit var pagingBody: PagingBody
 
     internal fun initPagingBody(pagingCallback: PagingCallback) {
         pagingBody = PagingBody(pagingCallback = pagingCallback)
@@ -36,9 +36,7 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseView
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))
-            .doFinally {
-                isRefreshing.set(false)
-            }
+            .doFinally { isRefreshing.set(false) }
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
@@ -54,6 +52,7 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseView
     fun loading() = isLoading.get()
 
     fun refreshList() {
+        isRefreshing.set(true)
         items.clear()
         pagingBody.reset()
         fetchWebSeriesList()

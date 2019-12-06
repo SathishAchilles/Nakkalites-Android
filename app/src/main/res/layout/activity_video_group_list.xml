@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm" />
+
+        <variable
+            name="spanCount"
+            type="Integer" />
+
+        <variable
+            name="spanSizeLookup"
+            type="androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        tools:context="in.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@{vm.pageTitle}"
+            app:titleTextColor="@color/white"
+            tools:title="Pavan" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="@{spanCount}"
+            app:spanSizeLookup="@{spanSizeLookup}"
+            tools:listitem="@layout/item_video" />
+    </LinearLayout>
+</layout>
