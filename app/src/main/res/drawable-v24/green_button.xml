@@ -4,20 +4,20 @@
     android:color="?attr/colorPrimaryDark">
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <corners android:radius="8dip" />
+            <corners android:radius="5dip" />
             <solid android:color="@android:color/darker_gray" />
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="8dip" />
+            <corners android:radius="5dip" />
             <solid android:color="@color/teal_400_2" />
         </shape>
     </item>
     <item android:state_enabled="true">
         <shape android:shape="rectangle">
-            <corners android:radius="8dip" />
+            <corners android:radius="5dip" />
             <solid android:color="@color/teal_400" />
         </shape>
     </item>
