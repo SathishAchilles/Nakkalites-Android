@@ -5,13 +5,19 @@
 
     <data>
 
+        <import type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm" />
+
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm" />
+            type="VideoGroupVm" />
 
         <variable
             name="onVideoGroupClick"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1&lt;VideoGroupVm,kotlin.Unit&gt;" />
+
+        <variable
+            name="showDeeplinkArrow"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -25,9 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:drawableEnd="@{@drawable/ic_chevron_right_black_24dp}"
+            android:drawableEnd="@{showDeeplinkArrow ? @drawable/ic_chevron_right_black_24dp : null}"
             android:fontFamily="@font/medium"
-            android:onClick="@{() -> onVideoGroupClick.invoke()}"
+            android:onClick="@{() -> onVideoGroupClick.invoke(vm)}"
             android:paddingTop="10dp"
             android:paddingBottom="12dp"
             android:text="@{vm.name}"

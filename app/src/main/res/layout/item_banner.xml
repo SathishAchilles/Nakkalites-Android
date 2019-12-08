@@ -4,13 +4,15 @@
 
     <data>
 
+        <import type="in.nakkalites.mediaclient.viewmodel.home.BannerVm" />
+
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.viewmodel.home.BannerVm" />
 
         <variable
             name="onBannerClick"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1&lt;BannerVm,kotlin.Unit&gt;" />
 
         <variable
             name="transformations"
@@ -21,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:onClick="@{() -> onBannerClick.invoke()}"
+        android:onClick="@{() -> onBannerClick.invoke(vm)}"
         android:orientation="vertical">
 
         <ImageView

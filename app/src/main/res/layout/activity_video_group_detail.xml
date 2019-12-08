@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm" />
+            type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm" />
 
         <variable
             name="spanCount"
@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
-        tools:context="in.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity">
+        tools:context="in.nakkalites.mediaclient.view.videogroup.VideoGroupDetailActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

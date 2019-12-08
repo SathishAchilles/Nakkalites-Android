@@ -5,13 +5,15 @@
 
     <data>
 
+        <import type="in.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm" />
+
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm" />
 
         <variable
             name="onWebSeriesClick"
-            type="kotlin.jvm.functions.Function0" />
+            type="kotlin.jvm.functions.Function1&lt;WebSeriesVm,kotlin.Unit&gt;" />
 
         <variable
             name="transformations"
@@ -31,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:layout_gravity="center"
-            android:onClick="@{() -> onWebSeriesClick.invoke()}"
+            android:onClick="@{() -> onWebSeriesClick.invoke(vm)}"
             app:fit="@{true}"
             app:imageTransforms="@{transformations}"
             app:imageUrl="@{vm.thumbnail}"

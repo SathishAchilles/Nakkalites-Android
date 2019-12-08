@@ -4,4 +4,6 @@
     </string>
     <string name="all">All</string>
     <string name="web_series">Web series</string>
+    <string name="x_episodes">%s - Episodes</string>
+    <string name="play_episode_x">Play Episode %s</string>
 </resources>

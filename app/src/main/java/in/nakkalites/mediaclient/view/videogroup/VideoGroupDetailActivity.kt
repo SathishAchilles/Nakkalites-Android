@@ -3,7 +3,7 @@ package `in`.nakkalites.mediaclient.view.videogroup
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
-import `in`.nakkalites.mediaclient.databinding.ActivityVideoGroupListBinding
+import `in`.nakkalites.mediaclient.databinding.ActivityVideoGroupDetailBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
@@ -14,7 +14,7 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.ProgressBarVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -23,11 +23,10 @@ import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.GridLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class VideoGroupListActivity : BaseActivity() {
+class VideoGroupDetailActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityVideoGroupListBinding
-    //    val vm: VideoGroupListVm by getViewModel<VideoGroupListVm>(parameters = mapOf(AppConstants.VIDEO_GROUP_ID to (intent.extras[AppConstants.VIDEO_GROUP_ID] as Int))
-    val vm by viewModel<VideoGroupListVm>()
+    private lateinit var binding: ActivityVideoGroupDetailBinding
+    val vm by viewModel<VideoGroupDetailVm>()
     private val videoGroupId by lazy {
         intent.getStringExtra(AppConstants.VIDEO_GROUP_ID)
     }
@@ -39,15 +38,15 @@ class VideoGroupListActivity : BaseActivity() {
     companion object {
         @JvmStatic
         fun createIntent(ctx: Context, videoGroupId: String, videoGroupName: String): Intent =
-            Intent(ctx, VideoGroupListActivity::class.java)
+            Intent(ctx, VideoGroupDetailActivity::class.java)
                 .putExtra(AppConstants.VIDEO_GROUP_ID, videoGroupId)
                 .putExtra(AppConstants.VIDEO_GROUP_NAME, videoGroupName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_video_group_list)
-        setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = false)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_video_group_detail)
+        setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         binding.vm = vm
         vm.setArgs(videoGroupId, videoGroupName)
         init()

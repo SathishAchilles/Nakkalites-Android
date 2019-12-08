@@ -4,18 +4,19 @@ import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.*
+import `in`.nakkalites.mediaclient.domain.models.BannerType
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.BindingPagerAdapter.PageTitles
-import `in`.nakkalites.mediaclient.view.binding.ViewModelBinders.videoViewModelProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.dummyViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.progressViewProvider
-import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
+import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoGroupItemViewProvider
 import `in`.nakkalites.mediaclient.view.utils.argumentError
 import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
 import `in`.nakkalites.mediaclient.view.utils.setDefaultColors
-import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity
+import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupDetailActivity
+import `in`.nakkalites.mediaclient.view.webseries.WebSeriesDetailActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.home.*
@@ -127,10 +128,10 @@ class HomeActivity : BaseActivity() {
     }
 
     private val videoGroupViewProvider = ViewProviders.wrapSequentially(
-        progressViewProvider(), dummyViewProvider(), viewProvider { vm1: BaseModel ->
+        progressViewProvider(), dummyViewProvider(), videoGroupItemViewProvider(),
+        viewProvider { vm1: BaseModel ->
             when (vm1) {
                 is BannersVm -> R.layout.item_banners
-                is VideoGroupVm -> R.layout.item_video_group
                 else -> argumentError()
             }
         })
@@ -146,22 +147,16 @@ class HomeActivity : BaseActivity() {
                 }
             }
             is VideoGroupVm -> {
-                val binding = (itemBinding as ItemVideoGroupBinding)
-                val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-                val viewAdapter = RecyclerViewAdapter(
-                    vm1.items, videoItemViewProvider(),
-                    videoViewModelProvider(this, dpToPx(150), dpToPx(250), onVideoClick)
+                ViewModelBinders.mapViewGroupVmBinding(
+                    this, onVideoClick, itemBinding, vm1, true, onVideoGroupClick
                 )
-                with(binding.recyclerView) {
-                    layoutManager = linearLayoutManager
-                    adapter = viewAdapter
-                }
-                binding.onVideoGroupClick = {
-                    loge("Video Group clicked ${vm1.name}")
-                    startActivity(VideoGroupListActivity.createIntent(this, vm1.id, vm1.name))
-                }
             }
         }
+    }
+
+    private val onVideoGroupClick = { vm: VideoGroupVm ->
+        loge("Video Group clicked ${vm.name}")
+        startActivity(VideoGroupDetailActivity.createIntent(this, vm.id, vm.name))
     }
 
     private val onVideoClick = { vm: VideoVm -> loge("Video clicked ${vm.name}") }
@@ -172,10 +167,17 @@ class HomeActivity : BaseActivity() {
         viewDataBinding.setVariable(BR.vm, vm)
         when (vm) {
             is BannerVm -> {
-                (viewDataBinding as ItemBannerBinding).onBannerClick =
-                    { loge("Banner clicked ${vm.name}") }
+                (viewDataBinding as ItemBannerBinding).onBannerClick = onBannerClick
                 viewDataBinding.transformations = getDefaultTransformations()
             }
+        }
+    }
+
+    private val onBannerClick = { vm: BannerVm ->
+        loge("Banner clicked ${vm.name}")
+        when (vm.type) {
+            BannerType.WEB_SERIES -> onWebSeriesClick(vm.webSeriesVm!!)
+            BannerType.VIDEO -> onVideoClick(vm.videoVm!!)
         }
     }
 
@@ -190,10 +192,14 @@ class HomeActivity : BaseActivity() {
     private val webSeriesVmBinder = viewModelBinder { viewDataBinding, vm1 ->
         when (vm1) {
             is WebSeriesVm -> {
-                (viewDataBinding as ItemWebSeriesBinding).onWebSeriesClick =
-                    { loge("Web Series clicked ${vm1.name}") }
+                (viewDataBinding as ItemWebSeriesBinding).onWebSeriesClick = onWebSeriesClick
                 viewDataBinding.transformations = getDefaultTransformations()
             }
         }
+    }
+
+    private val onWebSeriesClick = { vm1: WebSeriesVm ->
+        loge("Web Series clicked ${vm1.name}")
+        startActivity(WebSeriesDetailActivity.createIntent(this, vm1.id, vm1.name, vm1.thumbnail))
     }
 }

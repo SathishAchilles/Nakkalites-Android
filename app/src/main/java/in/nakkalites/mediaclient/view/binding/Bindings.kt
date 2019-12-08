@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.view.binding
 
+import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -150,6 +151,12 @@ object Bindings {
     fun RecyclerView.bindSpanCount(spanCount: Int) {
         val gridLm = layoutManager as GridLayoutManager
         gridLm.spanCount = spanCount
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:text")
+    fun TextView.bindDisplayText(displayText: DisplayText?) {
+        setText(displayText?.getText(resources))
     }
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {

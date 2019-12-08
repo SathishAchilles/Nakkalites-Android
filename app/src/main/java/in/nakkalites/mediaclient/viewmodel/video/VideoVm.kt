@@ -5,7 +5,7 @@ import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import androidx.annotation.DimenRes
 
-class VideoVm(position: Int, video: Video, addMarginStart: Boolean = false) : BaseModel {
+class VideoVm(video: Video, position: Int = -1, addMarginStart: Boolean = false) : BaseModel {
     val id = video.id
     val name = video.videoName
     val url = video.url

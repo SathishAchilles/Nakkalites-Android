@@ -4,6 +4,7 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.viewmodel.utils.DummyVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.ProgressBarVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 
 /** Common implementations of [ViewProvider]. */
 object ViewProviders {
@@ -27,4 +28,8 @@ object ViewProviders {
     @JvmStatic
     fun videoItemViewProvider(): ViewProvider =
         viewProvider { vm -> if (vm is VideoVm) R.layout.item_video else noLayout }
+
+    @JvmStatic
+    fun videoGroupItemViewProvider(): ViewProvider =
+        viewProvider { vm -> if (vm is VideoGroupVm) R.layout.item_video_group else noLayout }
 }

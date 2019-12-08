@@ -15,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
-class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class VideoGroupDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     private lateinit var pagingBody: PagingBody
     val items = ObservableArrayList<BaseModel>()
     private val isLoading = ObservableBoolean()
@@ -39,7 +39,7 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                 pagingBody.onNextPage(it.first.videos.size, it.second)
             }
             .map {
-                Pair(it.first.name, it.first.videos.map { video -> VideoVm(-1, video) })
+                Pair(it.first.name, it.first.videos.map { video -> VideoVm(video) })
             }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))

@@ -8,5 +8,6 @@ object HttpConstants {
     const val LOGIN = "v1/login"
     const val VIDEO_GROUPS = "v1/video_groups"
     const val WEBSERIES = "v1/webseries"
-    const val VIDEO_GROUP = "v1/video_group/{video-group-id}"
+    const val VIDEO_GROUP_DETAIL = "v1/video_group/{video-group-id}"
+    const val WEBSERIES_DETAIL = "v1/webseries/{webseries-id}"
 }
