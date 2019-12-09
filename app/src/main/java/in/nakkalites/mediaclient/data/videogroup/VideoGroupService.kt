@@ -26,4 +26,7 @@ interface VideoGroupService {
 
     @GET(HttpConstants.WEBSERIES_DETAIL)
     fun getWebSeriesDetail(@Path("webseries-id") id: String): Single<WebSeriesDetailResponse>
+
+    @GET(HttpConstants.VIDEO_DETAIL)
+    fun getVideoDetail(@Path("video-id") id: String): Single<VideoDetailResponse>
 }

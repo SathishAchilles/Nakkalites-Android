@@ -54,7 +54,7 @@ class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseVi
 
     private fun handleEmptyPage(viewModels: MutableList<BaseModel>): List<BaseModel> {
         if (viewModels.isEmpty()) {
-            viewModels.add(EmptyStateVm(R.layout.empty_state_home))
+            viewModels.add(EmptyStateVm(R.layout.empty_state))
         }
         return viewModels
     }

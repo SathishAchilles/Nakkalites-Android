@@ -100,3 +100,6 @@
 
 #Google Auth
 -keep class com.google.** {*;}
+
+#Stetho
+-keep class com.facebook.stetho.** {*;}

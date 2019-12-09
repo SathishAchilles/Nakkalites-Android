@@ -10,4 +10,5 @@ object HttpConstants {
     const val WEBSERIES = "v1/webseries"
     const val VIDEO_GROUP_DETAIL = "v1/video_group/{video-group-id}"
     const val WEBSERIES_DETAIL = "v1/webseries/{webseries-id}"
+    const val VIDEO_DETAIL = "v1/video/{video-id}"
 }

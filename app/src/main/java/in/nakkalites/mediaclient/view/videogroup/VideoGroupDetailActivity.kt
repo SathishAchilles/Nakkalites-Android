@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.databinding.ActivityVideoGroupDetailBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
+import `in`.nakkalites.mediaclient.view.utils.NavigationUtil
 import `in`.nakkalites.mediaclient.view.utils.argumentError
 import `in`.nakkalites.mediaclient.view.utils.displayWidth
 import `in`.nakkalites.mediaclient.view.utils.dpToPx
@@ -74,7 +75,10 @@ class VideoGroupDetailActivity : BaseActivity() {
         vm.fetchVideoGroups(videoGroupId)
     }
 
-    private val onVideoClick = { vm: VideoVm -> loge("Video clicked ${vm.name}") }
+    private val onVideoClick = { vm: VideoVm ->
+        loge("Video clicked ${vm.name}")
+        NavigationUtil.openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail)
+    }
 
     private val videoViewProvider = ViewProviders.wrapSequentially(
         ViewProviders.progressViewProvider(), ViewProviders.dummyViewProvider(),

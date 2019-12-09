@@ -13,4 +13,6 @@
     <color name="grey_400_3">#CCCCCC</color>
     <color name="grey_900_2">#181818</color>
     <color name="grey_800">#4A4A4A</color>
+    <color name="grey_900_3">#1A1A1A</color>
+    <color name="blue_grey_800_alpha_0">#003F4450</color>
 </resources>

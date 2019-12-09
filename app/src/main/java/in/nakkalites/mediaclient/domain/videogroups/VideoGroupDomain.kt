@@ -308,11 +308,57 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesDetailResponse::class.java)
-//        return Single.just(jsonAdapter.fromJson(json))
-        return videoGroupService.getWebSeriesDetail(id)
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getWebSeriesDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 WebSeries.map(response.webSeries)
+            }
+    }
+
+    fun getVideoDetail(id: String): Single<Video> {
+        val json = "{\n" +
+                "  \"video_info\": {\n" +
+                "    \"id\": 123,\n" +
+                "    \"title_name\": \"Nakkalites\",\n" +
+                "    \"title_type\": \"random\",\n" +
+                "    \"video_name\": \" Episode 1\",\n" +
+                "    \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
+                "    \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
+                "    \"description\": \"The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again! \",\n" +
+                "    \"share_text\": \"Share this text\",\n" +
+                "    \"video_list\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"header_name\": \"Episodes\",\n" +
+                "        \"videos\": [\n" +
+                "          {\n" +
+                "            \"id\": 123,\n" +
+                "            \"title_name\": \"Nakkalites\",\n" +
+                "            \"title_type\": \"random\",\n" +
+                "            \"video_name\": \" Episode 1\",\n" +
+                "            \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
+                "            \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\"\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"id\": 123,\n" +
+                "            \"title_name\": \"Nakkalites\",\n" +
+                "            \"title_type\": \"random\",\n" +
+                "            \"video_name\": \" Episode 2\",\n" +
+                "            \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
+                "            \"thumbnail_image\": \"https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg\"\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}"
+        val jsonAdapter = moshi.adapter(VideoDetailResponse::class.java)
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getVideoDetail(id)
+            .map { response ->
+                Timber.e(response.toString())
+                Video.map(response.video)
             }
     }
 }

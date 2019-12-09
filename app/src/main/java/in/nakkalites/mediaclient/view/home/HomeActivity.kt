@@ -11,10 +11,7 @@ import `in`.nakkalites.mediaclient.view.binding.BindingPagerAdapter.PageTitles
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.dummyViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.progressViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoGroupItemViewProvider
-import `in`.nakkalites.mediaclient.view.utils.argumentError
-import `in`.nakkalites.mediaclient.view.utils.dpToPx
-import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
-import `in`.nakkalites.mediaclient.view.utils.setDefaultColors
+import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupDetailActivity
 import `in`.nakkalites.mediaclient.view.webseries.WebSeriesDetailActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
@@ -159,7 +156,10 @@ class HomeActivity : BaseActivity() {
         startActivity(VideoGroupDetailActivity.createIntent(this, vm.id, vm.name))
     }
 
-    private val onVideoClick = { vm: VideoVm -> loge("Video clicked ${vm.name}") }
+    private val onVideoClick = { vm: VideoVm ->
+        loge("Video clicked ${vm.name}")
+        NavigationUtil.openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail)
+    }
 
     private val bannerProvider = viewProvider { R.layout.item_banner }
 

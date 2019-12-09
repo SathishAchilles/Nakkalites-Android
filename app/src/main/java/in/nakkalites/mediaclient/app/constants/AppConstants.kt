@@ -11,4 +11,7 @@ object AppConstants {
     const val WEBSERIES_ID = "WEBSERIES_ID"
     const val WEBSERIES_NAME = "WEBSERIES_NAME"
     const val WEBSERIES_THUMBNAIL = "WEBSERIES_THUMBNAIL"
+    const val VIDEO_ID = "VIDEO_ID"
+    const val VIDEO_NAME = "VIDEO_NAME"
+    const val VIDEO_THUMBNAIL = "VIDEO_THUMBNAIL"
 }

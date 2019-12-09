@@ -14,6 +14,7 @@ import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
+import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
@@ -66,6 +67,7 @@ val viewModelModule = module {
     viewModel { HomeVm(get(), get(), get()) }
     viewModel { VideoGroupDetailVm(get()) }
     viewModel { WebSeriesDetailVm(get()) }
+    viewModel { VideoDetailVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {

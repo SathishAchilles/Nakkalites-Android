@@ -9,6 +9,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:fontFamily">@font/normal</item>
+        <item name="collapsedTitleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="expandedTitleTextAppearance">@style/CollapsingToolbarTitleStyle</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
@@ -75,8 +77,9 @@
         <item name="android:layout_gravity">center</item>
     </style>
 
-    <style name="CollapsingToolbarTitleStyle" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+    <style name="CollapsingToolbarTitleStyle" parent="@android:style/TextAppearance">
         <item name="android:textSize">27sp</item>
         <item name="android:fontFamily">@font/bold</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

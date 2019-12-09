@@ -62,7 +62,7 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
 
     private fun handleEmptyPage(viewModels: MutableList<BaseModel>): List<BaseModel> {
         if (pagingBody.isFirstPage() && viewModels.isEmpty()) {
-            viewModels.add(EmptyStateVm(R.layout.empty_state_home))
+            viewModels.add(EmptyStateVm(R.layout.empty_state))
         }
         return viewModels
     }

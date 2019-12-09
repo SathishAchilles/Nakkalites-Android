@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import androidx.annotation.Px
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingMethod
@@ -120,13 +122,31 @@ object Bindings {
         requireAll = false
     )
     fun TextView.bindCompoundDrawables(
-        left: Drawable, top: Drawable, right: Drawable, bottom: Drawable, @ColorInt color: Int
+        left: Drawable?, top: Drawable?, right: Drawable?, bottom: Drawable?, @ColorInt color: Int
     ) {
         val input =
             arrayOf(left, top, right, bottom)
         val output: Array<Drawable?> =
             input.map { drawable -> tintDrawable(drawable, color) }.toTypedArray()
         setCompoundDrawablesWithIntrinsicBounds(output[0], output[1], output[2], output[3])
+    }
+
+    @JvmStatic
+    @BindingAdapter(
+        value = ["android:drawableLeft", "android:drawableTop", "android:drawableRight", "android:drawableBottom", "android:drawableTint"],
+        requireAll = false
+    )
+    fun TextView.bindCompoundDrawablesRes(
+        left: Int, top: Int, right: Int, bottom: Int, @ColorInt color: Int
+    ) {
+        bindCompoundDrawables(
+            getDrawable(context, left), getDrawable(context, top),
+            getDrawable(context, right), getDrawable(context, bottom), color
+        )
+    }
+
+    private fun getDrawable(ctx: Context, drawableResId: Int): Drawable? {
+        return if (drawableResId == 0) null else AppCompatResources.getDrawable(ctx, drawableResId)
     }
 
     @JvmStatic

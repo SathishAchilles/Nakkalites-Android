@@ -18,12 +18,14 @@ data class User(val id: String, val name: String, val email: String, val imageUr
 
 data class Video(
     val id: String, val titleName: String, val videoName: String, val url: String,
-    val thumbnailImage: String
+    val thumbnailImage: String, val description: String?, val shareText: String?,
+    val videoGroups: List<VideoGroup>
 ) {
     companion object {
         fun map(videoEntity: VideoEntity): Video = Video(
             videoEntity.id, videoEntity.titleName, videoEntity.videoName,
-            videoEntity.url, videoEntity.thumbnail
+            videoEntity.url, videoEntity.thumbnail, videoEntity.description, videoEntity.shareText,
+            videoEntity.videoGroups.map { VideoGroup.map(it) }
         )
     }
 }

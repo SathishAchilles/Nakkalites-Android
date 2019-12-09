@@ -14,6 +14,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:supportsRtl">
+        <activity android:name=".view.video.VideoDetailActivity"></activity>
         <activity android:name=".view.webseries.WebSeriesDetailActivity" />
         <activity android:name=".view.videogroup.VideoGroupDetailActivity" />
         <activity android:name=".view.home.HomeActivity" />

@@ -8,7 +8,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class VideoGroupResponse(
     @field:Json(name = "banners") val banners: List<BannerEntity>,
-    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity>
+    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
 ) : Page() {
     override val pageSize = videoGroups.size
 }
@@ -25,7 +25,7 @@ data class BannerEntity(
 data class VideoGroupEntity(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "header_name") val name: String,
-    @field:Json(name = "videos") val videos: List<VideoEntity>
+    @field:Json(name = "videos") val videos: List<VideoEntity> = listOf()
 )
 
 @JsonClass(generateAdapter = true)
@@ -34,7 +34,10 @@ data class VideoEntity(
     @field:Json(name = "title_name") val titleName: String,
     @field:Json(name = "video_name") val videoName: String,
     @field:Json(name = "url") val url: String,
-    @field:Json(name = "thumbnail_image") val thumbnail: String
+    @field:Json(name = "thumbnail_image") val thumbnail: String,
+    @field:Json(name = "description") val description: String?,
+    @field:Json(name = "share_text") val shareText: String?,
+    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
 )
 
 @JsonClass(generateAdapter = true)
@@ -45,7 +48,7 @@ data class WebSeriesEntity(
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "no_of_episodes") val episodesCount: Int,
     @field:Json(name = "description") val description: String,
-    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity>
+    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
 )
 
 @JsonClass(generateAdapter = true)
@@ -58,4 +61,9 @@ data class VideosResponse(
 @JsonClass(generateAdapter = true)
 data class WebSeriesDetailResponse(
     @field:Json(name = "web_series") val webSeries: WebSeriesEntity
+)
+
+@JsonClass(generateAdapter = true)
+data class VideoDetailResponse(
+    @field:Json(name = "video_info") val video: VideoEntity
 )

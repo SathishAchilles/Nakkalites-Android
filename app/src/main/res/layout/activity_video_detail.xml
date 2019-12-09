@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm" />
+            type="in.nakkalites.mediaclient.viewmodel.video.VideoDetailVm" />
 
     </data>
 
@@ -35,8 +35,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/video_overlay_gradient">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/expandedImage"
@@ -51,6 +50,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:src="@drawable/video_overlay_gradient" />
+
+                    <ImageView
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_play_arrow_black_24dp" />
                 </FrameLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -78,7 +83,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="36dp"
             android:background="@color/teal_400"
-            android:visibility="gone"
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"
             app:srcCompat="@drawable/ic_share_white_24dp" />

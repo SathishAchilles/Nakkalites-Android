@@ -21,8 +21,7 @@ object ViewModelBinders {
         override fun bind(viewDataBinding: ViewDataBinding, viewModel: BaseModel) {
             when (viewModel) {
                 is VideoVm -> {
-                    (viewDataBinding as ItemVideoBinding).onVideoClick =
-                        { onVideoClick.invoke(viewModel) }
+                    (viewDataBinding as ItemVideoBinding).onVideoClick = onVideoClick
                     viewDataBinding.vm = viewModel
                     loge(viewModel.name)
                     viewDataBinding.transformations = getDefaultTransformations()
