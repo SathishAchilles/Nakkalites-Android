@@ -7,4 +7,6 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     val url = video.url
     val thumbnail = video.thumbnailImage
     val description = video.description
+    val shareText = video.shareText
+    val name = video.videoName
 }

@@ -7,4 +7,5 @@
     <string name="x_episodes">%s - Episodes</string>
     <string name="play_episode_x">Play Episode %s</string>
     <string name="share">Share</string>
+    <string name="share_sheet_title">Share %s</string>
 </resources>

@@ -11,7 +11,6 @@ class VideoVm(video: Video, position: Int = -1, addMarginStart: Boolean = false)
     val url = video.url
     val thumbnail = video.thumbnailImage
     val description = video.description
-    val shareText = video.shareText
     @DimenRes
     val marginStart =
         if (position == 0 && addMarginStart) {

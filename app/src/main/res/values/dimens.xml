@@ -2,5 +2,7 @@
 <resources>
     <dimen name="progress_bar_row_height">60dp</dimen>
     <dimen name="horizontal_list_margin_start_default">10dp</dimen>
-    <dimen name="horizontal_list_margin_start_initial">24dp</dimen>
+    <dimen name="horizontal_list_margin_start_initial">20dp</dimen>
+    <dimen name="viewpager_next_item_visible">26dp</dimen>
+    <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
 </resources>

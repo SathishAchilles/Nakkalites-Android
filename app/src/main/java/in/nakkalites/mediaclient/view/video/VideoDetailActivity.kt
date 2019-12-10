@@ -16,6 +16,7 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -126,10 +127,20 @@ class VideoDetailActivity : BaseActivity() {
         NavigationUtil.openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail)
     }
 
+    private val onShareClick = { vm: VideoDetailItemVm ->
+        loge("Video share click ${vm.url}")
+        val intent = Intent(Intent.ACTION_SEND)
+            .setType("text/*")
+            .putExtra(Intent.EXTRA_TEXT, vm.shareText)
+            .let { Intent.createChooser(it, getString(R.string.share_sheet_title, vm.name)) }
+        startActivity(intent)
+    }
+
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is VideoDetailItemVm -> {
                 (itemBinding as ItemVideoDetailBinding).vm = vm1
+                itemBinding.onShareClick = onShareClick
             }
             is VideoGroupVm -> {
                 ViewModelBinders.mapViewGroupVmBinding(this, onVideoClick, itemBinding, vm1, false)

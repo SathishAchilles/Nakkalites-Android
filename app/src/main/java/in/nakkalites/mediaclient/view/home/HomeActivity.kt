@@ -16,7 +16,10 @@ import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupDetailActivity
 import `in`.nakkalites.mediaclient.view.webseries.WebSeriesDetailActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.home.*
+import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
+import `in`.nakkalites.mediaclient.viewmodel.home.BannerVm
+import `in`.nakkalites.mediaclient.viewmodel.home.BannersVm
+import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
@@ -24,13 +27,14 @@ import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.abs
 
 
 class HomeActivity : BaseActivity() {
@@ -136,12 +140,33 @@ class HomeActivity : BaseActivity() {
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is BannersVm -> {
-                val viewPager: ViewPager = (itemBinding as ItemBannersBinding).viewPager
-                if (viewPager.adapter == null) {
-                    viewPager.adapter = BindingPagerAdapter<BaseModel>(
+                val viewPager2: ViewPager = (itemBinding as ItemBannersBinding).viewPager
+                if (viewPager2.adapter == null) {
+                    viewPager2.adapter = BindingPagerAdapter<BaseModel>(
                         vm1.items, bannerProvider, bannerBinder
                     )
                 }
+                viewPager2.clipToPadding = false
+                viewPager2.pageMargin = dpToPx(30)
+//                viewPager2.setPadding(dpToPx(15), 0, dpToPx(15), 0)
+                // You need to retain one page on each side so that the next and previous items are visible
+                viewPager2.offscreenPageLimit = 1
+
+                // Add a PageTransformer that translates the next and previous items horizontally
+                // towards the center of the screen, which makes them visible
+                val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
+                val currentItemHorizontalMarginPx =
+                    resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
+                val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
+                val pageTransformer = ViewPager.PageTransformer { page: View, position: Float ->
+                    page.translationX = -pageTranslationX * position
+                    // Next line scales the item's height. You can remove it if you don't want this effect
+                    page.scaleY = 1 - (0.25f * abs(position))
+                    // If you want a fading effect uncomment the next line:
+                    // page.alpha = 0.25f + (1 - abs(position))
+                }
+                viewPager2.setPageTransformer(false, pageTransformer)
+
             }
             is VideoGroupVm -> {
                 ViewModelBinders.mapViewGroupVmBinding(

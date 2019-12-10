@@ -4,9 +4,15 @@
 
     <data>
 
+        <import type="in.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm" />
+
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm" />
+            type="VideoDetailItemVm" />
+
+        <variable
+            name="onShareClick"
+            type="kotlin.jvm.functions.Function1&lt;VideoDetailItemVm,kotlin.Unit&gt;" />
     </data>
 
     <LinearLayout
@@ -45,6 +51,7 @@
                 android:fontFamily="@font/normal"
                 android:gravity="center"
                 android:padding="5dp"
+                android:onClick="@{() -> onShareClick.invoke(vm)}"
                 android:text="@string/share"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
