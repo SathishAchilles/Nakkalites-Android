@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -10,12 +11,10 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.ColorInt
-import androidx.annotation.DimenRes
-import androidx.annotation.Px
-import androidx.annotation.StringRes
+import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
@@ -176,7 +175,22 @@ object Bindings {
     @JvmStatic
     @BindingAdapter("android:text")
     fun TextView.bindDisplayText(displayText: DisplayText?) {
-        setText(displayText?.getText(resources))
+        text = displayText?.getText(resources)
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:tint")
+    fun ImageView.bindImageViewSrcTint(@ColorInt color: Int?) {
+        color?.let {
+            ImageViewCompat.setImageTintList(this, ColorStateList.valueOf(color))
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:src")
+    fun ImageView.bindImageSrc(@DrawableRes resId: Int) {
+        val drawable = getDrawable(context, resId)
+        setImageDrawable(drawable)
     }
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {

@@ -31,7 +31,9 @@
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/grey_900_2"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:title="@{vm.pageTitle}"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -58,7 +60,6 @@
                     style="@style/Toolbar"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
-                    app:title="@{vm.pageTitle}"
                     app:titleTextColor="@color/white"
                     tools:title="Pavan" />
 

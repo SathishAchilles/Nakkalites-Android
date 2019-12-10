@@ -16,18 +16,39 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="18dp"
-        android:orientation="vertical"
-        tools:background="@color/colorPrimary">
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:fontFamily="@font/normal"
-            android:text="@{vm.description}"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            tools:text="A romantic video that resembles a typical Tamil love story. Let the romance begin!" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/normal"
+                android:text="@{vm.description}"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="A romantic video that resembles a typical Tamil love story. Let the romance begin!" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"
+                android:layout_marginStart="10dp"
+                android:drawableTop="@{@drawable/ic_share_white_24dp}"
+                android:drawablePadding="4dp"
+                android:drawableTint="@{@color/white}"
+                android:fontFamily="@font/normal"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/share"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

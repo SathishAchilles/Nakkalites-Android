@@ -82,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="36dp"
+            android:visibility="gone"
             android:background="@color/teal_400"
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"

@@ -59,7 +59,7 @@ class VideoDetailActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        this.menu = menu;
+        this.menu = menu
         menuInflater.inflate(R.menu.menu_share, menu)
         hideOption(R.id.action_share)
         return true
@@ -84,22 +84,22 @@ class VideoDetailActivity : BaseActivity() {
     }
 
     fun init() {
-        binding.appBar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
-            var isShow = false
-            var scrollRange = -1
-            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.totalScrollRange
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    isShow = true
-                    showOption(R.id.action_share)
-                } else if (isShow) {
-                    isShow = false
-                    hideOption(R.id.action_share)
-                }
-            }
-        })
+//        binding.appBar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+//            var isShow = false
+//            var scrollRange = -1
+//            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+//                if (scrollRange == -1) {
+//                    scrollRange = appBarLayout.totalScrollRange
+//                }
+//                if (scrollRange + verticalOffset == 0) {
+//                    isShow = true
+//                    showOption(R.id.action_share)
+//                } else if (isShow) {
+//                    isShow = false
+//                    hideOption(R.id.action_share)
+//                }
+//            }
+//        })
         val recyclerView = binding.recyclerView
         val gridLayoutManager = LinearLayoutManager(this)
         val viewAdapter = RecyclerViewAdapter<BaseModel>(
