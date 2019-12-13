@@ -18,7 +18,7 @@ import io.reactivex.rxkotlin.subscribeBy
 class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     val items = ObservableArrayList<BaseModel>()
     val pageTitle = ObservableField<String>()
-    val isDataLoading = ObservableBoolean()
+    private val isDataLoading = ObservableBoolean()
     var id: String? = null
     var name: String? = null
     var thumbnail: String? = null

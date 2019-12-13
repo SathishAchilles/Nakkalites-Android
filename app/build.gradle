@@ -54,6 +54,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
     dataBinding {
         enabled = true
     }
@@ -72,6 +75,10 @@ dependencies {
     implementation deps.androidX.recyclerView
     implementation deps.androidX.viewPager
     implementation deps.dotsIndicator
+    implementation deps.exoplayer.core
+    implementation deps.exoplayer.hls
+    implementation deps.exoplayer.okhttpExt
+    implementation deps.exoplayer.ui
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
     implementation deps.google.design

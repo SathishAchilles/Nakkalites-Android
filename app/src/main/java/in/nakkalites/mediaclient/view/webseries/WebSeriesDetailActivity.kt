@@ -4,16 +4,12 @@ import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityWebSeriesDetailBinding
-import `in`.nakkalites.mediaclient.databinding.ItemBannersBinding
 import `in`.nakkalites.mediaclient.databinding.ItemWebSeriesDetailBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
-import `in`.nakkalites.mediaclient.view.binding.ViewModelBinders.videoGroupViewModelProvider
-import `in`.nakkalites.mediaclient.view.utils.NavigationUtil
 import `in`.nakkalites.mediaclient.view.utils.argumentError
-import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
+import `in`.nakkalites.mediaclient.view.utils.openVideoDetailPage
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
-import `in`.nakkalites.mediaclient.viewmodel.home.BannersVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailItemVm
@@ -25,9 +21,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WebSeriesDetailActivity : BaseActivity() {
@@ -129,7 +122,7 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         loge("Video clicked ${vm.name}")
-        NavigationUtil.openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail)
+        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
     }
 
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->

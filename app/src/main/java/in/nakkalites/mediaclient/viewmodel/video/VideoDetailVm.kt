@@ -18,24 +18,26 @@ import io.reactivex.rxkotlin.subscribeBy
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     val items = ObservableArrayList<BaseModel>()
     private val isDataLoading = ObservableBoolean()
-    private var id: String? = null
-    private var name: String? = null
+    var id: String? = null
+    var name: String? = null
     var thumbnail: String? = null
+    var url: String? = null
     val pageTitle = ObservableField<String>()
 
-    fun setArgs(id: String, name: String, thumbnail: String) {
+    fun setArgs(id: String, name: String, thumbnail: String, url: String) {
         this.id = id
         this.name = name
         this.thumbnail = thumbnail
+        this.url = url
         pageTitle.set(name)
     }
 
     fun fetchVideoDetail(id: String) {
         disposables += videoGroupDomain.getVideoDetail(id)
             .map { video ->
-            listOf(VideoDetailItemVm(video)) +
-                    video.videoGroups.map { VideoGroupVm(it) }
-        }
+                listOf(VideoDetailItemVm(video)) +
+                        video.videoGroups.map { VideoGroupVm(it) }
+            }
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isDataLoading, items))

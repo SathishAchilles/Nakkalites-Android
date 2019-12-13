@@ -7,8 +7,8 @@ import `in`.nakkalites.mediaclient.databinding.ActivityVideoDetailBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoDetailBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
-import `in`.nakkalites.mediaclient.view.utils.NavigationUtil
 import `in`.nakkalites.mediaclient.view.utils.argumentError
+import `in`.nakkalites.mediaclient.view.utils.openVideoDetailPage
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
@@ -16,13 +16,11 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.AppBarLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoDetailActivity : BaseActivity() {
@@ -38,16 +36,21 @@ class VideoDetailActivity : BaseActivity() {
     private val thumbnail by lazy {
         intent.getStringExtra(AppConstants.VIDEO_THUMBNAIL)
     }
+    private val url by lazy {
+        intent.getStringExtra(AppConstants.VIDEO_URL)
+    }
     private var menu: Menu? = null
 
 
     companion object {
         @JvmStatic
-        fun createIntent(ctx: Context, id: String, name: String, thumbnail: String): Intent =
-            Intent(ctx, VideoDetailActivity::class.java)
-                .putExtra(AppConstants.VIDEO_ID, id)
-                .putExtra(AppConstants.VIDEO_NAME, name)
-                .putExtra(AppConstants.VIDEO_THUMBNAIL, thumbnail)
+        fun createIntent(
+            ctx: Context, id: String, name: String, thumbnail: String, url: String
+        ): Intent = Intent(ctx, VideoDetailActivity::class.java)
+            .putExtra(AppConstants.VIDEO_ID, id)
+            .putExtra(AppConstants.VIDEO_NAME, name)
+            .putExtra(AppConstants.VIDEO_THUMBNAIL, thumbnail)
+            .putExtra(AppConstants.VIDEO_URL, url)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +58,8 @@ class VideoDetailActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_detail)
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         binding.vm = vm
-        vm.setArgs(id, name, thumbnail)
+        binding.onPlayClick = onPlayClick
+        vm.setArgs(id, name, thumbnail, url)
         init()
     }
 
@@ -124,7 +128,7 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         loge("Video clicked ${vm.name}")
-        NavigationUtil.openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail)
+        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
     }
 
     private val onShareClick = { vm: VideoDetailItemVm ->
@@ -148,4 +152,9 @@ class VideoDetailActivity : BaseActivity() {
         }
     }
 
+    private val onPlayClick = { vm: VideoDetailVm ->
+        startActivity(
+            VideoPlayerActivity.createIntent(this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!)
+        )
+    }
 }

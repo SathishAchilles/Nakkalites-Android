@@ -11,6 +11,7 @@ ext.versions = [
         crashlytics         : '2.10.1',
         dotsIndicator       : '4.1.2',
         espressoCore        : '3.2.0',
+        exoplayer           : '2.10.4',
         fabricPlugin        : '1.31.2',
         firebase            : '17.2.1',
         googleDesign        : "28.0.0",
@@ -46,6 +47,12 @@ ext.deps = [
                 viewModel        : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
                 liveData         : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
                 recyclerView     : "androidx.recyclerview:recyclerview:${versions.androidX}"
+        ],
+        exoplayer    : [
+                core     : "com.google.android.exoplayer:exoplayer-core:${versions.exoplayer}",
+                hls      : "com.google.android.exoplayer:exoplayer-hls:${versions.exoplayer}",
+                okhttpExt: "com.google.android.exoplayer:extension-okhttp:${versions.exoplayer}",
+                ui       : "com.google.android.exoplayer:exoplayer-ui:${versions.exoplayer}"
         ],
         firebase     : [
                 analytics  : "com.google.firebase:firebase-analytics:${versions.firebase}",

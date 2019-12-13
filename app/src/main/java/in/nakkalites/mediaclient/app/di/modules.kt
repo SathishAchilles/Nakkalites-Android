@@ -9,12 +9,14 @@ import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
+import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
@@ -22,6 +24,9 @@ import android.content.SharedPreferences
 import android.os.StatFs
 import android.preference.PreferenceManager
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.google.android.exoplayer2.database.DatabaseProvider
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
@@ -68,11 +73,12 @@ val viewModelModule = module {
     viewModel { VideoGroupDetailVm(get()) }
     viewModel { WebSeriesDetailVm(get()) }
     viewModel { VideoDetailVm(get()) }
+    viewModel { VideoPlayerVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {
     single {
-        StethoInterceptor()
+        StethoInterceptorFactory.get(androidContext())
     }
     single {
         HeadersInterceptor()
@@ -104,11 +110,22 @@ fun netModule(serverUrl: String) = module {
             .client(get<OkHttpClient>())
             .build()
     }
-    single { get<Retrofit>().create(UserService::class.java) }
-    single { get<Retrofit>().create(VideoGroupService::class.java) }
+    single {
+        get<Retrofit>().create(UserService::class.java)
+    }
+    single {
+        get<Retrofit>().create(VideoGroupService::class.java)
+    }
     single {
         val downloader = OkHttp3Downloader(get<OkHttpClient>())
         Picasso.Builder(androidContext()).downloader(downloader).build()
+    }
+
+    single {
+        val cacheFolder = File(androidContext().cacheDir, AppConstants.VIDEO_CACHE_DIRECTORY)
+        val evictor = LeastRecentlyUsedCacheEvictor(calculateDiskCacheSize(cacheFolder))
+        val databaseProvider: DatabaseProvider? = null
+        SimpleCache(cacheFolder, evictor, databaseProvider)
     }
 }
 

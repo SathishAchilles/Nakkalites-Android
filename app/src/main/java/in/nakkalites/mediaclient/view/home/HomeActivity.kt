@@ -34,7 +34,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.abs
 
 
 class HomeActivity : BaseActivity() {
@@ -140,32 +139,26 @@ class HomeActivity : BaseActivity() {
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is BannersVm -> {
-                val viewPager2: ViewPager = (itemBinding as ItemBannersBinding).viewPager
-                if (viewPager2.adapter == null) {
-                    viewPager2.adapter = BindingPagerAdapter<BaseModel>(
+                val viewPager: ViewPager = (itemBinding as ItemBannersBinding).viewPager
+                if (viewPager.adapter == null) {
+                    viewPager.adapter = BindingPagerAdapter<BaseModel>(
                         vm1.items, bannerProvider, bannerBinder
                     )
                 }
-                viewPager2.clipToPadding = false
-                viewPager2.pageMargin = dpToPx(30)
-//                viewPager2.setPadding(dpToPx(15), 0, dpToPx(15), 0)
-                // You need to retain one page on each side so that the next and previous items are visible
-                viewPager2.offscreenPageLimit = 1
-
-                // Add a PageTransformer that translates the next and previous items horizontally
-                // towards the center of the screen, which makes them visible
+                viewPager.clipToPadding = false
+                viewPager.pageMargin = dpToPx(30)
+                viewPager.offscreenPageLimit = 1
                 val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
                 val currentItemHorizontalMarginPx =
                     resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
                 val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
                 val pageTransformer = ViewPager.PageTransformer { page: View, position: Float ->
                     page.translationX = -pageTranslationX * position
-                    // Next line scales the item's height. You can remove it if you don't want this effect
-                    page.scaleY = 1 - (0.25f * abs(position))
+//                    page.scaleY = 1 - (0.25f * abs(position))
                     // If you want a fading effect uncomment the next line:
-                    // page.alpha = 0.25f + (1 - abs(position))
+//                     page.alpha = 0.25f + (1 - abs(position))
                 }
-                viewPager2.setPageTransformer(false, pageTransformer)
+                viewPager.setPageTransformer(false, pageTransformer)
 
             }
             is VideoGroupVm -> {
@@ -183,7 +176,7 @@ class HomeActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         loge("Video clicked ${vm.name}")
-        NavigationUtil.openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail)
+        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
     }
 
     private val bannerProvider = viewProvider { R.layout.item_banner }
