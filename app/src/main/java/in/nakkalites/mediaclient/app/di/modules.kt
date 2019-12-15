@@ -58,7 +58,7 @@ val applicationModule = module {
         UserManager(get(), get())
     }
     single {
-        LoginDomain(get())
+        LoginDomain(get(), get())
     }
     single {
         VideoGroupDomain(get(), get())

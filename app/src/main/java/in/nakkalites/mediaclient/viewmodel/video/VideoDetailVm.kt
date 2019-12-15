@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
+import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
@@ -29,7 +30,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         this.name = name
         this.thumbnail = thumbnail
         this.url = url
-        pageTitle.set(name)
+        pageTitle.set(name.toCamelCase())
     }
 
     fun fetchVideoDetail(id: String) {

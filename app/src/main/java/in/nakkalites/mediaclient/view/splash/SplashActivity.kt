@@ -10,6 +10,8 @@ import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.databinding.DataBindingUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,6 +47,28 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun showLoading() {
+        vm.isAnimating = true
+        splashAnimator(binding.logoGroup)
+    }
 
+    private fun splashAnimator(view: View) {
+        val alpha = 1f
+        val scaleX = 1f
+        val scaleY = 1f
+        val startScaleX = 3f
+        val startScaleY = 3f
+        val startAlpha = 0f
+        val duration = 1000L
+        val factor = 2f
+        view.scaleX = scaleX
+        view.scaleY = scaleY
+        view.alpha = alpha
+        view.animate()
+            .setInterpolator(LinearInterpolator())
+            .alpha(startAlpha)
+//            .scaleX(startScaleX)
+//            .scaleY(startScaleY)
+            .setDuration(duration)
+            .withEndAction { vm.setAnimationEnded() }
     }
 }
