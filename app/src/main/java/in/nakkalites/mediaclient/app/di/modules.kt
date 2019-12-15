@@ -25,6 +25,7 @@ import android.os.StatFs
 import android.preference.PreferenceManager
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.database.DatabaseProvider
+import com.google.android.exoplayer2.database.ExoDatabaseProvider
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.squareup.moshi.Moshi
@@ -124,7 +125,7 @@ fun netModule(serverUrl: String) = module {
     single {
         val cacheFolder = File(androidContext().cacheDir, AppConstants.VIDEO_CACHE_DIRECTORY)
         val evictor = LeastRecentlyUsedCacheEvictor(calculateDiskCacheSize(cacheFolder))
-        val databaseProvider: DatabaseProvider? = null
+        val databaseProvider: DatabaseProvider = ExoDatabaseProvider(androidContext())
         SimpleCache(cacheFolder, evictor, databaseProvider)
     }
 }
