@@ -8,6 +8,7 @@ import `in`.nakkalites.mediaclient.databinding.ItemVideoDetailBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.utils.argumentError
+import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.view.utils.openVideoDetailPage
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm
@@ -147,7 +148,9 @@ class VideoDetailActivity : BaseActivity() {
                 itemBinding.onShareClick = onShareClick
             }
             is VideoGroupVm -> {
-                ViewModelBinders.mapViewGroupVmBinding(this, onVideoClick, itemBinding, vm1, false)
+                ViewModelBinders.mapViewGroupVmBinding(
+                    this, onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250), false
+                )
             }
         }
     }

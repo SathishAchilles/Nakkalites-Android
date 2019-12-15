@@ -3,7 +3,6 @@ package `in`.nakkalites.mediaclient.view.binding
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.databinding.ItemVideoBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoGroupBinding
-import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
@@ -35,13 +34,14 @@ object ViewModelBinders {
     @JvmStatic
     fun videoGroupViewModelProvider(
         context: Context, onVideoClick: (VideoVm) -> Unit,
-        onVideoGroupClick: (VideoGroupVm) -> Unit = {}, showDeeplinkArrow: Boolean
+        onVideoGroupClick: (VideoGroupVm) -> Unit = {}, height: Int, width: Int,
+        showDeeplinkArrow: Boolean
     ): ViewModelBinder = object : ViewModelBinder {
         override fun bind(viewDataBinding: ViewDataBinding, viewModel: BaseModel) {
             when (viewModel) {
                 is VideoGroupVm -> mapViewGroupVmBinding(
-                    context, onVideoClick, viewDataBinding, viewModel, showDeeplinkArrow,
-                    onVideoGroupClick
+                    context, onVideoClick, viewDataBinding, viewModel, height, width,
+                    showDeeplinkArrow, onVideoGroupClick
                 )
             }
         }
@@ -50,7 +50,7 @@ object ViewModelBinders {
     @JvmStatic
     fun mapViewGroupVmBinding(
         context: Context, onVideoClick: (VideoVm) -> Unit, viewDataBinding: ViewDataBinding,
-        viewModel: VideoGroupVm, showDeeplinkArrow: Boolean = true,
+        viewModel: VideoGroupVm, height: Int, width: Int, showDeeplinkArrow: Boolean = true,
         onVideoGroupClick: (VideoGroupVm) -> Unit = {}
     ) {
         val binding = (viewDataBinding as ItemVideoGroupBinding)
@@ -58,7 +58,7 @@ object ViewModelBinders {
         val linearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         val viewAdapter = RecyclerViewAdapter(
             viewModel.items, ViewProviders.videoItemViewProvider(),
-            videoViewModelProvider(context, context.dpToPx(150), context.dpToPx(250), onVideoClick)
+            videoViewModelProvider(context, height, width, onVideoClick)
         )
         with(binding.recyclerView) {
             layoutManager = linearLayoutManager

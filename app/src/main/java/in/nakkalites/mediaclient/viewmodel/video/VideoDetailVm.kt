@@ -36,7 +36,8 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         disposables += videoGroupDomain.getVideoDetail(id)
             .map { video ->
                 listOf(VideoDetailItemVm(video)) +
-                        video.videoGroups.map { VideoGroupVm(it) }
+                        video.videoGroups
+                            .map { VideoGroupVm(it, showVideoTitle = true) }
             }
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())

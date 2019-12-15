@@ -39,7 +39,8 @@ class VideoGroupDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseV
                 pagingBody.onNextPage(it.first.videos.size, it.second)
             }
             .map {
-                Pair(it.first.name, it.first.videos.map { video -> VideoVm(video) })
+                Pair(it.first.name, it.first.videos
+                    .map { video -> VideoVm(video, showVideoTitle = true) })
             }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))

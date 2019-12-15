@@ -12,7 +12,7 @@ import `in`.nakkalites.mediaclient.view.binding.ViewProviders.dummyViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.progressViewProvider
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoGroupItemViewProvider
 import `in`.nakkalites.mediaclient.view.utils.*
-import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupDetailActivity
+import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity
 import `in`.nakkalites.mediaclient.view.webseries.WebSeriesDetailActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
@@ -163,7 +163,8 @@ class HomeActivity : BaseActivity() {
             }
             is VideoGroupVm -> {
                 ViewModelBinders.mapViewGroupVmBinding(
-                    this, onVideoClick, itemBinding, vm1, true, onVideoGroupClick
+                    this, onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250), true,
+                    onVideoGroupClick
                 )
             }
         }
@@ -171,7 +172,7 @@ class HomeActivity : BaseActivity() {
 
     private val onVideoGroupClick = { vm: VideoGroupVm ->
         loge("Video Group clicked ${vm.name}")
-        startActivity(VideoGroupDetailActivity.createIntent(this, vm.id, vm.name))
+        startActivity(VideoGroupListActivity.createIntent(this, vm.id, vm.name))
     }
 
     private val onVideoClick = { vm: VideoVm ->

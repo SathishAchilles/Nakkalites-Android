@@ -17,7 +17,7 @@
         <activity android:name=".view.video.VideoPlayerActivity"></activity>
         <activity android:name=".view.video.VideoDetailActivity" />
         <activity android:name=".view.webseries.WebSeriesDetailActivity" />
-        <activity android:name=".view.videogroup.VideoGroupDetailActivity" />
+        <activity android:name=".view.videogroup.VideoGroupListActivity" />
         <activity android:name=".view.home.HomeActivity" />
         <activity android:name=".view.login.LoginActivity" />
         <activity android:name=".view.splash.SplashActivity">

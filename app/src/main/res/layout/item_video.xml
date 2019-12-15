@@ -28,7 +28,7 @@
             type="java.util.List&lt;com.squareup.picasso.Transformation&gt;" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@{vm.marginStart}"
@@ -40,11 +40,21 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:onClick="@{() -> onVideoClick.invoke(vm)}"
             app:height="@{height}"
             app:imageTransforms="@{transformations}"
             app:imageUrl="@{vm.thumbnail}"
             app:width="@{width}"
             tools:src="@drawable/ic_launcher_background" />
-    </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/normal"
+            android:text="@{vm.name}"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:visibility="@{vm.titleVisibility}" />
+    </LinearLayout>
 </layout>

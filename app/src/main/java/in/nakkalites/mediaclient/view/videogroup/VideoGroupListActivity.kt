@@ -3,7 +3,7 @@ package `in`.nakkalites.mediaclient.view.videogroup
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
-import `in`.nakkalites.mediaclient.databinding.ActivityVideoGroupDetailBinding
+import `in`.nakkalites.mediaclient.databinding.ActivityVideoGroupListBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
@@ -22,11 +22,12 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class VideoGroupDetailActivity : BaseActivity() {
+class VideoGroupListActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityVideoGroupDetailBinding
+    private lateinit var binding: ActivityVideoGroupListBinding
     val vm by viewModel<VideoGroupDetailVm>()
     private val videoGroupId by lazy {
         intent.getStringExtra(AppConstants.VIDEO_GROUP_ID)
@@ -34,19 +35,18 @@ class VideoGroupDetailActivity : BaseActivity() {
     private val videoGroupName by lazy {
         intent.getStringExtra(AppConstants.VIDEO_GROUP_NAME)
     }
-    private val spanCount = 2
 
     companion object {
         @JvmStatic
         fun createIntent(ctx: Context, videoGroupId: String, videoGroupName: String): Intent =
-            Intent(ctx, VideoGroupDetailActivity::class.java)
+            Intent(ctx, VideoGroupListActivity::class.java)
                 .putExtra(AppConstants.VIDEO_GROUP_ID, videoGroupId)
                 .putExtra(AppConstants.VIDEO_GROUP_NAME, videoGroupName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_video_group_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_video_group_list)
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         binding.vm = vm
         vm.setArgs(videoGroupId, videoGroupName)
@@ -59,16 +59,14 @@ class VideoGroupDetailActivity : BaseActivity() {
             { recyclerView }, Runnable { vm.fetchVideoGroups(videoGroupId) },
             { vm.loading() }, false
         )
-        val gridLayoutManager = GridLayoutManager(this, spanCount)
+        val gridLayoutManager = LinearLayoutManager(this)
         val viewAdapter = RecyclerViewAdapter<BaseModel>(
             vm.items, videoViewProvider,
             ViewModelBinders.videoViewModelProvider(
-                this, dpToPx(115), (displayWidth() - dpToPx(40)) / (spanCount), onVideoClick
+                this, dpToPx(250), displayWidth() - dpToPx(40), onVideoClick
             )
         )
         recyclerView.adapter = viewAdapter
-        binding.spanCount = spanCount
-        binding.spanSizeLookup = spanSizeLookup(vm.items)
         recyclerView.layoutManager = gridLayoutManager
         scrollPager.attachScrollEvent()
         vm.initPagingBody(scrollPager.pagingCallback)
@@ -83,16 +81,4 @@ class VideoGroupDetailActivity : BaseActivity() {
     private val videoViewProvider = ViewProviders.wrapSequentially(
         ViewProviders.progressViewProvider(), ViewProviders.dummyViewProvider(),
         videoItemViewProvider(), viewProvider { argumentError() })
-
-    private fun spanSizeLookup(items: ObservableArrayList<BaseModel>) =
-        object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                val vm1 = items[position]
-                return if (vm1 is ProgressBarVm || vm1 is EmptyStateVm) {
-                    spanCount
-                } else {
-                    spanCount / 2
-                }
-            }
-        }
 }

@@ -8,14 +8,6 @@
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm" />
-
-        <variable
-            name="spanCount"
-            type="Integer" />
-
-        <variable
-            name="spanSizeLookup"
-            type="androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup" />
     </data>
 
     <LinearLayout
@@ -23,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
-        tools:context="in.nakkalites.mediaclient.view.videogroup.VideoGroupDetailActivity">
+        tools:context="in.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -38,9 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="@{spanCount}"
-            app:spanSizeLookup="@{spanSizeLookup}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_video" />
     </LinearLayout>
 </layout>
