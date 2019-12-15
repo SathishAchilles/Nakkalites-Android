@@ -15,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
-class VideoGroupDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     private lateinit var pagingBody: PagingBody
     val items = ObservableArrayList<BaseModel>()
     private val isLoading = ObservableBoolean()

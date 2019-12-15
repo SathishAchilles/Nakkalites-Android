@@ -17,7 +17,7 @@ import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
 import android.content.SharedPreferences
@@ -71,7 +71,7 @@ val viewModelModule = module {
     viewModel { AllVideoGroupsVm(get()) }
     viewModel { WebSeriesListVm(get()) }
     viewModel { HomeVm(get(), get(), get()) }
-    viewModel { VideoGroupDetailVm(get()) }
+    viewModel { VideoGroupListVm(get()) }
     viewModel { WebSeriesDetailVm(get()) }
     viewModel { VideoDetailVm(get()) }
     viewModel { VideoPlayerVm(get()) }

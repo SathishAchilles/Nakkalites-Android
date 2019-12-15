@@ -12,23 +12,19 @@ import `in`.nakkalites.mediaclient.view.utils.displayWidth
 import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.view.utils.openVideoDetailPage
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
-import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
-import `in`.nakkalites.mediaclient.viewmodel.utils.ProgressBarVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupDetailVm
+import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableArrayList
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoGroupListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityVideoGroupListBinding
-    val vm by viewModel<VideoGroupDetailVm>()
+    val vm by viewModel<VideoGroupListVm>()
     private val videoGroupId by lazy {
         intent.getStringExtra(AppConstants.VIDEO_GROUP_ID)
     }

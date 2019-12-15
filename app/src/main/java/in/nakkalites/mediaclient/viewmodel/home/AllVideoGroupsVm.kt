@@ -34,7 +34,7 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
             .map {
                 listOf(BannersVm(it.first)) +
                         it.second.map { videoGroup ->
-                            VideoGroupVm(videoGroup, showVideoTitle = true)
+                            VideoGroupVm(videoGroup)
                         }
             }
             .map { handleEmptyPage(it.toMutableList()) }
