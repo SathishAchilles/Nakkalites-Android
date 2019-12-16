@@ -2,7 +2,6 @@ package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.UserResponse
-import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupResponse
 import `in`.nakkalites.mediaclient.domain.BaseDomain
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri

@@ -121,7 +121,6 @@ fun netModule(serverUrl: String) = module {
         val downloader = OkHttp3Downloader(get<OkHttpClient>())
         Picasso.Builder(androidContext()).downloader(downloader).build()
     }
-
     single {
         val cacheFolder = File(androidContext().cacheDir, AppConstants.VIDEO_CACHE_DIRECTORY)
         val evictor = LeastRecentlyUsedCacheEvictor(calculateDiskCacheSize(cacheFolder))
