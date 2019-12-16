@@ -16,6 +16,18 @@
         android:background="@drawable/drop_shadow_bottom_video_control" />
 
     <ImageButton
+        android:id="@+id/back"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="top|start"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_arrow_back" />
+
+    <ImageButton
         android:id="@id/exo_play"
         android:layout_width="42dp"
         android:layout_height="42dp"

@@ -34,8 +34,9 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
-    activity: Activity, simpleCache: SimpleCache, url: String, private val playerView: PlayerView,
-    private val okHttpClient: OkHttpClient, private val playerTracker: PlayerTracker
+    private val activity: Activity, simpleCache: SimpleCache, url: String,
+    private val playerView: PlayerView, private val okHttpClient: OkHttpClient,
+    private val playerTracker: PlayerTracker
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
@@ -58,6 +59,7 @@ class VideoObserver(
     private val playPauseButton = activity.findViewById<View>(R.id.play_pause)
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
+    private val backButton = activity.findViewById<ImageView>(R.id.back)
 
     init {
         initializePlayer()
@@ -78,6 +80,9 @@ class VideoObserver(
     private fun initializePlayer() {
         if (BuildConfig.DEBUG) {
             player.addAnalyticsListener(EventLogger(trackSelector))
+        }
+        backButton.setOnClickListener {
+            activity.onBackPressed()
         }
         playPauseButton.setOnClickListener {
             playerTracker.shouldPauseCurrentVideo = player.playWhenReady
@@ -140,8 +145,7 @@ class VideoObserver(
     ): DataSource.Factory {
         val userAgent = Util.getUserAgent(activity, activity.getString(R.string.app_name))
         val dataSourceFactory = DefaultDataSourceFactory(
-            activity,
-            bandwidthMeter,
+            activity, bandwidthMeter,
             OkHttpDataSourceFactory(okHttpClient, userAgent, bandwidthMeter)
         )
         return CacheDataSourceFactory(simpleCache, dataSourceFactory)
