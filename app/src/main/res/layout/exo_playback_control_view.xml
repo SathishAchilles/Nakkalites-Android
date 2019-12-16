@@ -22,10 +22,24 @@
         android:background="@color/transparent"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="top|start"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:padding="5dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/ic_arrow_back" />
+
+    <ImageButton
+        android:id="@+id/volume_button"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/background_item_selected"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_volume_on" />
 
     <ImageButton
         android:id="@id/exo_play"
@@ -64,20 +78,32 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="25dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <com.google.android.exoplayer2.ui.DefaultTimeBar
+                android:id="@+id/exo_progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxHeight="10dp"
+                app:bar_height="3dp"
+                app:scrubber_drawable="@drawable/bg_scrubber"
+                app:buffered_color="@color/grey_400"
+                app:played_color="@color/amber_700"
+                app:unplayed_color="@color/grey_500" />
 
             <TextView
                 android:id="@id/exo_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginStart="15dp"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
@@ -86,10 +112,7 @@
                 android:id="@+id/duration_partition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginStart="2dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/exo_position"
                 android:text="/"
                 android:textColor="@color/white"
                 android:textSize="10sp"
@@ -99,37 +122,10 @@
                 android:id="@id/exo_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginStart="2dp"
-                android:layout_marginBottom="4dp"
-                android:layout_toEndOf="@id/duration_partition"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
-
-            <ImageView
-                android:id="@+id/volume_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/background_item_selected"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="4dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_volume_on" />
-        </RelativeLayout>
-
-        <com.google.android.exoplayer2.ui.DefaultTimeBar
-            android:id="@+id/exo_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:maxHeight="10dp"
-            app:buffered_color="@color/grey_400"
-            app:played_color="@color/amber_700"
-            app:unplayed_color="@color/grey_500" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
