@@ -21,10 +21,13 @@
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/signInButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:onClick="@{onSignUpClick}"
-            android:visibility="visible"
+            app:circleCrop="true"
+            app:colorScheme="dark"
+            app:buttonSize="standard"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="parent"
             app:layout_constraintRight_toLeftOf="parent"
