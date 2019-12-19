@@ -12,15 +12,18 @@ import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+
 
 class LoginActivity : BaseActivity() {
 
@@ -61,7 +64,7 @@ class LoginActivity : BaseActivity() {
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
+                val account = task.getResult(ApiException::class.java)
                 vm.login(account)
                 loge("Logged in ${account?.email} ${account?.displayName} ${account?.account} ${account?.photoUrl}")
             } catch (e: Throwable) {
@@ -71,6 +74,7 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun setupGoogleSignInOptions() {
+        setGoogleButtonText(binding.signInButton, getString(R.string.continue_with_google))
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -79,9 +83,18 @@ class LoginActivity : BaseActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
+    private fun setGoogleButtonText(signInButton: SignInButton, buttonText: String) {
+        for (i in 0 until signInButton.childCount) {
+            val view: View = signInButton.getChildAt(i)
+            if (view is TextView) {
+                view.text = buttonText
+                return
+            }
+        }
+    }
+
     private val onSignUpClick = {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
     }
 
     private fun goToHome() {

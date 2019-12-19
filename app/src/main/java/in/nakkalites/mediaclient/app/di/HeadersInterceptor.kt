@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.app.di
 
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.utils.isValidApiUrl
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.Interceptor
@@ -7,7 +8,7 @@ import okhttp3.Request
 import okhttp3.Response
 
 
-class HeadersInterceptor : Interceptor {
+class HeadersInterceptor(private val userManager: UserManager) : Interceptor {
     private val maxRetries = 3
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -29,6 +30,6 @@ class HeadersInterceptor : Interceptor {
     }
 
     private fun rewriteHeaders(request: Request): Request = request.newBuilder()
-        .headers(HeadersFactory().get().toHeaders())
+        .headers(HeadersFactory(userManager).get().toHeaders())
         .build()
 }

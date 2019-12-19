@@ -15,7 +15,7 @@ inline fun <reified T> Retrofit.create(): T {
     return create(T::class.java)
 }
 
-private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.nakkalites\\.com\$") }
+private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.nakkalites\\.in\$") }
 fun Request.isValidApiUrl(): Boolean {
     return apiRegex.matches(url.host)
 }

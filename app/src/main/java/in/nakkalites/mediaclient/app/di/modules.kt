@@ -82,7 +82,7 @@ fun netModule(serverUrl: String) = module {
         StethoInterceptorFactory.get(androidContext())
     }
     single {
-        HeadersInterceptor()
+        HeadersInterceptor(get())
     }
     single {
         getOkHttpBuilder(

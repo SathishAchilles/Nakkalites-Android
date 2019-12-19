@@ -8,5 +8,5 @@ import retrofit2.http.POST
 
 interface UserService {
     @POST(HttpConstants.LOGIN)
-    fun login(@Body params: StringAnyMap): Single<UserResponse>
+    fun login(@Body params: StringAnyMap): Single<LoginResponse>
 }

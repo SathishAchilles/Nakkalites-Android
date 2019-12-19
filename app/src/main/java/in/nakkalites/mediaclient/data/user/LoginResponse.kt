@@ -4,7 +4,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class UserResponse(@field:Json(name = "user") val user: UserEntity)
+data class LoginResponse(
+    @field:Json(name = "user") val user: UserEntity,
+    @field:Json(name = "access_token") val accessToken: String
+)
 
 @JsonClass(generateAdapter = true)
 data class UserEntity(

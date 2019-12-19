@@ -24,4 +24,10 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
             null
         }
     }
+
+    fun setAccessToken(accessToken: String) {
+        prefs.edit().putString(PrefsConstants.ACCESS_TOKEN, accessToken).apply()
+    }
+
+    fun getAccessToken(): String? = prefs.getString(PrefsConstants.ACCESS_TOKEN, null)
 }
