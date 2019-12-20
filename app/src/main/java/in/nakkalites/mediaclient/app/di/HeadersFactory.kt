@@ -1,20 +1,19 @@
 package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.BuildConfig
-import `in`.nakkalites.mediaclient.domain.login.UserManager
+import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 
 
-class HeadersFactory(private val userManager: UserManager) {
+class HeadersFactory(private val userDataStore: UserDataStore) {
 
     fun get(): Map<String, String> = mutableMapOf(
         Headers.APP_VERSION to BuildConfig.VERSION_NAME,
-        Headers.APP_VERSION_CODE to BuildConfig.VERSION_CODE.toString()
-    ).apply {
-        userManager.getAccessToken()?.also { accessToken ->
-            Headers.APP_ACCESS_TOKEN to accessToken
-        }
-        userManager.getUser()?.let { user -> Headers.APP_USER_ID to user.id }
-    }
+        Headers.APP_VERSION_CODE to BuildConfig.VERSION_CODE.toString(),
+        Headers.APP_ACCESS_TOKEN to userDataStore.getAccessToken(),
+        Headers.APP_USER_ID to getUserId()
+    )
+
+    private fun getUserId() = userDataStore.getUser()?.id ?: ""
 }
 
 object Headers {

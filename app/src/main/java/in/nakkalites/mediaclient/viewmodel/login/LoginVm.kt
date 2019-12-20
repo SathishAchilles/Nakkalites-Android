@@ -23,7 +23,7 @@ class LoginVm(private val loginDomain: LoginDomain) : BaseViewModel() {
     fun login(account: GoogleSignInAccount?) {
         if (account != null) {
             disposables += loginDomain.login(
-                account.id!!, account.displayName!!, account.email!!, account.photoUrl
+                account.id!!, account.displayName, account.email!!, account.photoUrl
             )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -37,9 +37,7 @@ class LoginVm(private val loginDomain: LoginDomain) : BaseViewModel() {
                     }
                 )
         } else {
-            loginState.value = Event(Result.Error<User>(null,
-                NoUserFoundException()
-            ))
+            loginState.value = Event(Result.Error<User>(null, NoUserFoundException()))
         }
     }
 }

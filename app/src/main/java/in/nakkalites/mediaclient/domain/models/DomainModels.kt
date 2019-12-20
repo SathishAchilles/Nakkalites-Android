@@ -8,11 +8,12 @@ import `in`.nakkalites.mediaclient.data.videogroup.WebSeriesEntity
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class User(val id: String, val name: String, val email: String, val imageUrl: String? = null) {
+data class User(
+    val id: String, val name: String?, val email: String?, val imageUrl: String? = null
+) {
     companion object {
-        fun map(userEntity: UserEntity): User = User(
-            userEntity.id, userEntity.name, userEntity.email
-        )
+        fun map(userEntity: UserEntity): User =
+            User(userEntity.id, userEntity.name, userEntity.email, userEntity.imageUrl)
     }
 }
 

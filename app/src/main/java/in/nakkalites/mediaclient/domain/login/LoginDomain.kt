@@ -1,17 +1,17 @@
 package `in`.nakkalites.mediaclient.domain.login
 
-import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.domain.BaseDomain
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import com.squareup.moshi.Moshi
 import io.reactivex.Single
+import timber.log.Timber
 
 class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : BaseDomain {
 
     fun login(
-        id: String, displayName: String, email: String, photoUrl: Uri?
+        id: String, displayName: String?, email: String, photoUrl: Uri?
     ): Single<User> {
         val json = "{\n" +
                 "  \"user\": {\n" +
@@ -23,9 +23,12 @@ class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : Base
                 "  \"access_token\" : \"nngkdnsjcjsxsl\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(LoginResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return userManager.login(id, displayName, email, photoUrl)
-            .map { UserEntity(id, displayName, email, photoUrl?.toString()) }
-            .map { User(it.id, it.name, it.email, it.imageUrl) }
+//        return Single.just(jsonAdapter.fromJson(json))
+        return userManager.login(id, displayName, email, photoUrl)
+            .map { it.user }
+            .map {
+                Timber.e(it.toString())
+                User(it.id, it.name, it.email, it.imageUrl)
+            }
     }
 }

@@ -138,8 +138,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(VideoGroupResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getVideoGroups(pagingBody.toMap())
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getVideoGroups(pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Triple(
@@ -221,8 +221,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesListResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getWebSeriesList(pagingBody.toMap())
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getWebSeriesList(pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Pair(response.webSeriesList.map { WebSeries.map(it) }, response.cursor)
@@ -264,8 +264,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(VideosResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getVideosOfVideoGroup(videoGroupId, pagingBody.toMap())
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getVideosOfVideoGroup(videoGroupId, pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Pair(VideoGroup.map(response.videoGroup), response.cursor)
@@ -308,8 +308,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesDetailResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getWebSeriesDetail(id)
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getWebSeriesDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 WebSeries.map(response.webSeries)
@@ -354,8 +354,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(VideoDetailResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getVideoDetail(id)
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getVideoDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 Video.map(response.video)

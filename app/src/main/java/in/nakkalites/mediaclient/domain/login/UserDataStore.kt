@@ -1,10 +1,12 @@
 package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.data.PrefsConstants
+import `in`.nakkalites.mediaclient.data.utils.getStringOrEmpty
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.content.SharedPreferences
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import timber.log.Timber
 
 
 class UserDataStore(private val prefs: SharedPreferences, private val moshi: Moshi) {
@@ -21,13 +23,16 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
             val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
             jsonAdapter.fromJson(userJson)
         } catch (e: Exception) {
+            Timber.e(e)
             null
         }
     }
 
-    fun setAccessToken(accessToken: String) {
-        prefs.edit().putString(PrefsConstants.ACCESS_TOKEN, accessToken).apply()
+    fun setAccessToken(accessToken: String?) {
+        accessToken?.let {
+            prefs.edit().putString(PrefsConstants.ACCESS_TOKEN, it).apply()
+        }
     }
 
-    fun getAccessToken(): String? = prefs.getString(PrefsConstants.ACCESS_TOKEN, null)
+    fun getAccessToken(): String = prefs.getStringOrEmpty(PrefsConstants.ACCESS_TOKEN)
 }

@@ -26,12 +26,24 @@
             android:layout_margin="30dp"
             android:onClick="@{onSignUpClick}"
             android:text="@string/continue_with_google"
+            app:buttonSize="standard"
             app:circleCrop="true"
             app:colorScheme="dark"
-            app:buttonSize="standard"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="parent"
             app:layout_constraintRight_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="parent" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progress_bar"
+            style="@style/SpinKitView.CubeGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:SpinKit_Color="@color/cyan_400"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

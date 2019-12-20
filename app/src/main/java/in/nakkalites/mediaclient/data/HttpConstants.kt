@@ -12,3 +12,9 @@ object HttpConstants {
     const val WEBSERIES_DETAIL = "v1/webseries/{webseries-id}"
     const val VIDEO_DETAIL = "v1/video/{video-id}"
 }
+
+object HttpStatus {
+    const val SUCCESS = 200
+    const val UNAUTHORIZED = 401
+    const val LOGOUT = 462
+}

@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -44,12 +45,20 @@ class LoginActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.onSignUpClick = onSignUpClick
         setupGoogleSignInOptions()
+        hideLoading()
         vm.viewStates().observe(this, EventObserver {
             when (it) {
-                is Result.Success -> goToHome()
+                is Result.Success -> {
+                    hideLoading()
+                    goToHome()
+                }
                 is Result.Error -> {
+                    hideLoading()
                     Timber.e(it.throwable)
                     showError(it.throwable.message)
+                }
+                is Result.Loading -> {
+                    showLoading()
                 }
             }
         })
@@ -59,16 +68,27 @@ class LoginActivity : BaseActivity() {
         Toast.makeText(this, message ?: "Error", Toast.LENGTH_SHORT).show()
     }
 
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        binding.progressBar.visibility = View.GONE
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val account = task.getResult(ApiException::class.java)
                 vm.login(account)
                 loge("Logged in ${account?.email} ${account?.displayName} ${account?.account} ${account?.photoUrl}")
             } catch (e: Throwable) {
                 logThrowable(e)
+                Snackbar
+                    .make(binding.root, getString(R.string.error_network), Snackbar.LENGTH_SHORT)
+                    .show()
             }
         }
     }

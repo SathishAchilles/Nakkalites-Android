@@ -86,8 +86,7 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         getOkHttpBuilder(
-            androidContext(),
-            listOf(get<HeadersInterceptor>(), get<StethoInterceptor>())
+            androidContext(), listOf(get<HeadersInterceptor>(), get<StethoInterceptor>())
         )
     }
     single {
