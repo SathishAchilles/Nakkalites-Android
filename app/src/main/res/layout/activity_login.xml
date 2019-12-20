@@ -20,7 +20,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.gms.common.SignInButton
-            android:id="@+id/signInButton"
+            android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"

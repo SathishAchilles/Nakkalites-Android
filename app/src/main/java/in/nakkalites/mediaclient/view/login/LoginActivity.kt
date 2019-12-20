@@ -2,8 +2,10 @@ package `in`.nakkalites.mediaclient.view.login
 
 import `in`.nakkalites.logging.logThrowable
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
+import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
@@ -16,6 +18,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -50,12 +53,13 @@ class LoginActivity : BaseActivity() {
             when (it) {
                 is Result.Success -> {
                     hideLoading()
+                    setupCrashlyticsUserDetails(it.data)
                     goToHome()
                 }
                 is Result.Error -> {
                     hideLoading()
                     Timber.e(it.throwable)
-                    showError(it.throwable.message)
+                    showError(it.throwable.message ?: getString(R.string.error_network))
                 }
                 is Result.Loading -> {
                     showLoading()
@@ -64,8 +68,14 @@ class LoginActivity : BaseActivity() {
         })
     }
 
-    private fun showError(message: String?) {
-        Toast.makeText(this, message ?: "Error", Toast.LENGTH_SHORT).show()
+    private fun setupCrashlyticsUserDetails(user: User) {
+        if (!BuildConfig.DEBUG) {
+            Crashlytics.setUserIdentifier(user.id)
+        }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun showLoading() {
