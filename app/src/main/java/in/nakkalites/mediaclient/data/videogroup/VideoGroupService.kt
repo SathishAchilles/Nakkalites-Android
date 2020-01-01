@@ -2,11 +2,9 @@ package `in`.nakkalites.mediaclient.data.videogroup
 
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.utils.StringAnyMap
+import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.QueryMap
+import retrofit2.http.*
 
 interface VideoGroupService {
     @GET(HttpConstants.VIDEO_GROUPS)
@@ -29,4 +27,9 @@ interface VideoGroupService {
 
     @GET(HttpConstants.VIDEO_DETAIL)
     fun getVideoDetail(@Path("video-id") id: String): Single<VideoDetailResponse>
+
+    @POST(HttpConstants.VIDEO_TRACK)
+    fun trackVideo(
+        @Path("video-id") id: String, @Body params: StringAnyMap
+    ): Completable
 }

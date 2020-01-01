@@ -11,10 +11,9 @@ import okhttp3.Response
 
 class HeadersInterceptor(private val userDataStore: UserDataStore) : Interceptor {
     private val maxRetries = 3
-    private val lock = Any()
 
     override fun intercept(chain: Interceptor.Chain): Response {
-//        if (proceedToNextInterceptor(chain)) return chain.proceed(chain.request())
+        if (proceedToNextInterceptor(chain)) return chain.proceed(chain.request())
 
         val origRequest = chain.request()
         var response = chain.proceed(rewriteHeaders(origRequest))
@@ -29,7 +28,7 @@ class HeadersInterceptor(private val userDataStore: UserDataStore) : Interceptor
 
     private fun proceedToNextInterceptor(chain: Interceptor.Chain): Boolean {
         val request = chain.request()
-        return !request.isValidApiUrl()
+        return false /*!request.isValidApiUrl()*/
     }
 
     private fun rewriteHeaders(request: Request): Request = request.newBuilder()

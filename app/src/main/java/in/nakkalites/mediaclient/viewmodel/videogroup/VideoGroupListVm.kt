@@ -14,6 +14,7 @@ import androidx.databinding.ObservableField
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     private lateinit var pagingBody: PagingBody
@@ -50,10 +51,7 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                     items.addAll(it.second)
                     loge("items ${it.second}")
                 },
-                onError = {
-                    loge("Error $it")
-                    it.printStackTrace()
-                }
+                onError = Timber::e
             )
     }
 

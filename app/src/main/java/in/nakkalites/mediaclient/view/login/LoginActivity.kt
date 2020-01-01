@@ -6,11 +6,13 @@ import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
 import `in`.nakkalites.mediaclient.domain.models.User
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -58,8 +60,14 @@ class LoginActivity : BaseActivity() {
                 }
                 is Result.Error -> {
                     hideLoading()
-                    Timber.e(it.throwable)
-                    showError(it.throwable.message ?: getString(R.string.error_network))
+                    errorHandler(it.throwable) {
+                        if (it.throwable is NoUserFoundException) {
+                            showError(getString(R.string.error_no_user))
+                            true
+                        } else {
+                            false
+                        }
+                    }
                 }
                 is Result.Loading -> {
                     showLoading()

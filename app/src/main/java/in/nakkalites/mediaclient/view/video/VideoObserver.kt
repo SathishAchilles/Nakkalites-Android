@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Color
 import android.net.Uri
@@ -15,8 +16,7 @@ import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -25,7 +25,6 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
-import com.jakewharton.rxbinding3.view.visibility
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -34,20 +33,14 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
-    private val activity: Activity, simpleCache: SimpleCache, url: String,
-    private val playerView: PlayerView, private val okHttpClient: OkHttpClient,
-    private val playerTracker: PlayerTracker
+    private val activity: Activity, private val id: String, url: String,
+    private val playerView: PlayerView, private val playerTracker: PlayerTracker,
+    bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
+    simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
     private var videoDuration: Long? = null
-    private var currentSecond: Long = 0
-    private val bandwidthMeter = DefaultBandwidthMeter.Builder(activity)
-        .build()
-    private val trackSelector = DefaultTrackSelector(AdaptiveTrackSelection.Factory())
-    private val loadControl = DefaultLoadControl.Builder()
-        .setBufferDurationsMs(6000, 18000, 500, 3000)
-        .createDefaultLoadControl()
     private val player = ExoPlayerFactory.newSimpleInstance(
         activity, DefaultRenderersFactory(activity), trackSelector, loadControl
     )
@@ -60,6 +53,13 @@ class VideoObserver(
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
     private val backButton = activity.findViewById<ImageView>(R.id.back)
+    private var currentSecond: Long = 0
+        set(value) {
+            field = value
+            videoDuration?.let {
+                playerTracker.trackVideoProgress(currentSecond)
+            }
+        }
 
     init {
         initializePlayer()
@@ -127,6 +127,7 @@ class VideoObserver(
                     playPauseButton.visibility = View.GONE
                 }
             }
+
         })
     }
 

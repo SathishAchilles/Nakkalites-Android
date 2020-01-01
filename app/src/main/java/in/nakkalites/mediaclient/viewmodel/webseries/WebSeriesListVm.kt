@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.webseries
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
@@ -14,6 +13,7 @@ import androidx.databinding.ObservableBoolean
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     internal val isRefreshing = ObservableBoolean()
@@ -40,12 +40,8 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseView
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
-                    loge("items $it")
                 },
-                onError = {
-                    loge("Error $it")
-                    it.printStackTrace()
-                }
+                onError = Timber::e
             )
     }
 

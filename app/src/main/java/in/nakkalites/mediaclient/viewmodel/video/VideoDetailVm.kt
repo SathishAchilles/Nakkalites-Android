@@ -15,6 +15,7 @@ import androidx.databinding.ObservableField
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     val items = ObservableArrayList<BaseModel>()
@@ -46,12 +47,8 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
-                    loge("items $it")
                 },
-                onError = {
-                    loge("Error $it")
-                    it.printStackTrace()
-                }
+                onError = Timber::e
             )
     }
 

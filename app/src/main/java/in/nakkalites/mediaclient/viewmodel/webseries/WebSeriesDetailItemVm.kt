@@ -8,7 +8,8 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 
 class WebSeriesDetailItemVm(webSeries: WebSeries) : BaseModel {
     val episodesCount = DisplayText.Singular(R.string.x_episodes, listOf(webSeries.episodesCount))
-    val nextEpisodeButtonText = DisplayText.Singular(R.string.play_episode_x, listOf(1))
+    val nextEpisodeButtonText =
+        DisplayText.Singular(R.string.play_episode_x, listOf(webSeries.nextEpisodeNumber))
     val description = webSeries.description
     val videoVm = VideoVm(webSeries.videoGroups[0].videos[0])
 }

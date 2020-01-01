@@ -20,26 +20,27 @@ data class User(
 data class Video(
     val id: String, val titleName: String, val videoName: String, val url: String,
     val thumbnailImage: String, val description: String?, val shareText: String?,
-    val videoGroups: List<VideoGroup>
+    val lastPlayedTime: Long, val videoGroups: List<VideoGroup>
 ) {
     companion object {
         fun map(videoEntity: VideoEntity): Video = Video(
             videoEntity.id, videoEntity.titleName, videoEntity.videoName,
             videoEntity.url, videoEntity.thumbnail, videoEntity.description, videoEntity.shareText,
-            videoEntity.videoGroups.map { VideoGroup.map(it) }
+            videoEntity.lastPlayedTime ?: 0, videoEntity.videoGroups.map { VideoGroup.map(it) }
         )
     }
 }
 
 data class WebSeries(
     val id: String, val titleName: String, val name: String, val thumbnailImage: String,
-    val episodesCount: Int, val description: String, val videoGroups: List<VideoGroup>
+    val episodesCount: Int, val description: String, val nextEpisodeNumber: Int,
+    val videoGroups: List<VideoGroup>
 ) {
     companion object {
         fun map(webSeriesEntity: WebSeriesEntity): WebSeries = WebSeries(
             webSeriesEntity.id, webSeriesEntity.titleName, webSeriesEntity.name,
             webSeriesEntity.thumbnail, webSeriesEntity.episodesCount, webSeriesEntity.description,
-            webSeriesEntity.videoGroups.map { VideoGroup.map(it) }
+            webSeriesEntity.nextEpisode ?: 1, webSeriesEntity.videoGroups.map { VideoGroup.map(it) }
         )
     }
 }

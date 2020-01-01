@@ -10,4 +10,12 @@
     <string name="share_sheet_title">Share %s</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="error_network">Some problem in server</string>
+    <string name="app_update_dialog_title">Update App</string>
+    <string name="mandatory_update_message">Please update the Nakkalites app to use it</string>
+    <string name="optional_update_message">Please update the Nakkalites app. There is a new version available</string>
+    <string name="update_app">Update App</string>
+    <string name="cancel">Cancel</string>
+    <string name="skip">Skip</string>
+    <string name="generic_error_message">Something went Wrong. Please try again later</string>
+    <string name="error_no_user">No User found</string>
 </resources>

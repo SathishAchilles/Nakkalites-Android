@@ -1,7 +1,6 @@
 package `in`.nakkalites.mediaclient.data.videogroup
 
 import `in`.nakkalites.mediaclient.data.utils.Page
-import android.util.EventLogTags
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -34,6 +33,7 @@ data class VideoEntity(
     @field:Json(name = "title_name") val titleName: String,
     @field:Json(name = "video_name") val videoName: String,
     @field:Json(name = "url") val url: String,
+    @field:Json(name = "last_played_time") val lastPlayedTime: Long?,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "description") val description: String?,
     @field:Json(name = "share_text") val shareText: String?,
@@ -48,22 +48,11 @@ data class WebSeriesEntity(
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "no_of_episodes") val episodesCount: Int,
     @field:Json(name = "description") val description: String,
+    @field:Json(name = "next_episode_number") val nextEpisode: Int?,
     @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
 )
 
 @JsonClass(generateAdapter = true)
-data class VideosResponse(
-    @field:Json(name = "video_group") val videoGroup: VideoGroupEntity
-) : Page() {
-    override val pageSize = videoGroup.videos.size
-}
-
-@JsonClass(generateAdapter = true)
 data class WebSeriesDetailResponse(
     @field:Json(name = "web_series") val webSeries: WebSeriesEntity
-)
-
-@JsonClass(generateAdapter = true)
-data class VideoDetailResponse(
-    @field:Json(name = "video_info") val video: VideoEntity
 )

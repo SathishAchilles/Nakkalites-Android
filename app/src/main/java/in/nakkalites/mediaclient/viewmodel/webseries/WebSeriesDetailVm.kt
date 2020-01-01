@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.webseries
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
@@ -14,6 +13,7 @@ import androidx.databinding.ObservableField
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     val items = ObservableArrayList<BaseModel>()
@@ -42,12 +42,8 @@ class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseVi
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
-                    loge("items $it")
                 },
-                onError = {
-                    loge("Error $it")
-                    it.printStackTrace()
-                }
+                onError = Timber::e
             )
     }
 

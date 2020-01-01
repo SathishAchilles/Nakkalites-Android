@@ -2,12 +2,15 @@ package `in`.nakkalites.mediaclient.domain.videogroups
 
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.data.PrefsConstants
+import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.videogroup.*
 import `in`.nakkalites.mediaclient.domain.BaseDomain
 import `in`.nakkalites.mediaclient.domain.models.*
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
+import android.net.Uri
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import io.reactivex.Completable
 import io.reactivex.Single
 import timber.log.Timber
 
@@ -360,5 +363,11 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 Timber.e(response.toString())
                 Video.map(response.video)
             }
+    }
+
+    fun trackVideo(id: String, timeElapsed: Long): Completable {
+//        return Completable.complete()
+        val params = mutableMapOf<String, Any>("time_elapsed" to timeElapsed)
+        return videoGroupService.trackVideo(id, params)
     }
 }

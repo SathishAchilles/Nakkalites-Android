@@ -16,4 +16,6 @@ object AppConstants {
     const val VIDEO_NAME = "VIDEO_NAME"
     const val VIDEO_THUMBNAIL = "VIDEO_THUMBNAIL"
     const val VIDEO_URL = "VIDEO_URL"
+
+    const val PLAY_STORE_URL = "market://details?id="
 }

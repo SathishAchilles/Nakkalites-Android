@@ -10,6 +10,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.google.android.exoplayer2.LoadControl
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import okhttp3.OkHttpClient
@@ -33,6 +36,9 @@ class VideoPlayerActivity : BaseActivity() {
         intent.getStringExtra(AppConstants.VIDEO_URL)
     }
     private val stethoInterceptor by inject<StethoInterceptor>()
+    private val bandwidthMeter by inject<DefaultBandwidthMeter>()
+    private val trackSelector by inject<MappingTrackSelector>()
+    private val loadControl by inject<LoadControl>()
     private val simpleCache by inject<SimpleCache>()
     private lateinit var videoObserver: VideoObserver
 
@@ -64,7 +70,10 @@ class VideoPlayerActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
         binding.vm = vm
         vm.setArgs(id, name, thumbnail, url)
-        videoObserver = VideoObserver(this, simpleCache, url, binding.playerView, okClient, vm)
+        videoObserver = VideoObserver(
+            this, id, url, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
+            okClient, loadControl
+        )
         lifecycle.addObserver(videoObserver)
     }
 

@@ -1,33 +1,46 @@
 package `in`.nakkalites.mediaclient.app.di
 
+import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.data.HttpConstants
-import `in`.nakkalites.mediaclient.domain.login.UserDataStore
-import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.domain.login.UserDataStore
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
-import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
+import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
 import android.preference.PreferenceManager
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.google.android.exoplayer2.DefaultLoadControl
+import com.google.android.exoplayer2.LoadControl
 import com.google.android.exoplayer2.database.DatabaseProvider
 import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.google.android.exoplayer2.util.Util
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
@@ -62,6 +75,9 @@ val applicationModule = module {
     }
     single {
         VideoGroupDomain(get(), get())
+    }
+    single {
+        FirebaseRemoteConfig.getInstance()
     }
 }
 
@@ -125,6 +141,18 @@ fun netModule(serverUrl: String) = module {
         val evictor = LeastRecentlyUsedCacheEvictor(calculateDiskCacheSize(cacheFolder))
         val databaseProvider: DatabaseProvider = ExoDatabaseProvider(androidContext())
         SimpleCache(cacheFolder, evictor, databaseProvider)
+    }
+    single {
+        DefaultBandwidthMeter.Builder(androidContext())
+            .build()
+    }
+    single<MappingTrackSelector> {
+        DefaultTrackSelector(AdaptiveTrackSelection.Factory())
+    }
+    single<LoadControl> {
+        DefaultLoadControl.Builder()
+            .setBufferDurationsMs(6000, 18000, 500, 3000)
+            .createDefaultLoadControl()
     }
 }
 

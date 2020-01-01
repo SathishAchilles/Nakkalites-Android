@@ -7,10 +7,20 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import timber.log.Timber
 
 class SplashVm(private val userManager: UserManager) : BaseViewModel() {
 
-    var isAnimating = false
+    var isViewAnimating = true
+        set(value) {
+            field = value
+            setAnimationEnded()
+        }
+    var hasConfigRetrieved = false
+        set(value) {
+            field = value
+            setAnimationEnded()
+        }
     private val splashViewState = MutableLiveData<Event<Result<Unit>>>()
     private var result: Result<Unit>? = null
 
@@ -25,7 +35,9 @@ class SplashVm(private val userManager: UserManager) : BaseViewModel() {
         }
     }
 
-    fun setAnimationEnded() {
-        splashViewState.value = Event(result!!)
+    private fun setAnimationEnded() {
+        if (!isViewAnimating && hasConfigRetrieved) {
+            splashViewState.value = Event(result!!)
+        }
     }
 }
