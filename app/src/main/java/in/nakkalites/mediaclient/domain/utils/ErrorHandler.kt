@@ -12,14 +12,15 @@ import timber.log.Timber
 import java.io.IOException
 
 @JvmOverloads
-fun Activity.errorHandler(error: Throwable, shouldHandleError: () -> Boolean = { false }) {
+fun Activity.errorHandler(error: Throwable, shouldHandleError: () -> Boolean = { true }) {
     Timber.e(error)
     when {
-//        error is HttpException && error.code() == HttpStatus.LOGOUT -> logout()
+        error is HttpException && error.code() == HttpStatus.LOGOUT -> {
+            Timber.e("Logout ${error.code()}")
+            /*logout()*/
+        }
         else -> if (shouldHandleError()) {
-            runOnUiThread {
-                Toast.makeText(this, R.string.generic_error_message, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(this, R.string.generic_error_message, Toast.LENGTH_SHORT).show()
         }
     }
 }

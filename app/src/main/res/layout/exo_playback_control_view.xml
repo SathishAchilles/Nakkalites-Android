@@ -50,11 +50,39 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_centerInParent="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:background="@color/transparent"
         android:clickable="true"
         android:focusable="true"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/exo_icon_play" />
+
+    <ImageButton
+        android:id="@id/exo_rew"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignBaseline="@id/exo_play"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/exo_play"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/exo_icon_rewind" />
+
+    <ImageButton
+        android:id="@id/exo_ffwd"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignBaseline="@id/exo_play"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/exo_play"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/exo_icon_fastforward" />
 
     <ImageButton
         android:id="@id/exo_pause"
@@ -72,6 +100,8 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_centerInParent="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:clickable="true"
         android:focusable="true" />
 

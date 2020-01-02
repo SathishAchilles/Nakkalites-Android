@@ -2,7 +2,6 @@ package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Color
 import android.net.Uri
@@ -40,6 +39,7 @@ class VideoObserver(
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
+    private val MAX_FORWARD_BACKWARD_IN_MS = 10 * 1000 // 10 seconds
     private var videoDuration: Long? = null
     private val player = ExoPlayerFactory.newSimpleInstance(
         activity, DefaultRenderersFactory(activity), trackSelector, loadControl
@@ -127,8 +127,9 @@ class VideoObserver(
                     playPauseButton.visibility = View.GONE
                 }
             }
-
         })
+        playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
+        playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
     }
 
     private fun changeVolumeIcon(player: SimpleExoPlayer, volumeButton: ImageView) {

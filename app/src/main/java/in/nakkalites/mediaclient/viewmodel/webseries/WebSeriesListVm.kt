@@ -46,6 +46,7 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseView
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
+                    viewState.value = Event(Result.Success(Unit))
                 },
                 onError = {
                     viewState.value = Event(Result.Error(Unit, throwable = it))

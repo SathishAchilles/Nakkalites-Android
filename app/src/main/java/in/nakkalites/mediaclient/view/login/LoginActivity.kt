@@ -63,9 +63,9 @@ class LoginActivity : BaseActivity() {
                     errorHandler(it.throwable) {
                         if (it.throwable is NoUserFoundException) {
                             showError(getString(R.string.error_no_user))
-                            true
-                        } else {
                             false
+                        } else {
+                            true
                         }
                     }
                 }
