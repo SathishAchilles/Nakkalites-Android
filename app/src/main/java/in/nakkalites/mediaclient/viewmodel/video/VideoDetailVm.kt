@@ -1,8 +1,9 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.view.utils.Event
+import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
@@ -12,10 +13,11 @@ import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     val items = ObservableArrayList<BaseModel>()
@@ -25,6 +27,9 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var thumbnail: String? = null
     var url: String? = null
     val pageTitle = ObservableField<String>()
+    private val viewState = MutableLiveData<Event<Result<Unit>>>()
+
+    fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
     fun setArgs(id: String, name: String, thumbnail: String, url: String) {
         this.id = id
@@ -38,8 +43,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         disposables += videoGroupDomain.getVideoDetail(id)
             .map { video ->
                 listOf(VideoDetailItemVm(video)) +
-                        video.videoGroups
-                            .map { VideoGroupVm(it) }
+                        video.videoGroups.map { VideoGroupVm(it) }
             }
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())
@@ -48,7 +52,9 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                 onSuccess = {
                     items.addAll(it)
                 },
-                onError = Timber::e
+                onError = {
+                    viewState.value = Event(Result.Error(Unit, throwable = it))
+                }
             )
     }
 

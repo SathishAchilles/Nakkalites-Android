@@ -5,6 +5,7 @@ import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.*
 import `in`.nakkalites.mediaclient.domain.models.BannerType
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
 import `in`.nakkalites.mediaclient.view.binding.BindingPagerAdapter.PageTitles
@@ -20,6 +21,7 @@ import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.BannerVm
 import `in`.nakkalites.mediaclient.viewmodel.home.BannersVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
@@ -51,6 +53,20 @@ class HomeActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         setupToolbar(binding.toolbar, showHomeAsUp = false, upIsBack = false)
         init()
+        vm.allVideosGroupsStates().observe(this, EventObserver {
+            when (it) {
+                is Result.Error -> {
+                    errorHandler(it.throwable)
+                }
+            }
+        })
+        vm.webSeriesStates().observe(this, EventObserver {
+            when (it) {
+                is Result.Error -> {
+                    errorHandler(it.throwable)
+                }
+            }
+        })
     }
 
     private fun init() {

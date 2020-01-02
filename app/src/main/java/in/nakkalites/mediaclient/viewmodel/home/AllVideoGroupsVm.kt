@@ -1,7 +1,6 @@
 package `in`.nakkalites.mediaclient.viewmodel.home
 
 import `in`.nakkalites.mediaclient.R
-import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
@@ -19,16 +18,15 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 
 class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     private lateinit var pagingBody: PagingBody
     val isRefreshing = ObservableBoolean()
     val items = ObservableArrayList<BaseModel>()
     private val isLoading = ObservableBoolean()
-    private val state = MutableLiveData<Event<Result<Unit>>>()
+    private val viewState = MutableLiveData<Event<Result<Unit?>>>()
 
-    fun allVideoGroupsViewStates(): LiveData<Event<Result<Unit>>> = state
+    fun viewStates(): LiveData<Event<Result<Unit?>>> = viewState
 
     internal fun initPagingBody(pagingCallback: PagingCallback) {
         pagingBody = PagingBody(pagingCallback = pagingCallback)
@@ -53,7 +51,9 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                 onSuccess = {
                     items.addAll(it)
                 },
-                onError = Timber::e
+                onError = {
+                    viewState.value = Event(Result.Error(Unit, throwable = it))
+                }
             )
     }
 

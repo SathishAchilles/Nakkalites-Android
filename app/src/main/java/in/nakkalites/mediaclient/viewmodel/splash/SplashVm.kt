@@ -7,7 +7,6 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import timber.log.Timber
 
 class SplashVm(private val userManager: UserManager) : BaseViewModel() {
 

@@ -5,11 +5,10 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoDetailBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoDetailBinding
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
-import `in`.nakkalites.mediaclient.view.utils.argumentError
-import `in`.nakkalites.mediaclient.view.utils.dpToPx
-import `in`.nakkalites.mediaclient.view.utils.openVideoDetailPage
+import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
@@ -62,6 +61,13 @@ class VideoDetailActivity : BaseActivity() {
         binding.onPlayClick = onPlayClick
         vm.setArgs(id, name, thumbnail, url)
         init()
+        vm.viewStates().observe(this, EventObserver {
+            when (it) {
+                is Result.Error -> {
+                    errorHandler(it.throwable)
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

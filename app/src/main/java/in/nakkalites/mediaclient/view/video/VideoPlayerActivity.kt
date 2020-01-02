@@ -3,7 +3,10 @@ package `in`.nakkalites.mediaclient.view.video
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoPlayerBinding
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
+import `in`.nakkalites.mediaclient.view.utils.EventObserver
+import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import android.content.Context
 import android.content.Intent
@@ -75,6 +78,13 @@ class VideoPlayerActivity : BaseActivity() {
             okClient, loadControl
         )
         lifecycle.addObserver(videoObserver)
+        vm.viewStates().observe(this, EventObserver {
+            when (it) {
+                is Result.Error -> {
+                    errorHandler(it.throwable)
+                }
+            }
+        })
     }
 
 }

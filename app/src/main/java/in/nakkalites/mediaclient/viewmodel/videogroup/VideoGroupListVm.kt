@@ -4,6 +4,8 @@ import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.view.utils.Event
+import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
@@ -11,10 +13,11 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 
 class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     private lateinit var pagingBody: PagingBody
@@ -23,6 +26,9 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
     private var videoGroupId: String? = null
     private var videoGroupName: String? = null
     val pageTitle = ObservableField<String>()
+    private val viewState = MutableLiveData<Event<Result<Unit>>>()
+
+    fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
     internal fun setArgs(videoGroupId: String, videoGroupName: String) {
         this.videoGroupId = videoGroupId
@@ -51,7 +57,9 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                     items.addAll(it.second)
                     loge("items ${it.second}")
                 },
-                onError = Timber::e
+                onError = {
+                    viewState.value = Event(Result.Error(Unit, throwable = it))
+                }
             )
     }
 

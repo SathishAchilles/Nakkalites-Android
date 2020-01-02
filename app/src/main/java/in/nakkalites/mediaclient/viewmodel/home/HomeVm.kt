@@ -20,5 +20,10 @@ class HomeVm(
     fun setSelectedTab(position: Int) {
         selectedTab = HomeTab.fromPosition(position)
     }
+
+    fun allVideosGroupsStates() = allVideoGroupsVm.viewStates()
+
+    fun webSeriesStates() = webSeriesListVm.viewStates()
+
 }
 
