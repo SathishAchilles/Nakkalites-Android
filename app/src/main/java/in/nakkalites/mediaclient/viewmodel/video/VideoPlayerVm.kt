@@ -33,7 +33,7 @@ class VideoPlayerVm(
 
     override var duration: Long = 0
 
-    override var shouldPauseCurrentVideo = true
+    override var shouldPauseCurrentVideo = false
 
     override fun trackVideoProgress(timeElapsed: Long) {
         disposable?.dispose()

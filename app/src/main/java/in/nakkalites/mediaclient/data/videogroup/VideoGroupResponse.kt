@@ -43,7 +43,6 @@ data class VideoEntity(
 @JsonClass(generateAdapter = true)
 data class WebSeriesEntity(
     @field:Json(name = "id") val id: String,
-    @field:Json(name = "title_name") val titleName: String,
     @field:Json(name = "name") val name: String,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "no_of_episodes") val episodesCount: Int,
