@@ -15,6 +15,13 @@ class VideoVm(
     val thumbnail = video.thumbnailImage
     val description = video.description
     val titleVisibility = showVideoTitle
+    val showProgress = true //video.lastPlayedTime != null
+    val progressPercent: Int = if (video.lastPlayedTime != null && video.duration != null) {
+        (100 * (video.lastPlayedTime / video.duration.toFloat())).toInt()
+    } else {
+        0
+    }
+
     @DimenRes
     val marginStart =
         if (position == 0 && addMarginStart) {

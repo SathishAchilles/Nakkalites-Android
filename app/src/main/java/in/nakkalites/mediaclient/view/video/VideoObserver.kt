@@ -57,7 +57,7 @@ class VideoObserver(
         set(value) {
             field = value
             videoDuration?.let {
-                playerTracker.trackVideoProgress(currentSecond)
+                playerTracker.trackVideoProgress(it, currentSecond)
             }
         }
 

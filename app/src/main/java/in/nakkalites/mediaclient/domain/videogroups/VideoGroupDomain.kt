@@ -365,9 +365,12 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
             }
     }
 
-    fun trackVideo(id: String, timeElapsed: Long): Completable {
+    fun trackVideo(id: String, totalDuration: Long, timeElapsed: Long): Completable {
 //        return Completable.complete()
-        val params = mutableMapOf<String, Any>("time_elapsed" to timeElapsed)
+        val params = mutableMapOf<String, Any>(
+            "time_duration" to totalDuration,
+            "time_elapsed" to timeElapsed
+        )
         return videoGroupService.trackVideo(id, params)
     }
 }

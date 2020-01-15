@@ -37,16 +37,31 @@
         android:layout_marginBottom="16dp"
         android:orientation="vertical">
 
-        <ImageView
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:onClick="@{() -> onVideoClick.invoke(vm)}"
-            app:height="@{height}"
-            app:imageTransforms="@{transformations}"
-            app:imageUrl="@{vm.thumbnail}"
-            app:width="@{width}"
-            tools:src="@drawable/ic_launcher_background" />
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> onVideoClick.invoke(vm)}"
+                app:height="@{height}"
+                app:imageTransforms="@{transformations}"
+                app:imageUrl="@{vm.thumbnail}"
+                app:width="@{width}"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="bottom"
+                android:progress="@{vm.progressPercent}"
+                android:progressDrawable="@color/red"
+                android:visibility="@{vm.showProgress}"
+                tools:progress="50" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="match_parent"

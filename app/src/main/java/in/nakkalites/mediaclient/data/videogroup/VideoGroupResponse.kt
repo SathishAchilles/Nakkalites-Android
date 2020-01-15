@@ -34,6 +34,7 @@ data class VideoEntity(
     @field:Json(name = "video_name") val videoName: String,
     @field:Json(name = "url") val url: String,
     @field:Json(name = "last_played_time") val lastPlayedTime: Long?,
+    @field:Json(name = "duration") val duration: Long?,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "description") val description: String?,
     @field:Json(name = "share_text") val shareText: String?,

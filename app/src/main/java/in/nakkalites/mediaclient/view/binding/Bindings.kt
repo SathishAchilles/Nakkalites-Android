@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
@@ -191,6 +192,12 @@ object Bindings {
     fun ImageView.bindImageSrc(@DrawableRes resId: Int) {
         val drawable = getDrawable(context, resId)
         setImageDrawable(drawable)
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:progress")
+    fun ProgressBar.bindProgress(progress : Int) {
+        setProgress(progress)
     }
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {

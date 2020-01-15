@@ -20,4 +20,5 @@
     <color name="drop_shadow">#66000000</color>
     <color name="amber_700">#E89B00</color>
     <color name="grey_500">#9A9A9A</color>
+    <color name="red">#FF0000</color>
 </resources>
