@@ -12,6 +12,8 @@ object HttpConstants {
     const val WEBSERIES_DETAIL = "v1/webseries/{webseries-id}"
     const val VIDEO_DETAIL = "v1/video/{video-id}"
     const val VIDEO_TRACK = "v1/video/{video-id}/track"
+    const val TERMS_CONDITIONS = "https://www.nakkalites.com/api/terms-conditions"
+    const val PRIVACY_POLICY = "https://www.nakkalites.com/api/privacy"
 }
 
 object HttpStatus {

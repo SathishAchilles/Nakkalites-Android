@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="open_source_licenses" type="id"/>
+    <item name="terms_conditions" type="id"/>
+    <item name="privacy_policy" type="id"/>
+</resources>

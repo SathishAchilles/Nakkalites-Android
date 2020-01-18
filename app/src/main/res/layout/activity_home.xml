@@ -13,6 +13,10 @@
             name="onTabSelect"
             type="com.google.android.material.tabs.TabLayout.ViewPagerOnTabSelectedListener" />
 
+        <variable
+            name="toolbarMenuListener"
+            type="android.widget.Toolbar.OnMenuItemClickListener" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -32,15 +36,16 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ToolbarPopupTheme"
                 app:title="@{null}">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/logo_small" />
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -63,7 +68,7 @@
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

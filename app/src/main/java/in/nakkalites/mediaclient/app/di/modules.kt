@@ -20,6 +20,7 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
+import `in`.nakkalites.mediaclient.viewmodel.webview.WebViewVm
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
@@ -91,6 +92,7 @@ val viewModelModule = module {
     viewModel { WebSeriesDetailVm(get()) }
     viewModel { VideoDetailVm(get()) }
     viewModel { VideoPlayerVm(get()) }
+    viewModel { WebViewVm() }
 }
 
 fun netModule(serverUrl: String) = module {

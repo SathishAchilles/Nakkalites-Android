@@ -137,7 +137,7 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun showLoading() {
-        splashAnimator(binding.logoGroup)
+        splashAnimator(binding.logo)
     }
 
     private fun splashAnimator(view: View) {

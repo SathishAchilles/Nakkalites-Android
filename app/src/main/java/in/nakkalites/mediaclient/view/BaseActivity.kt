@@ -15,7 +15,7 @@ abstract class BaseActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(showHomeAsUp)
         if (showHomeAsUp) {
             if (upIsBack) { // calls either overridden onBackPressed() or super.onBackPressed()
-                toolbar.setNavigationOnClickListener { v: View? -> onBackPressed() }
+                toolbar.setNavigationOnClickListener { onBackPressed() }
             } else {
                 toolbar.setNavigationOnClickListener { v: View? ->
                     val intent = NavUtils.getParentActivityIntent(this@BaseActivity)

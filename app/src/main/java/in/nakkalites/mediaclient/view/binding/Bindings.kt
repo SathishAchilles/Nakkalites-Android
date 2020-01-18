@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
@@ -199,6 +200,23 @@ object Bindings {
     fun ProgressBar.bindProgress(progress : Int) {
         setProgress(progress)
     }
+
+    /**
+     * support-v7 version of [androidx.databinding.adapters.ToolbarBindingAdapter]
+     */
+    @BindingMethods(
+        BindingMethod(
+            type = Toolbar::class,
+            attribute = "android:onMenuItemClick",
+            method = "setOnMenuItemClickListener"
+        ),
+        BindingMethod(
+            type = Toolbar::class,
+            attribute = "android:onNavigationClick",
+            method = "setNavigationOnClickListener"
+        )
+    )
+    class ToolbarV7BindingAdapter
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {
         if (drawable != null && color != 0) {

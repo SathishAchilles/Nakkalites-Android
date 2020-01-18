@@ -60,7 +60,7 @@
                 android:progress="@{vm.progressPercent}"
                 android:progressDrawable="@color/red"
                 android:visibility="@{vm.showProgress}"
-                tools:progress="50" />
+                tools:progress="10" />
         </FrameLayout>
 
         <TextView

@@ -3,6 +3,7 @@ package `in`.nakkalites.mediaclient.view.home
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.*
 import `in`.nakkalites.mediaclient.domain.models.BannerType
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
@@ -15,21 +16,25 @@ import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoGroupItemView
 import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.view.videogroup.VideoGroupListActivity
 import `in`.nakkalites.mediaclient.view.webseries.WebSeriesDetailActivity
+import `in`.nakkalites.mediaclient.view.webview.WebViewActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.BannerVm
 import `in`.nakkalites.mediaclient.viewmodel.home.BannersVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
-import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,6 +74,12 @@ class HomeActivity : BaseActivity() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.home, menu)
+        return true
+    }
+
     private fun init() {
         val pagerAdapter = BindingPagerAdapter(vm.pages, pageViewProvider, pageViewBinder)
             .also { it.setPageTitles(pageTitles) }
@@ -83,6 +94,7 @@ class HomeActivity : BaseActivity() {
                 }
             it.viewPager.adapter = pagerAdapter
             it.viewPager.currentItem = vm.selectedTab.position
+            it.toolbar.setOnMenuItemClickListener(toolbarMenuListener)
         }
     }
 
@@ -236,5 +248,23 @@ class HomeActivity : BaseActivity() {
     private val onWebSeriesClick = { vm1: WebSeriesVm ->
         loge("Web Series clicked ${vm1.name}")
         startActivity(WebSeriesDetailActivity.createIntent(this, vm1.id, vm1.name, vm1.thumbnail))
+    }
+
+    private val toolbarMenuListener = { menuItem: MenuItem ->
+        fun createWebViewIntent(url: String, @StringRes toolbarTitleRes: Int) =
+            WebViewActivity.createIntent(this, name = getString(toolbarTitleRes), url = url)
+
+        val intent = when (menuItem.itemId) {
+            R.id.open_source_licenses ->
+                createWebViewIntent(
+                    getString(R.string.licenses_html_path), R.string.open_source_licenses
+                )
+            R.id.terms_conditions ->
+                Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.TERMS_CONDITIONS))
+            R.id.privacy_policy ->
+                Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.PRIVACY_POLICY))
+            else -> null
+        }
+        intent?.let(::startActivity)?.let { true } ?: false
     }
 }

@@ -136,6 +136,9 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun goToHome() {
-        startActivity(HomeActivity.createIntent(this))
+        HomeActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
     }
 }
