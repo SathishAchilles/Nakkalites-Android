@@ -18,27 +18,90 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="7dp"
         android:layout_marginBottom="18dp"
         android:orientation="vertical">
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="false"
+            android:colorControlActivated="@color/white"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:progress="@{vm.progress}"
+            android:progressBackgroundTint="@color/grey_300"
+            android:progressTint="@color/cyan_400"
+            android:thumb="@drawable/bg_scrubber"
+            android:visibility="@{vm.showProgress}"
+            tools:progress="50" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/bold"
+            android:shadowColor="#80000000"
+            android:shadowDy="2"
+            android:shadowRadius="5"
+            android:text="@{vm.title}"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            tools:text="Amma Expectation vs Reality" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/normal"
+            android:text="@{vm.description}"
+            android:textColor="@color/silver_chalice"
+            android:textSize="16sp"
+            tools:text="A romantic video that resembles a typical Tamil love story. Let the romance begin!" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/normal"
-                android:text="@{vm.description}"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                tools:text="A romantic video that resembles a typical Tamil love story. Let the romance begin!" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:fontFamily="@font/bold"
+                    android:lineSpacingExtra="4.8sp"
+                    android:text="@string/starring"
+                    android:textColor="@color/alto"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/normal"
+                    android:lineSpacingExtra="3.9sp"
+                    android:text="@{vm.starring}"
+                    android:textColor="@color/silver_chalice"
+                    android:textSize="16sp"
+                    android:textStyle="normal"
+                    tools:text="Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,20 +110,22 @@
                 android:layout_marginStart="10dp"
                 android:drawableTop="@{@drawable/ic_share_white_24dp}"
                 android:drawablePadding="4dp"
-                android:drawableTint="@{@color/white}"
+                android:drawableTint="@{@color/cyan_400}"
                 android:fontFamily="@font/normal"
                 android:gravity="center"
-                android:padding="5dp"
                 android:onClick="@{() -> onShareClick.invoke(vm)}"
+                android:padding="5dp"
                 android:text="@string/share"
-                android:textColor="@color/white"
+                android:textColor="@color/cyan_400"
                 android:textSize="12sp" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="18dp"
+            android:layout_marginEnd="30dp"
             android:background="@color/grey_800" />
     </LinearLayout>
 </layout>

@@ -27,6 +27,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "        \"title_name\": \"Nakkalites\",\n" +
                 "        \"name\": \"Webseries Season1\",\n" +
                 "        \"id\": 123,\n" +
+                "      \"no_of_seasons\": 2,\n" +
                 "        \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
                 "        \"no_of_episodes\": 10,\n" +
                 "        \"description\": \"\",\n" +
@@ -140,8 +141,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(VideoGroupResponse::class.java)
-//        return Single.just(jsonAdapter.fromJson(json))
-        return videoGroupService.getVideoGroups(pagingBody.toMap())
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getVideoGroups(pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Triple(
@@ -366,6 +367,9 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "    \"id\": 123,\n" +
                 "    \"title_name\": \"Nakkalites\",\n" +
                 "    \"title_type\": \"random\",\n" +
+                "            \"duration\": 12233,\n" +
+                "            \"last_played_time\": 1233,\n" +
+                "    \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
                 "    \"video_name\": \" Episode 1\",\n" +
                 "    \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
                 "    \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
@@ -398,8 +402,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(VideoDetailResponse::class.java)
-//        return Single.just(jsonAdapter.fromJson(json))
-        return videoGroupService.getVideoDetail(id)
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getVideoDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 Video.map(response.video)

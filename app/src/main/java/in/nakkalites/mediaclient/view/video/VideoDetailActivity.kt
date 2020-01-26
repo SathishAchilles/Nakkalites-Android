@@ -152,6 +152,7 @@ class VideoDetailActivity : BaseActivity() {
             is VideoDetailItemVm -> {
                 (itemBinding as ItemVideoDetailBinding).vm = vm1
                 itemBinding.onShareClick = onShareClick
+                itemBinding.seekbar.setOnTouchListener { _, _ -> true }
             }
             is VideoGroupVm -> {
                 ViewModelBinders.mapViewGroupVmBinding(
