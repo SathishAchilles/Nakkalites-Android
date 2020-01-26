@@ -8,6 +8,7 @@ import android.net.Uri
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -16,6 +17,7 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector
+import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -53,11 +55,12 @@ class VideoObserver(
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
     private val backButton = activity.findViewById<ImageView>(R.id.back)
+    private val seekBar = activity.findViewById<DefaultTimeBar>(R.id.exo_progress)
     private var currentSecond: Long = 0
         set(value) {
             field = value
             videoDuration?.let {
-                playerTracker.trackVideoProgress(it, currentSecond)
+                playerTracker.timeElapsed = it
             }
         }
 

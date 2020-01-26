@@ -1,10 +1,7 @@
 package `in`.nakkalites.mediaclient.domain.models
 
 import `in`.nakkalites.mediaclient.data.user.UserEntity
-import `in`.nakkalites.mediaclient.data.videogroup.BannerEntity
-import `in`.nakkalites.mediaclient.data.videogroup.VideoEntity
-import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupEntity
-import `in`.nakkalites.mediaclient.data.videogroup.WebSeriesEntity
+import `in`.nakkalites.mediaclient.data.videogroup.*
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
@@ -19,29 +16,31 @@ data class User(
 
 data class Video(
     val id: String, val titleName: String, val videoName: String, val url: String,
-    val thumbnailImage: String, val description: String?, val shareText: String?,
-    val duration: Long?, val lastPlayedTime: Long?, val videoGroups: List<VideoGroup>
+    val thumbnailImage: String, val description: String?, val duration: Long?,
+    val lastPlayedTime: Long?, val starring: String?, val videoGroups: List<VideoGroup>
 ) {
     companion object {
         fun map(videoEntity: VideoEntity): Video = Video(
             videoEntity.id, videoEntity.titleName, videoEntity.videoName,
-            videoEntity.url, videoEntity.thumbnail, videoEntity.description, videoEntity.shareText,
-            videoEntity.duration, videoEntity.lastPlayedTime,
+            videoEntity.url, videoEntity.thumbnail, videoEntity.description,
+            videoEntity.duration, videoEntity.lastPlayedTime, videoEntity.starring,
             videoEntity.videoGroups.map { VideoGroup.map(it) }
         )
     }
 }
 
 data class WebSeries(
-    val id: String, val name: String, val thumbnailImage: String,
-    val episodesCount: Int, val description: String, val nextEpisodeNumber: Int,
-    val videoGroups: List<VideoGroup>
+    val id: String, val name: String, val thumbnailImage: String, val webSeriesCount: Int,
+    val nextWebSeriesNumber: Int?, val nextEpisodeNumber: Int, val description: String,
+    val nextVideoId: String?, val starring: String?, val seasons: List<Season>
 ) {
     companion object {
         fun map(webSeriesEntity: WebSeriesEntity): WebSeries = WebSeries(
             webSeriesEntity.id, webSeriesEntity.name,
-            webSeriesEntity.thumbnail, webSeriesEntity.episodesCount, webSeriesEntity.description,
-            webSeriesEntity.nextEpisode ?: 1, webSeriesEntity.videoGroups.map { VideoGroup.map(it) }
+            webSeriesEntity.thumbnail, webSeriesEntity.seasonsCount,
+            webSeriesEntity.nextWebseriesNumber, webSeriesEntity.nextEpisodeNumber ?: 1,
+            webSeriesEntity.description, webSeriesEntity.nextVideoId, webSeriesEntity.starring,
+            webSeriesEntity.seasons.map { Season.map(it) }
         )
     }
 }
@@ -66,6 +65,17 @@ data class VideoGroup(
         fun map(videoGroupEntity: VideoGroupEntity): VideoGroup = VideoGroup(
             videoGroupEntity.id, videoGroupEntity.name,
             videoGroupEntity.videos.map { Video.map(it) }
+        )
+    }
+}
+
+data class Season(
+    val id: String, val name: String, val episodes: List<Video>
+) {
+    companion object {
+        fun map(seasonEntity: SeasonEntity): Season = Season(
+            seasonEntity.id, seasonEntity.name,
+            seasonEntity.episodes.map { Video.map(it) }
         )
     }
 }

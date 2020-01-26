@@ -21,4 +21,10 @@
     <color name="amber_700">#E89B00</color>
     <color name="grey_500">#9A9A9A</color>
     <color name="red">#FF0000</color>
+    <color name="alto">#DADADA</color>
+    <color name="silver_chalice">#B0B0B0</color>
+    <color name="harlequin">#21EE00</color>
+    <color name="grey_600">#7A7A7A</color>
+    <color name="black">#000000</color>
+    <color name="green_a700">#0CA51D</color>
 </resources>

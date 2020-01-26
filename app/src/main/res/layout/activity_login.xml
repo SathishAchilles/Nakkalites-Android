@@ -11,8 +11,8 @@
             type="in.nakkalites.mediaclient.viewmodel.login.LoginVm" />
 
         <variable
-            name="onSignUpClick"
-            type="kotlin.jvm.functions.Function0&lt;kotlin.Unit&gt;" />
+            name="callback"
+            type="in.nakkalites.mediaclient.view.login.LoginViewCallbacks" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:onClick="@{onSignUpClick}"
             android:text="@string/continue_with_google"
             app:buttonSize="standard"
             app:circleCrop="true"

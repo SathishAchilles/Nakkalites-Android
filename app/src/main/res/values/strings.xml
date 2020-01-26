@@ -5,7 +5,10 @@
     <string name="all">All</string>
     <string name="web_series">Web series</string>
     <string name="x_episodes">%s - Episodes</string>
-    <string name="x_seasons">%s - Seasons</string>
+    <plurals name="x_season">
+        <item quantity="one">%s season</item>
+        <item quantity="other">%s seasons</item>
+    </plurals>
     <string name="play_episode_x">Play Episode %s</string>
     <string name="share">Share</string>
     <string name="share_sheet_title">Share %s</string>
@@ -17,11 +20,15 @@
     <string name="update_app">Update App</string>
     <string name="cancel">Cancel</string>
     <string name="skip">Skip</string>
-    <string name="generic_error_message">Something went Wrong. Please try again later</string>
+    <string name="generic_error_message">Something went wrong. Please try again later</string>
     <string name="error_no_user">No User found</string>
     <string name="terms_and_conditions">Terms And Conditions</string>
     <string name="open_source_licenses">Open Source Licenses</string>
     <string name="privacy_policy">Privacy Policy</string>
     <!-- for android_asset, see https://stackoverflow.com/a/18720439/1852422 -->
     <string name="licenses_html_path" translatable="false">file:///android_asset/licenses.html</string>
+    <string name="web_series_share_text">Share %s</string>
+    <string name="video_share_text">Share %s</string>
+    <string name="starring">Starring</string>
+    <string name="episode_title">%s - %s</string>
 </resources>

@@ -33,11 +33,13 @@ class VideoPlayerVm(
 
     override var duration: Long = 0
 
+    override var timeElapsed: Long = 0
+
     override var shouldPauseCurrentVideo = false
 
-    override fun trackVideoProgress(totalDuration: Long, timeElapsed: Long) {
+    fun uploadVideoProgress() {
         disposable?.dispose()
-        disposable = videoGroupDomain.trackVideo(id!!, totalDuration, duration)
+        disposable = videoGroupDomain.trackVideo(id!!, duration, timeElapsed)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onComplete = {

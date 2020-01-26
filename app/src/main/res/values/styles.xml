@@ -11,6 +11,8 @@
         <item name="android:fontFamily">@font/normal</item>
         <item name="collapsedTitleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
         <item name="expandedTitleTextAppearance">@style/CollapsingToolbarTitleStyle</item>
+        <item name="spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
@@ -87,4 +89,17 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 
+    <style name="SpinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="SpinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+
+    </style>
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/bg_spinner</item>
+    </style>
 </resources>

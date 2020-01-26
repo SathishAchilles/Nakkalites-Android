@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.viewmodel.webseries.SeasonHeaderVm" />
+
+        <variable
+            name="onItemClick"
+            type="kotlin.jvm.functions.Function1&lt;kotlin.Pair&lt;String,String&gt;,kotlin.Unit&gt;" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/season_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
+            android:background="@null"
+            android:lineSpacingExtra="4.8sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:popupBackground="@color/white"
+            android:popupElevation="3dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:entries="@{vm.seasonsEntries}"
+            app:onItemClick="@{onItemClick}"
+            tools:text="Season 1" />
+    </LinearLayout>
+</layout>

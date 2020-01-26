@@ -87,4 +87,13 @@ class VideoPlayerActivity : BaseActivity() {
         })
     }
 
+    override fun onPause() {
+        super.onPause()
+        vm.uploadVideoProgress()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        vm.uploadVideoProgress()
+    }
 }

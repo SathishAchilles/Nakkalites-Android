@@ -37,6 +37,7 @@ data class VideoEntity(
     @field:Json(name = "duration") val duration: Long?,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "description") val description: String?,
+    @field:Json(name = "starring") val starring: String?,
     @field:Json(name = "share_text") val shareText: String?,
     @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
 )
@@ -45,14 +46,24 @@ data class VideoEntity(
 data class WebSeriesEntity(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "name") val name: String,
+    @field:Json(name = "no_of_seasons") val seasonsCount: Int,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
-    @field:Json(name = "no_of_episodes") val episodesCount: Int,
+    @field:Json(name = "next_webseries_number") val nextWebseriesNumber: Int?,
+    @field:Json(name = "next_episode_number") val nextEpisodeNumber: Int?,
+    @field:Json(name = "next_video_id") val nextVideoId: String?,
     @field:Json(name = "description") val description: String,
-    @field:Json(name = "next_episode_number") val nextEpisode: Int?,
-    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
+    @field:Json(name = "starring") val starring: String?,
+    @field:Json(name = "seasons") val seasons: List<SeasonEntity> = listOf()
 )
 
 @JsonClass(generateAdapter = true)
 data class WebSeriesDetailResponse(
     @field:Json(name = "web_series") val webSeries: WebSeriesEntity
+)
+
+@JsonClass(generateAdapter = true)
+data class SeasonEntity(
+    @field:Json(name = "id") val id: String,
+    @field:Json(name = "name") val name: String,
+    @field:Json(name = "episodes") val episodes: List<VideoEntity> = listOf()
 )

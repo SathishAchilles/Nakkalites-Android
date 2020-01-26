@@ -48,7 +48,7 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-        binding.onSignUpClick = onSignUpClick
+        binding.callback = callback
         setupGoogleSignInOptions()
         hideLoading()
         vm.viewStates().observe(this, EventObserver {
@@ -119,6 +119,7 @@ class LoginActivity : BaseActivity() {
             .requestProfile()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+        binding.signInButton.setOnClickListener { callback.onSignUpClick() }
     }
 
     private fun setGoogleButtonText(signInButton: SignInButton, buttonText: String) {
@@ -131,8 +132,10 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private val onSignUpClick = {
-        startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
+    private val callback = object : LoginViewCallbacks {
+        override fun onSignUpClick() {
+            startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
+        }
     }
 
     private fun goToHome() {

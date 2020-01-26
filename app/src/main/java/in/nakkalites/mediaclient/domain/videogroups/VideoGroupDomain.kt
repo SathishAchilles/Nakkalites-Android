@@ -1,14 +1,13 @@
 package `in`.nakkalites.mediaclient.domain.videogroups
 
 import `in`.nakkalites.logging.loge
-import `in`.nakkalites.mediaclient.data.PrefsConstants
-import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.videogroup.*
 import `in`.nakkalites.mediaclient.domain.BaseDomain
-import `in`.nakkalites.mediaclient.domain.models.*
+import `in`.nakkalites.mediaclient.domain.models.Banner
+import `in`.nakkalites.mediaclient.domain.models.Video
+import `in`.nakkalites.mediaclient.domain.models.VideoGroup
+import `in`.nakkalites.mediaclient.domain.models.WebSeries
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
-import android.net.Uri
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -160,6 +159,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "      \"title_name\": \"Nakkalites\",\n" +
                 "      \"name\": \"Webseries Season1\",\n" +
                 "      \"id\": 123,\n" +
+                "      \"no_of_seasons\": 2,\n" +
                 "      \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
                 "      \"no_of_episodes\": 10,\n" +
                 "      \"description\": \"\",\n" +
@@ -193,7 +193,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "      \"name\": \"Webseries Season2\",\n" +
                 "      \"id\": 123,\n" +
                 "      \"thumbnail_image\": \"https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg\",\n" +
-                "      \"no_of_episodes\": 10,\n" +
+                "      \"no_of_seasons\": 2,\n" +
                 "      \"description\": \"\",\n" +
                 "      \"video_list\": [\n" +
                 "        {\n" +
@@ -224,8 +224,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesListResponse::class.java)
-//        return Single.just(jsonAdapter.fromJson(json))
-        return videoGroupService.getWebSeriesList(pagingBody.toMap())
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getWebSeriesList(pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Pair(response.webSeriesList.map { WebSeries.map(it) }, response.cursor)
@@ -281,29 +281,70 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "    \"title_name\": \"Nakkalites\",\n" +
                 "    \"name\": \"Webseries Season1\",\n" +
                 "    \"id\": 123,\n" +
+                "    \"no_of_seasons\": 2,\n" +
                 "    \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
-                "    \"no_of_episodes\": 10,\n" +
+                "    \"next_webseries_number\": 2,\n" +
+                "    \"next_episode_number\": 2,\n" +
+                "    \"next_video_id\": 1,\n" +
                 "    \"description\": \"The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again! \",\n" +
-                "    \"video_list\": [\n" +
+                "    \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
+                "    \"seasons\": [\n" +
                 "      {\n" +
-                "        \"id\": 0,\n" +
-                "        \"header_name\": \"Episodes\",\n" +
-                "        \"videos\": [\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Season 1\",\n" +
+                "        \"episodes\": [\n" +
                 "          {\n" +
                 "            \"id\": 123,\n" +
                 "            \"title_name\": \"Nakkalites\",\n" +
                 "            \"title_type\": \"random\",\n" +
                 "            \"video_name\": \" Episode 1\",\n" +
+                "            \"description\": \"The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!\",\n" +
+                "            \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
                 "            \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
-                "            \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\"\n" +
+                "            \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
+                "            \"duration\": 12233,\n" +
+                "            \"last_played_time\": 1233\n" +
                 "          },\n" +
                 "          {\n" +
                 "            \"id\": 123,\n" +
                 "            \"title_name\": \"Nakkalites\",\n" +
                 "            \"title_type\": \"random\",\n" +
                 "            \"video_name\": \" Episode 2\",\n" +
+                "            \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
+                "            \"description\": \"The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!\",\n" +
                 "            \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
-                "            \"thumbnail_image\": \"https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg\"\n" +
+                "            \"thumbnail_image\": \"https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg\",\n" +
+                "            \"duration\": 12233,\n" +
+                "            \"last_played_time\": 1233\n" +
+                "          }\n" +
+                "        ]\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Season 2\",\n" +
+                "        \"episodes\": [\n" +
+                "          {\n" +
+                "            \"id\": 123,\n" +
+                "            \"title_name\": \"Nakkalites\",\n" +
+                "            \"title_type\": \"random\",\n" +
+                "            \"video_name\": \" Episode 3\",\n" +
+                "            \"description\": \"The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!\",\n" +
+                "            \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
+                "            \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
+                "            \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\",\n" +
+                "            \"duration\": 12233,\n" +
+                "            \"last_played_time\": 1233\n" +
+                "          },\n" +
+                "          {\n" +
+                "            \"id\": 123,\n" +
+                "            \"title_name\": \"Nakkalites\",\n" +
+                "            \"title_type\": \"random\",\n" +
+                "            \"video_name\": \" Episode 4\",\n" +
+                "            \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
+                "            \"description\": \"The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!\",\n" +
+                "            \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
+                "            \"thumbnail_image\": \"https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg\",\n" +
+                "            \"duration\": 12233\n" +
                 "          }\n" +
                 "        ]\n" +
                 "      }\n" +
@@ -311,8 +352,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesDetailResponse::class.java)
-//        return Single.just(jsonAdapter.fromJson(json))
-        return videoGroupService.getWebSeriesDetail(id)
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getWebSeriesDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 WebSeries.map(response.webSeries)

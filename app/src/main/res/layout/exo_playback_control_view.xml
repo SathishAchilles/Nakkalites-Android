@@ -59,32 +59,6 @@
         app:srcCompat="@drawable/exo_icon_play" />
 
     <ImageButton
-        android:id="@id/exo_rew"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_alignBaseline="@id/exo_play"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/exo_play"
-        android:background="@color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/exo_icon_rewind" />
-
-    <ImageButton
-        android:id="@id/exo_ffwd"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_alignBaseline="@id/exo_play"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/exo_play"
-        android:background="@color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/exo_icon_fastforward" />
-
-    <ImageButton
         android:id="@id/exo_pause"
         android:layout_width="42dp"
         android:layout_height="42dp"
@@ -127,10 +101,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxHeight="10dp"
+                android:thumbTint="@color/cyan_400"
                 app:bar_height="3dp"
                 app:buffered_color="@color/grey_400"
-                app:played_color="@color/amber_700"
+                app:played_color="@color/green_a700"
                 app:scrubber_drawable="@drawable/bg_scrubber"
+                app:scrubber_enabled_size="10dp"
                 app:unplayed_color="@color/grey_500" />
 
             <TextView

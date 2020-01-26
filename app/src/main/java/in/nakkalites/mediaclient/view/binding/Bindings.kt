@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.view.binding
 
+import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import android.content.Context
 import android.content.res.ColorStateList
@@ -9,11 +10,10 @@ import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.ImageViewCompat
@@ -26,12 +26,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import org.jetbrains.annotations.NotNull
 
 object Bindings {
     @JvmStatic
     @BindingAdapter("android:onClick")
-    fun View.bindOnClick(onClickRunnable: Function0<Unit>?) {
-        setOnClickListener { onClickRunnable?.invoke() }
+    fun View.bindOnClick(onClickRunnable: Runnable?) {
+        setOnClickListener { onClickRunnable?.run() }
     }
 
     @JvmStatic
@@ -197,7 +198,7 @@ object Bindings {
 
     @JvmStatic
     @BindingAdapter("android:progress")
-    fun ProgressBar.bindProgress(progress : Int) {
+    fun ProgressBar.bindProgress(progress: Int) {
         setProgress(progress)
     }
 
@@ -217,6 +218,29 @@ object Bindings {
         )
     )
     class ToolbarV7BindingAdapter
+
+    @JvmStatic
+    @BindingAdapter(value = ["entries", "onItemClick"], requireAll = false)
+    fun AppCompatSpinner.bindAdapter(
+        items: List<Pair<String, String>>, onItemClick: (@NotNull Pair<String, String>) -> Unit
+    ) {
+        val adapter = ArrayAdapter<String>(
+            this.context, R.layout.spinner_item_selected, items.map { it.second })
+        adapter.setDropDownViewResource(R.layout.spinner_drop_down_item)
+
+        setAdapter(adapter)
+        onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>, view: View?, position: Int, id: Long
+            ) {
+                onItemClick.invoke(items[position])
+            }
+        }
+    }
 
     private fun tintDrawable(drawable: Drawable?, @ColorInt color: Int): Drawable? {
         if (drawable != null && color != 0) {

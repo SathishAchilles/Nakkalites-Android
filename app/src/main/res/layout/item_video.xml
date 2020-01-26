@@ -57,8 +57,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_gravity="bottom"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:progress="@{vm.progressPercent}"
-                android:progressDrawable="@color/red"
+                android:progressDrawable="@color/harlequin"
                 android:visibility="@{vm.showProgress}"
                 tools:progress="10" />
         </FrameLayout>

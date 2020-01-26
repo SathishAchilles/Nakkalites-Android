@@ -7,9 +7,16 @@ import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 
 class WebSeriesDetailItemVm(webSeries: WebSeries) : BaseModel {
-    val episodesCount = DisplayText.Singular(R.string.x_seasons, listOf(webSeries.episodesCount))
+    val name = webSeries.name
+    val webseriesCount = DisplayText.Plural(
+        R.plurals.x_season, webSeries.webSeriesCount, listOf(webSeries.webSeriesCount)
+    )
     val nextEpisodeButtonText =
         DisplayText.Singular(R.string.play_episode_x, listOf(webSeries.nextEpisodeNumber))
     val description = webSeries.description
-    val videoVm = VideoVm(webSeries.videoGroups[0].videos[0])
+    val starring = webSeries.starring
+    private val nextVideo =
+        webSeries.seasons.map { it.episodes.filter { video -> video.id == webSeries.nextVideoId } }
+            .flatten().firstOrNull()
+    val videoVm: VideoVm = VideoVm(nextVideo ?: webSeries.seasons[0].episodes[0])
 }

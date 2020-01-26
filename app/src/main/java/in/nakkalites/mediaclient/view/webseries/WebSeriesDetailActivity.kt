@@ -4,6 +4,8 @@ import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityWebSeriesDetailBinding
+import `in`.nakkalites.mediaclient.databinding.ItemSeasonEpisodeBinding
+import `in`.nakkalites.mediaclient.databinding.ItemSeasonHeaderBinding
 import `in`.nakkalites.mediaclient.databinding.ItemWebSeriesDetailBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
@@ -12,6 +14,8 @@ import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
+import `in`.nakkalites.mediaclient.viewmodel.webseries.SeasonEpisodeItemVm
+import `in`.nakkalites.mediaclient.viewmodel.webseries.SeasonHeaderVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailItemVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
@@ -22,6 +26,7 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class WebSeriesDetailActivity : BaseActivity() {
 
@@ -65,7 +70,7 @@ class WebSeriesDetailActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        this.menu = menu;
+        this.menu = menu
         menuInflater.inflate(R.menu.menu_share, menu)
         hideOption(R.id.action_share)
         return true
@@ -74,6 +79,7 @@ class WebSeriesDetailActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id: Int = item.itemId
         if (id == R.id.action_share) {
+
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -90,12 +96,12 @@ class WebSeriesDetailActivity : BaseActivity() {
     }
 
     fun init() {
-//        binding.appBar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
+//        binding.appBar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
 //            var isShow = false
 //            var scrollRange = -1
 //            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
 //                if (scrollRange == -1) {
-//                    scrollRange = appBarLayout.totalScrollRange
+//                    scrollRange = appBarLayout.totalScrollRange +
 //                }
 //                if (scrollRange + verticalOffset == 0) {
 //                    isShow = true
@@ -123,25 +129,60 @@ class WebSeriesDetailActivity : BaseActivity() {
         viewProvider { vm ->
             when (vm) {
                 is WebSeriesDetailItemVm -> R.layout.item_web_series_detail
+                is SeasonEpisodeItemVm -> R.layout.item_season_episode
+                is SeasonHeaderVm -> R.layout.item_season_header
                 else -> argumentError()
             }
         })
 
+    private val callbacks: WebSeriesDetailCallbacks = object : WebSeriesDetailCallbacks {
+        override fun onVideoClick(vm: VideoVm) {
+            onVideoClick.invoke(vm)
+        }
+
+        override fun onShareClick(vm: WebSeriesDetailItemVm) {
+            loge("Webseries shared ${vm.name}")
+            val intent = Intent(Intent.ACTION_SEND)
+                .setType("text/*")
+                .putExtra(Intent.EXTRA_TEXT, getString(R.string.web_series_share_text, vm.name))
+                .let { Intent.createChooser(it, getString(R.string.share_sheet_title, vm.name)) }
+            startActivity(intent)
+        }
+    }
+
     private val onVideoClick = { vm: VideoVm ->
         loge("Video clicked ${vm.name}")
-        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+        openVideoPlayerPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+    }
+
+    private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
+        loge("Video clicked ${vm.title}")
+        openVideoPlayerPage(this, vm.id, vm.title, vm.imageUrl, vm.url)
+    }
+
+    private val onSeasonSelected = { seasonPair: Pair<String, String> ->
+        Timber.e(seasonPair.first)
+        vm.onSeasonSelected(seasonPair)
     }
 
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is WebSeriesDetailItemVm -> {
                 (itemBinding as ItemWebSeriesDetailBinding).vm = vm1
-                itemBinding.onVideoClick = onVideoClick
+                itemBinding.callback = callbacks
             }
             is VideoGroupVm -> {
                 ViewModelBinders.mapViewGroupVmBinding(
                     this, onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250), false
                 )
+            }
+            is SeasonEpisodeItemVm -> {
+                (itemBinding as ItemSeasonEpisodeBinding).transformations =
+                    getDefaultTransformations()
+                itemBinding.onVideoClick = onEpisodeVideoClick
+            }
+            is SeasonHeaderVm -> {
+                (itemBinding as ItemSeasonHeaderBinding).onItemClick = onSeasonSelected
             }
         }
     }

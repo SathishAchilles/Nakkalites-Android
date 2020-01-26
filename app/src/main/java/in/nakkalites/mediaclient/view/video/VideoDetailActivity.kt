@@ -142,7 +142,7 @@ class VideoDetailActivity : BaseActivity() {
         loge("Video share click ${vm.url}")
         val intent = Intent(Intent.ACTION_SEND)
             .setType("text/*")
-            .putExtra(Intent.EXTRA_TEXT, vm.shareText)
+            .putExtra(Intent.EXTRA_TEXT, getString(R.string.web_series_share_text, vm.name))
             .let { Intent.createChooser(it, getString(R.string.share_sheet_title, vm.name)) }
         startActivity(intent)
     }

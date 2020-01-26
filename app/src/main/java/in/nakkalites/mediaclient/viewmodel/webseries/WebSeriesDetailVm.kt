@@ -1,14 +1,13 @@
 package `in`.nakkalites.mediaclient.viewmodel.webseries
 
-import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.domain.models.Season
+import `in`.nakkalites.mediaclient.domain.models.WebSeries
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -25,6 +24,8 @@ class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseVi
     var id: String? = null
     var name: String? = null
     var thumbnail: String? = null
+    private val seasons = mutableListOf<Season>()
+    private var selectedSeasonId: String? = null
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
@@ -39,10 +40,9 @@ class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseVi
     fun fetchWebSeriesDetail(id: String) {
         disposables += videoGroupDomain.getWebSeriesDetail(id)
             .map { webSeries ->
-                listOf(WebSeriesDetailItemVm(webSeries)) +
-                        webSeries.videoGroups.map { VideoGroupVm(it) }
+                seasons.addAll(webSeries.seasons)
+                createViewModels(webSeries)
             }
-            .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isDataLoading, items))
             .subscribeBy(
@@ -55,11 +55,27 @@ class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseVi
             )
     }
 
+    private fun createViewModels(webSeries: WebSeries): List<BaseModel> {
+        val viewModels = mutableListOf<BaseModel>(WebSeriesDetailItemVm(webSeries))
+        viewModels.add(SeasonHeaderVm(webSeries.seasons))
+        viewModels.addAll(createEpisodeVms(webSeries.seasons.firstOrNull()))
+        return viewModels
+    }
 
-    private fun handleEmptyPage(viewModels: MutableList<BaseModel>): List<BaseModel> {
-        if (viewModels.isEmpty()) {
-            viewModels.add(EmptyStateVm(R.layout.empty_state))
+    private fun createEpisodeVms(season: Season?): List<BaseModel> {
+        val viewModels = mutableListOf<BaseModel>()
+        selectedSeasonId = season?.id
+        season?.episodes?.mapIndexed { index, video ->
+            viewModels.add(SeasonEpisodeItemVm(season.id, season.name, index + 1, video))
         }
         return viewModels
     }
+
+    fun onSeasonSelected(seasonPair: Pair<String, String>) {
+        if (selectedSeasonId != seasonPair.first) {
+            items.removeAll { it is SeasonEpisodeItemVm }
+            items.addAll(createEpisodeVms(seasons.firstOrNull { it.id == seasonPair.first }))
+        }
+    }
+
 }

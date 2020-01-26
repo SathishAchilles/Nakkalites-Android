@@ -11,9 +11,8 @@
             type="in.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailItemVm" />
 
         <variable
-            name="onVideoClick"
-            type="kotlin.jvm.functions.Function1&lt;VideoVm,kotlin.Unit&gt;" />
-
+            name="callback"
+            type="in.nakkalites.mediaclient.view.webseries.WebSeriesDetailCallbacks" />
     </data>
 
     <LinearLayout
@@ -23,22 +22,44 @@
         android:layout_marginEnd="30dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/normal"
-            android:paddingTop="14dp"
-            android:text="@{vm.episodesCount}"
-            android:textColor="@color/grey_400_3"
-            android:textSize="16sp"
-            tools:text="@string/x_episodes" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/normal"
+                android:paddingTop="14dp"
+                android:text="@{vm.webseriesCount}"
+                android:textColor="@color/grey_400_2"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"
+                android:drawableTop="@{@drawable/ic_share_white_24dp}"
+                android:drawablePadding="4dp"
+                android:drawableTint="@{@color/cyan_400}"
+                android:fontFamily="@font/normal"
+                android:gravity="center"
+                android:onClick="@{() -> callback.onShareClick(vm)}"
+                android:padding="5dp"
+                android:text="@string/share"
+                android:textColor="@color/cyan_400"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/green_button"
-            android:onClick="@{() -> onVideoClick.invoke(vm.videoVm)}">
+            android:onClick="@{() -> callback.onVideoClick(vm.videoVm)}">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,11 +84,33 @@
             android:textColor="@color/grey_400_3"
             android:textSize="16sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:fontFamily="@font/bold"
+            android:lineSpacingExtra="4.8sp"
+            android:text="@string/starring"
+            android:textColor="@color/alto"
+            android:textSize="20sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/normal"
+            android:lineSpacingExtra="3.9sp"
+            android:text="@{vm.starring}"
+            android:textColor="@color/silver_chalice"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            tools:text="Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="18dp"
-            android:layout_marginBottom="18dp"
             android:background="@color/grey_800" />
     </LinearLayout>
 </layout>

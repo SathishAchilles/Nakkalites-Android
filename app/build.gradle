@@ -106,6 +106,8 @@ dependencies {
     implementation deps.spinKit
     implementation deps.stetho.core
     implementation deps.stetho.okHttp
+    implementation deps.stetho.okHttp
+    implementation deps.time
 
     testImplementation deps.junit
     androidTestImplementation deps.androidX.espressoCore

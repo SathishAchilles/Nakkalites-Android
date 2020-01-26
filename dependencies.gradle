@@ -35,6 +35,7 @@ ext.versions = [
         spinKit             : '1.4.0',
         stetho              : '1.5.1',
         timber              : '4.7.1',
+        time                : '1.0.3',
         viewPager           : '1.0.0'
 ]
 
@@ -89,6 +90,7 @@ ext.deps = [
                 auth: "com.google.android.gms:play-services-auth:${versions.playServices}"
         ],
         timber         : "com.jakewharton.timber:timber:${versions.timber}",
+        time           : "com.github.kizitonwose.time:time:${versions.time}",
         retrofit       : [
                 core          : "com.squareup.retrofit2:retrofit:${versions.retrofit}",
                 moshiConvertor: "com.squareup.retrofit2:converter-moshi:${versions.retrofit}",
