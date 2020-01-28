@@ -9,7 +9,6 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
 import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -43,7 +42,8 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         disposables += videoGroupDomain.getVideoDetail(id)
             .map { video ->
                 listOf(VideoDetailItemVm(video)) +
-                        video.videoGroups.map { VideoGroupVm(it) }
+                        VideoListHeader() +
+                        video.videos.map { VideoVm(it) }
             }
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())

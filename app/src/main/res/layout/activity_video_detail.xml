@@ -8,6 +8,14 @@
         <import type="in.nakkalites.mediaclient.viewmodel.video.VideoDetailVm" />
 
         <variable
+            name="spanSizeLookup"
+            type="androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup" />
+
+        <variable
+            name="spanCount"
+            type="Integer" />
+
+        <variable
             name="vm"
             type="VideoDetailVm" />
 
@@ -63,6 +71,20 @@
                         android:layout_gravity="center"
                         android:onClick="@{() -> onPlayClick.invoke(vm)}"
                         android:src="@drawable/ic_play_arrow_black_24dp" />
+
+                    <ImageView
+                        android:id="@+id/volume_button"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="end|bottom"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/background_item_selected"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/ic_volume_on" />
                 </FrameLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -70,9 +92,9 @@
                     style="@style/Toolbar"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
-                    app:title="@{vm.pageTitle}"
+                    app:title=" "
                     app:titleTextColor="@color/white"
-                    tools:title="Pavan" />
+                    tools:title="" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
@@ -82,7 +104,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/grey_900_2"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:spanCount="@{spanCount}"
+            app:spanSizeLookup="@{spanSizeLookup}"
+            tools:listitem="@layout/item_video"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

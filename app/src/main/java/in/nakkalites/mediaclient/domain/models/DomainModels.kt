@@ -17,14 +17,14 @@ data class User(
 data class Video(
     val id: String, val titleName: String, val videoName: String, val url: String,
     val thumbnailImage: String, val description: String?, val duration: Long?,
-    val lastPlayedTime: Long?, val starring: String?, val videoGroups: List<VideoGroup>
+    val lastPlayedTime: Long?, val starring: String?, val videos: List<Video>
 ) {
     companion object {
         fun map(videoEntity: VideoEntity): Video = Video(
             videoEntity.id, videoEntity.titleName, videoEntity.videoName,
             videoEntity.url, videoEntity.thumbnail, videoEntity.description,
             videoEntity.duration, videoEntity.lastPlayedTime, videoEntity.starring,
-            videoEntity.videoGroups.map { VideoGroup.map(it) }
+            videoEntity.videos.map { map(it) }
         )
     }
 }

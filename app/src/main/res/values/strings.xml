@@ -31,4 +31,5 @@
     <string name="video_share_text">Share %s</string>
     <string name="starring">Starring</string>
     <string name="episode_title">%s - %s</string>
+    <string name="related_videos">Related Videos</string>
 </resources>

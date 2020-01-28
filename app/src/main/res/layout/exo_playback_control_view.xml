@@ -30,20 +30,6 @@
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/ic_arrow_back" />
 
-    <ImageButton
-        android:id="@+id/volume_button"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/background_item_selected"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="5dp"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_volume_on" />
 
     <ImageButton
         android:id="@id/exo_play"
@@ -85,6 +71,20 @@
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
         android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/volume_button"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/background_item_selected"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_volume_on" />
 
         <LinearLayout
             android:layout_width="match_parent"

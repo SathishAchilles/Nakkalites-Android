@@ -8,19 +8,21 @@ import `in`.nakkalites.mediaclient.databinding.ItemVideoDetailBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
+import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
 import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
+import `in`.nakkalites.mediaclient.viewmodel.video.VideoListHeader
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.databinding.ObservableArrayList
+import androidx.recyclerview.widget.GridLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoDetailActivity : BaseActivity() {
@@ -40,7 +42,7 @@ class VideoDetailActivity : BaseActivity() {
         intent.getStringExtra(AppConstants.VIDEO_URL)
     }
     private var menu: Menu? = null
-
+    private val spanCount = 2
 
     companion object {
         @JvmStatic
@@ -113,22 +115,23 @@ class VideoDetailActivity : BaseActivity() {
 //            }
 //        })
         val recyclerView = binding.recyclerView
-        val gridLayoutManager = LinearLayoutManager(this)
-        val viewAdapter = RecyclerViewAdapter<BaseModel>(
-            vm.items, videoGroupViewProvider, videoGroupVmBinder
-        )
-        recyclerView.adapter = viewAdapter
+        val gridLayoutManager = GridLayoutManager(this, spanCount)
+        val viewAdapter = RecyclerViewAdapter<BaseModel>(vm.items, viewProvider, vmBinder)
+        binding.spanCount = spanCount
+        binding.spanSizeLookup = spanSizeLookup(vm.items)
         recyclerView.layoutManager = gridLayoutManager
+        recyclerView.adapter = viewAdapter
         vm.fetchVideoDetail(id)
     }
 
-    private val videoGroupViewProvider = ViewProviders.wrapSequentially(
+    private val viewProvider = ViewProviders.wrapSequentially(
         ViewProviders.progressViewProvider(),
         ViewProviders.dummyViewProvider(),
-        ViewProviders.videoGroupItemViewProvider(),
+        videoItemViewProvider(),
         viewProvider { vm ->
             when (vm) {
                 is VideoDetailItemVm -> R.layout.item_video_detail
+                is VideoListHeader -> R.layout.item_video_list_header
                 else -> argumentError()
             }
         })
@@ -147,17 +150,18 @@ class VideoDetailActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
+    private val vmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is VideoDetailItemVm -> {
                 (itemBinding as ItemVideoDetailBinding).vm = vm1
                 itemBinding.onShareClick = onShareClick
+//                itemBinding.seekbar.setPadding(0, 0, 0, 0)
                 itemBinding.seekbar.setOnTouchListener { _, _ -> true }
             }
-            is VideoGroupVm -> {
-                ViewModelBinders.mapViewGroupVmBinding(
-                    this, onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250), false
-                )
+            is VideoVm -> {
+                ViewModelBinders.videoViewModelProvider(
+                    this, dpToPx(115), (displayWidth() - dpToPx(40)) / spanCount, onVideoClick
+                ).bind(itemBinding, vm1)
             }
         }
     }
@@ -167,4 +171,16 @@ class VideoDetailActivity : BaseActivity() {
             VideoPlayerActivity.createIntent(this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!)
         )
     }
+
+    private fun spanSizeLookup(items: ObservableArrayList<BaseModel>) =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val vm1 = items[position]
+                return if (vm1 is VideoVm) {
+                    spanCount / 2
+                } else {
+                    spanCount
+                }
+            }
+        }
 }

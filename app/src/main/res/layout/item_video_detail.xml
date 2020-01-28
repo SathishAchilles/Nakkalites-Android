@@ -22,21 +22,58 @@
         android:layout_marginBottom="18dp"
         android:orientation="vertical">
 
-        <SeekBar
-            android:id="@+id/seekbar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:clickable="false"
-            android:colorControlActivated="@color/white"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:progress="@{vm.progress}"
-            android:progressBackgroundTint="@color/grey_300"
-            android:progressTint="@color/cyan_400"
-            android:thumb="@drawable/bg_scrubber"
-            android:visibility="@{vm.showProgress}"
-            tools:progress="50" />
+            android:orientation="horizontal">
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:colorControlActivated="@color/white"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:progress="@{vm.progress}"
+                android:progressBackgroundTint="@color/grey_300"
+                android:progressTint="@color/cyan_400"
+                android:thumb="@drawable/bg_scrubber"
+                android:visibility="@{vm.showProgress}"
+                tools:progress="50" />
+
+            <TextView
+                android:id="@+id/position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                tools:ignore="SmallSp"
+                android:text="@{vm.position}"/>
+
+            <TextView
+                android:id="@+id/duration_partition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="/"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                tools:ignore="HardcodedText,SmallSp" />
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                tools:ignore="SmallSp"
+                android:text="@{vm.duration}"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -119,13 +156,13 @@
                 android:textColor="@color/cyan_400"
                 android:textSize="12sp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="30dp"
-            android:background="@color/grey_800" />
+        <!--
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@color/grey_800" />-->
     </LinearLayout>
 </layout>
