@@ -25,6 +25,8 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var name: String? = null
     var thumbnail: String? = null
     var url: String? = null
+    var duration: Long? = 0L
+    var lastPlayedTime: Long? = 0L
     val pageTitle = ObservableField<String>()
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
@@ -40,6 +42,11 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
 
     fun fetchVideoDetail(id: String) {
         disposables += videoGroupDomain.getVideoDetail(id)
+            .map { video ->
+                duration = video.duration
+                lastPlayedTime = video.lastPlayedTime
+                video
+            }
             .map { video ->
                 listOf(VideoDetailItemVm(video)) +
                         VideoListHeader() +

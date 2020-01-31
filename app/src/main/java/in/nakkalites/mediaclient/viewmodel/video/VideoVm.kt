@@ -21,6 +21,8 @@ class VideoVm(
     } else {
         0
     }
+    val duration = video.duration
+    val lastPlayedTime = video.lastPlayedTime
 
     @DimenRes
     val marginStart =

@@ -138,7 +138,9 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         loge("Video clicked ${vm.name}")
-        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+        openVideoPlayerPage(
+            this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
+        )
     }
 
     private val onShareClick = { vm: VideoDetailItemVm ->
@@ -167,8 +169,8 @@ class VideoDetailActivity : BaseActivity() {
     }
 
     private val onPlayClick = { vm: VideoDetailVm ->
-        startActivity(
-            VideoPlayerActivity.createIntent(this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!)
+        openVideoPlayerPage(
+            this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration, vm.lastPlayedTime
         )
     }
 

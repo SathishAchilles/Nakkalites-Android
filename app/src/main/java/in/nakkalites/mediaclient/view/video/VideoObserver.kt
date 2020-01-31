@@ -8,7 +8,6 @@ import android.net.Uri
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -17,7 +16,6 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector
-import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -31,10 +29,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
     private val activity: Activity, private val id: String, url: String,
+    private val duration: Long, private val lastPlayedTime: Long,
     private val playerView: PlayerView, private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
@@ -55,7 +55,6 @@ class VideoObserver(
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
     private val backButton = activity.findViewById<ImageView>(R.id.back)
-    private val seekBar = activity.findViewById<DefaultTimeBar>(R.id.exo_progress)
     private var currentSecond: Long = 0
         set(value) {
             field = value
@@ -105,6 +104,10 @@ class VideoObserver(
         }
         with(player) {
             prepare(mediaSource)
+                Timber.e("${player.currentWindowIndex} $lastPlayedTime")
+            if (lastPlayedTime != 0L) {
+                seekTo(player.currentWindowIndex, lastPlayedTime)
+            }
             playWhenReady = !playerTracker.shouldPauseCurrentVideo
         }
         playerView.setShutterBackgroundColor(Color.TRANSPARENT)
@@ -118,6 +121,7 @@ class VideoObserver(
             }
             .map { player.currentPosition }
             .subscribe { currentSecond = it / 1000 }
+
         player.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 if (playbackState == Player.STATE_READY) {

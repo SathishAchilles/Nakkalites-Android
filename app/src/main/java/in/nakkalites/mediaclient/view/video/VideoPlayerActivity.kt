@@ -38,6 +38,13 @@ class VideoPlayerActivity : BaseActivity() {
     private val url by lazy {
         intent.getStringExtra(AppConstants.VIDEO_URL)
     }
+    private val lastPlayedTime: Long? by lazy {
+        intent.getLongExtra(AppConstants.LAST_PLAYED_TIME, 0L)
+    }
+    private val duration: Long? by lazy {
+        intent.getLongExtra(AppConstants.DURATION, 0L)
+    }
+
     private val stethoInterceptor by inject<StethoInterceptor>()
     private val bandwidthMeter by inject<DefaultBandwidthMeter>()
     private val trackSelector by inject<MappingTrackSelector>()
@@ -48,13 +55,15 @@ class VideoPlayerActivity : BaseActivity() {
     companion object {
         @JvmStatic
         fun createIntent(
-            ctx: Context, id: String, name: String, thumbnail: String, url: String
-        ): Intent =
-            Intent(ctx, VideoPlayerActivity::class.java)
-                .putExtra(AppConstants.VIDEO_ID, id)
-                .putExtra(AppConstants.VIDEO_NAME, name)
-                .putExtra(AppConstants.VIDEO_THUMBNAIL, thumbnail)
-                .putExtra(AppConstants.VIDEO_URL, url)
+            ctx: Context, id: String, name: String, thumbnail: String, url: String,
+            duration: Long?, lastPayedTime: Long?
+        ): Intent = Intent(ctx, VideoPlayerActivity::class.java)
+            .putExtra(AppConstants.VIDEO_ID, id)
+            .putExtra(AppConstants.VIDEO_NAME, name)
+            .putExtra(AppConstants.VIDEO_THUMBNAIL, thumbnail)
+            .putExtra(AppConstants.VIDEO_URL, url)
+            .putExtra(AppConstants.LAST_PLAYED_TIME, lastPayedTime)
+            .putExtra(AppConstants.DURATION, duration)
     }
 
     private val okClient: OkHttpClient
@@ -74,8 +83,8 @@ class VideoPlayerActivity : BaseActivity() {
         binding.vm = vm
         vm.setArgs(id, name, thumbnail, url)
         videoObserver = VideoObserver(
-            this, id, url, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
-            okClient, loadControl
+            this, id, url, duration ?: 0L, lastPlayedTime ?: 0L, binding.playerView, vm,
+            bandwidthMeter, trackSelector, simpleCache, okClient, loadControl
         )
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {

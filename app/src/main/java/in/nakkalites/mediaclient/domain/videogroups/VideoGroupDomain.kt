@@ -367,8 +367,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "    \"id\": 123,\n" +
                 "    \"title_name\": \"Nakkalites\",\n" +
                 "    \"title_type\": \"random\",\n" +
-                "            \"duration\": 12233,\n" +
-                "            \"last_played_time\": 1233,\n" +
+                "            \"duration\": 12232233,\n" +
+                "            \"last_played_time\": 123233,\n" +
                 "    \"starring\": \"Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar\",\n" +
                 "    \"video_name\": \" Episode 1\",\n" +
                 "    \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +

@@ -152,12 +152,16 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         loge("Video clicked ${vm.name}")
-        openVideoPlayerPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+        openVideoPlayerPage(
+            this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
+        )
     }
 
     private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
         loge("Video clicked ${vm.title}")
-        openVideoPlayerPage(this, vm.id, vm.title, vm.imageUrl, vm.url)
+        openVideoPlayerPage(
+            this, vm.id, vm.title, vm.imageUrl, vm.url, vm.durationInMs, vm.lastPlayedTime
+        )
     }
 
     private val onSeasonSelected = { seasonPair: Pair<String, String> ->
