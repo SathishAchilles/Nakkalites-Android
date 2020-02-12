@@ -19,18 +19,19 @@
             android:layout_width="match_parent"
             android:layout_height="210dp" />
 
-        <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
+        <com.rd.PageIndicatorView
             android:id="@+id/dots_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            app:dotsColor="@color/white"
-            app:dotsCornerRadius="8dp"
-            app:dotsSize="16dp"
-            app:dotsSpacing="4dp"
-            app:dotsStrokeColor="@color/cyan_400"
-            app:dotsStrokeWidth="2dp"
-            app:viewPager="@{viewPager}" />
+            android:layout_marginBottom="8dp"
+            app:piv_animationType="scale"
+            app:piv_dynamicCount="true"
+            app:piv_interactiveAnimation="true"
+            app:piv_selectedColor="@color/white"
+            app:piv_unselectedColor="@color/grey_300_2"
+            app:viewPager="@{viewPager}"
+            app:piv_padding="8dp"
+            app:piv_radius="3dp" />
     </LinearLayout>
 </layout>

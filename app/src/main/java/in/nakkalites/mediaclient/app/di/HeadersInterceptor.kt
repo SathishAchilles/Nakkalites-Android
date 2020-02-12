@@ -20,6 +20,7 @@ class HeadersInterceptor(private val userDataStore: UserDataStore) : Interceptor
         var count = 1
         while (count < maxRetries) {
             if (response.code != UNAUTHORIZED) return response
+            response.close()
             response = chain.proceed(rewriteHeaders(origRequest))
             count++
         }

@@ -31,4 +31,19 @@ class VideoVm(
         } else {
             R.dimen.horizontal_list_margin_start_default
         }
+
+    @DimenRes
+    val marginGridStart =
+        if (position %2 == 0) {
+            R.dimen.horizontal_list_margin_start_initial
+        } else {
+            R.dimen.video_default_margin
+        }
+    @DimenRes
+    val marginGridEnd =
+        if (position %2 == 0) {
+            R.dimen.video_default_margin
+        } else {
+            R.dimen.horizontal_list_margin_start_initial
+        }
 }

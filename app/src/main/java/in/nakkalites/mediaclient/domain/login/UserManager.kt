@@ -1,8 +1,8 @@
 package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.logging.loge
-import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
+import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
@@ -19,21 +19,22 @@ class UserManager(private val userService: UserService, private val userDataStor
     }
 
     fun login(
-        id: String, displayName: String?, email: String?, photoUrl: Uri?
+        type: String, id: String, displayName: String?, email: String?, photoUrl: Uri?
     ): Single<LoginResponse> {
-//        return Single.just(UserResponse(UserEntity("123", "Pavan", "thynameisp1@gmail.com")))
         val params = mutableMapOf<String, Any>(
-            "id" to id
+            "id" to id,
+            "type" to type
         ).apply {
             displayName?.let { put("name", displayName) }
             email?.let { put("email", email) }
             photoUrl?.let { put("photo_url", it.toString()) }
         }
         loge("params $params $id $displayName $email $photoUrl")
+//        return Single.just(LoginResponse(UserEntity("123", "Pavan", "thynameisp1@gmail.com", null, ""))
         return userService.login(params)
             .doOnSuccess {
                 setUser(it.user)
-                setAccessToken(it.accessToken)
+                setAccessToken(it.user.accessToken)
             }
     }
 

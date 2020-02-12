@@ -6,10 +6,13 @@ import `in`.nakkalites.mediaclient.view.widgets.RoundedCornersTransformation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Point
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Transformation
@@ -59,3 +62,17 @@ fun Activity.playStoreIntent() = Intent(
     Intent.ACTION_VIEW, Uri.parse(AppConstants.PLAY_STORE_URL + packageName)
 )
 
+fun Activity.setPortraitOrientation() {
+    var uiOptions = View.SYSTEM_UI_FLAG_VISIBLE
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        uiOptions = uiOptions or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+    window.decorView.systemUiVisibility = uiOptions
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+}
+
+fun Activity.setLandScapeOrientation() {
+    var uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+    window.decorView.systemUiVisibility = uiOptions
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+}

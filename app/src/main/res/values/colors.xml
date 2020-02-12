@@ -28,4 +28,6 @@
     <color name="black">#000000</color>
     <color name="green_a700">#0CA51D</color>
     <color name="grey_300">#D1D1D1</color>
+    <color name="grey_300_2">#D8D8D8</color>
+    <color name="grey_900_4">#2B2B2B</color>
 </resources>

@@ -5,11 +5,18 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class VideoGroupResponse(
+data class VideoGroupsResponse(
     @field:Json(name = "banners") val banners: List<BannerEntity>,
-    @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
+    @field:Json(name = "video_groups") val videoGroups: List<VideoGroupEntity> = listOf()
 ) : Page() {
     override val pageSize = videoGroups.size
+}
+
+@JsonClass(generateAdapter = true)
+data class VideoGroupResponse(
+    @field:Json(name = "video_group") val videoGroup: VideoGroupEntity
+) : Page() {
+    override val pageSize = videoGroup.videos.size
 }
 
 @JsonClass(generateAdapter = true)
@@ -31,6 +38,7 @@ data class VideoGroupEntity(
 data class VideoEntity(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "title_name") val titleName: String,
+    @field:Json(name = "title_type") val titleType: String,
     @field:Json(name = "video_name") val videoName: String,
     @field:Json(name = "url") val url: String,
     @field:Json(name = "last_played_time") val lastPlayedTime: Long?,
@@ -45,6 +53,7 @@ data class VideoEntity(
 @JsonClass(generateAdapter = true)
 data class WebSeriesEntity(
     @field:Json(name = "id") val id: String,
+    @field:Json(name = "title_name") val title: String,
     @field:Json(name = "name") val name: String,
     @field:Json(name = "no_of_seasons") val seasonsCount: Int,
     @field:Json(name = "thumbnail_image") val thumbnail: String,

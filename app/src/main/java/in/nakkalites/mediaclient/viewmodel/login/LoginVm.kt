@@ -22,7 +22,7 @@ class LoginVm(private val loginDomain: LoginDomain) : BaseViewModel() {
 
     fun login(account: GoogleSignInAccount?) {
         if (account != null) {
-            disposables += loginDomain.login(
+            disposables += loginDomain.loginViaGoogle(
                 account.id!!, account.displayName, account.email!!, account.photoUrl
             )
                 .subscribeOn(Schedulers.io())

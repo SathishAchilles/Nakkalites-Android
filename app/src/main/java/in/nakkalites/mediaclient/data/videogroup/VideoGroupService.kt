@@ -8,11 +8,7 @@ import retrofit2.http.*
 
 interface VideoGroupService {
     @GET(HttpConstants.VIDEO_GROUPS)
-    @Headers(
-        "Content-Type:application/json",
-        "x-api-key:PMAK-5de80ebba02a48003620e12a-5dd8c491cd75f1ffbf9c7c4fb32270fee6"
-    )
-    fun getVideoGroups(@QueryMap paging: StringAnyMap): Single<VideoGroupResponse>
+    fun getVideoGroups(@QueryMap paging: StringAnyMap): Single<VideoGroupsResponse>
 
     @GET(HttpConstants.WEBSERIES)
     fun getWebSeriesList(@QueryMap paging: StringAnyMap): Single<WebSeriesListResponse>
@@ -20,13 +16,18 @@ interface VideoGroupService {
     @GET(HttpConstants.VIDEO_GROUP_DETAIL)
     fun getVideosOfVideoGroup(
         @Path("video-group-id") id: String, @QueryMap paging: StringAnyMap
-    ): Single<VideosResponse>
+    ): Single<VideoGroupResponse>
 
     @GET(HttpConstants.WEBSERIES_DETAIL)
     fun getWebSeriesDetail(@Path("webseries-id") id: String): Single<WebSeriesDetailResponse>
 
     @GET(HttpConstants.VIDEO_DETAIL)
     fun getVideoDetail(@Path("video-id") id: String): Single<VideoDetailResponse>
+
+    @GET(HttpConstants.VIDEO_RELATED)
+    fun getRelatedVideos(
+        @Path("video-id") id: String, @QueryMap paging: StringAnyMap
+    ): Single<VideosResponse>
 
     @POST(HttpConstants.VIDEO_TRACK)
     fun trackVideo(

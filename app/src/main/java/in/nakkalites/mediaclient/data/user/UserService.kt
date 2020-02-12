@@ -7,6 +7,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface UserService {
-    @POST(HttpConstants.LOGIN)
+    @POST("https://sleepy-lowlands-51142.herokuapp.com/api/" + HttpConstants.LOGIN)
     fun login(@Body params: StringAnyMap): Single<LoginResponse>
 }

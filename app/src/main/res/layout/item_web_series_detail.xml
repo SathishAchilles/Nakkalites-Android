@@ -22,58 +22,65 @@
         android:layout_marginEnd="30dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:fontFamily="@font/normal"
+            android:text="@{vm.webseriesCount}"
+            android:textColor="@color/grey_400_2"
+            android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/normal"
-                android:paddingTop="14dp"
-                android:text="@{vm.webseriesCount}"
-                android:textColor="@color/grey_400_2"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center"
-                android:drawableTop="@{@drawable/ic_share_white_24dp}"
-                android:drawablePadding="4dp"
-                android:drawableTint="@{@color/cyan_400}"
-                android:fontFamily="@font/normal"
-                android:gravity="center"
-                android:onClick="@{() -> callback.onShareClick(vm)}"
-                android:padding="5dp"
-                android:text="@string/share"
-                android:textColor="@color/cyan_400"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/green_button"
-            android:onClick="@{() -> callback.onVideoClick(vm.videoVm)}">
+            android:gravity="center"
+            android:onClick="@{() -> callback.onVideoClick(vm.videoVm)}"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@{@drawable/ic_play_arrow_black_24dp}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:drawableStart="@{@drawable/ic_play_arrow_black_24dp}"
-                android:drawablePadding="10dp"
                 android:fontFamily="@font/bold"
                 android:padding="16dp"
                 android:text="@{vm.nextEpisodeButtonText}"
                 android:textColor="@color/white"
                 android:textSize="19sp"
                 tools:text="@string/play_episode_x" />
-        </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/grey_button"
+            android:gravity="center"
+            android:onClick="@{() -> callback.onShareClick(vm)}"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@{@drawable/ic_share_white_24dp}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/bold"
+                android:padding="16dp"
+                android:text="@string/share"
+                android:textColor="@color/white"
+                android:textSize="19sp"
+                tools:text="@string/share" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -92,7 +99,7 @@
             android:lineSpacingExtra="4.8sp"
             android:text="@string/starring"
             android:textColor="@color/alto"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="normal" />
 
         <TextView

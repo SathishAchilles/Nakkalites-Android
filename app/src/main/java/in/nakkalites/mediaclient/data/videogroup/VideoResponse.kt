@@ -6,13 +6,13 @@ import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)
-data class VideosResponse(
-    @field:Json(name = "video_group") val videoGroup: VideoGroupEntity
-) : Page() {
-    override val pageSize = videoGroup.videos.size
-}
+data class VideoDetailResponse(
+    @field:Json(name = "video") val video: VideoEntity
+)
 
 @JsonClass(generateAdapter = true)
-data class VideoDetailResponse(
-    @field:Json(name = "video_info") val video: VideoEntity
-)
+data class VideosResponse(
+    @field:Json(name = "videos") val videos: List<VideoEntity>
+) : Page() {
+    override val pageSize = videos.size
+}

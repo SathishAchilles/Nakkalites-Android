@@ -5,11 +5,11 @@ import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoPlayerBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
-import `in`.nakkalites.mediaclient.view.utils.EventObserver
-import `in`.nakkalites.mediaclient.view.utils.Result
+import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -50,6 +50,7 @@ class VideoPlayerActivity : BaseActivity() {
     private val trackSelector by inject<MappingTrackSelector>()
     private val loadControl by inject<LoadControl>()
     private val simpleCache by inject<SimpleCache>()
+    private lateinit var orientationManager: OrientationManager
     private lateinit var videoObserver: VideoObserver
 
     companion object {
@@ -94,6 +95,17 @@ class VideoPlayerActivity : BaseActivity() {
                 }
             }
         })
+        orientationManager = OrientationManager(this, orientationChangeListener = object :
+            OrientationManager.OrientationChangeListener {
+            override fun onOrientationChanged(newOrientation: Int) {
+                if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setLandScapeOrientation()
+                } else {
+                    setPortraitOrientation()
+                }
+            }
+        })
+        orientationManager.enable()
     }
 
     override fun onPause() {
@@ -102,7 +114,11 @@ class VideoPlayerActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        orientationManager.disable()
         vm.uploadVideoProgress()
+        super.onDestroy()
+    }
+
+    private fun setLandscapeOrientation() {
     }
 }

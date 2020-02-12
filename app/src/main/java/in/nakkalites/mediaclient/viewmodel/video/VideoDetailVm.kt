@@ -1,6 +1,8 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.domain.utils.PagingBody
+import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
@@ -14,11 +16,14 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+    private lateinit var pagingBody: PagingBody
     val items = ObservableArrayList<BaseModel>()
     private val isDataLoading = ObservableBoolean()
     var id: String? = null
@@ -40,18 +45,16 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         pageTitle.set(name.toCamelCase())
     }
 
+    fun loading(): Boolean {
+        return isDataLoading.get()
+    }
+
+    internal fun initPagingBody(pagingCallback: PagingCallback) {
+        pagingBody = PagingBody(pagingCallback = pagingCallback)
+    }
+
     fun fetchVideoDetail(id: String) {
-        disposables += videoGroupDomain.getVideoDetail(id)
-            .map { video ->
-                duration = video.duration
-                lastPlayedTime = video.lastPlayedTime
-                video
-            }
-            .map { video ->
-                listOf(VideoDetailItemVm(video)) +
-                        VideoListHeader() +
-                        video.videos.map { VideoVm(it) }
-            }
+        disposables += getRequestObservable(id, pagingBody)
             .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isDataLoading, items))
@@ -65,6 +68,31 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
             )
     }
 
+    private fun getRequestObservable(id: String, pagingBody: PagingBody): Single<List<BaseModel>> {
+        val relatedVideos = videoGroupDomain.getRelatedVideos(id, pagingBody)
+            .doAfterSuccess {
+                pagingBody.onNextPage(it.first.size, it.second)
+            }
+            .onErrorReturn { Pair(listOf(), null) }
+            .map {
+                listOf<BaseModel>(VideoListHeader()) +
+                        it.first.mapIndexed { index, video -> VideoVm(video, index) }
+            }
+        return if (pagingBody.isFirstPage()) {
+            val videoDetail = videoGroupDomain.getVideoDetail(id)
+                .map { video ->
+                    duration = video.duration
+                    lastPlayedTime = video.lastPlayedTime
+                    video
+                }
+                .map { video ->
+                    listOf<BaseModel>(VideoDetailItemVm(video))
+                }
+            Single.zip(videoDetail, relatedVideos, BiFunction { t1, t2 -> t1 + t2 })
+        } else {
+            relatedVideos
+        }
+    }
 
     private fun handleEmptyPage(viewModels: MutableList<BaseModel>): List<BaseModel> {
         if (viewModels.isEmpty()) {
@@ -72,5 +100,4 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         }
         return viewModels
     }
-
 }

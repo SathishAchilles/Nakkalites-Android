@@ -5,16 +5,17 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoDetailBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoDetailBinding
+import `in`.nakkalites.mediaclient.databinding.ItemVideoGridBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.*
-import `in`.nakkalites.mediaclient.view.binding.ViewProviders.videoItemViewProvider
 import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailItemVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoListHeader
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -23,6 +24,7 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoDetailActivity : BaseActivity() {
@@ -115,23 +117,29 @@ class VideoDetailActivity : BaseActivity() {
 //            }
 //        })
         val recyclerView = binding.recyclerView
+        val scrollPager = RecyclerViewScrollPager(this,
+            { recyclerView }, Runnable { vm.fetchVideoDetail(id) },
+            { vm.loading() }, false
+        )
         val gridLayoutManager = GridLayoutManager(this, spanCount)
         val viewAdapter = RecyclerViewAdapter<BaseModel>(vm.items, viewProvider, vmBinder)
         binding.spanCount = spanCount
         binding.spanSizeLookup = spanSizeLookup(vm.items)
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = viewAdapter
+        scrollPager.attachScrollEvent()
+        vm.initPagingBody(scrollPager.pagingCallback)
         vm.fetchVideoDetail(id)
     }
 
     private val viewProvider = ViewProviders.wrapSequentially(
         ViewProviders.progressViewProvider(),
         ViewProviders.dummyViewProvider(),
-        videoItemViewProvider(),
         viewProvider { vm ->
             when (vm) {
                 is VideoDetailItemVm -> R.layout.item_video_detail
                 is VideoListHeader -> R.layout.item_video_list_header
+                is VideoVm -> R.layout.item_video_grid
                 else -> argumentError()
             }
         })
@@ -152,6 +160,7 @@ class VideoDetailActivity : BaseActivity() {
         startActivity(intent)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private val vmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
             is VideoDetailItemVm -> {
@@ -161,9 +170,9 @@ class VideoDetailActivity : BaseActivity() {
                 itemBinding.seekbar.setOnTouchListener { _, _ -> true }
             }
             is VideoVm -> {
-                ViewModelBinders.videoViewModelProvider(
-                    this, dpToPx(115), (displayWidth() - dpToPx(40)) / spanCount, onVideoClick
-                ).bind(itemBinding, vm1)
+                (itemBinding as ItemVideoGridBinding).onVideoClick = onVideoClick
+                itemBinding.vm = vm1
+                itemBinding.transformations = getDefaultTransformations()
             }
         }
     }

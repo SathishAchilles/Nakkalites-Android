@@ -155,7 +155,15 @@ object Bindings {
     @BindingAdapter("android:layout_marginStart")
     fun View.bindMarginStart(@DimenRes marginStart: Int) {
         val lp = layoutParams as MarginLayoutParams
-        lp.leftMargin = context.resources.getDimension(marginStart).toInt()
+        lp.marginStart = context.resources.getDimension(marginStart).toInt()
+        layoutParams = lp
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:layout_marginEnd")
+    fun View.bindMarginEnd(@DimenRes marginEnd: Int) {
+        val lp = layoutParams as MarginLayoutParams
+        lp.marginEnd = context.resources.getDimension(marginEnd).toInt()
         layoutParams = lp
     }
 

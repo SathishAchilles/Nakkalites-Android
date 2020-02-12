@@ -70,7 +70,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "      }\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"video_list\": [\n" +
+                "  \"video_groups\": [\n" +
                 "    {\n" +
                 "      \"id\": 0,\n" +
                 "      \"header_name\": \"popular\",\n" +
@@ -81,7 +81,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "          \"title_type\": \"random\",\n" +
                 "          \"video_name\": \" Episode 1\",\n" +
                 "          \"url\": \"https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8\",\n" +
-                "          \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\"\n" +
+                "          \"thumbnail_image\": \"https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg\"\n" +
+//                "          \"thumbnail_image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "          \"id\": 123,\n" +
@@ -140,9 +141,9 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  ],\n" +
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
-        val jsonAdapter = moshi.adapter(VideoGroupResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getVideoGroups(pagingBody.toMap())
+        val jsonAdapter = moshi.adapter(VideoGroupsResponse::class.java)
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getVideoGroups(pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Triple(
@@ -225,8 +226,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesListResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getWebSeriesList(pagingBody.toMap())
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getWebSeriesList(pagingBody.toMap())
             .map { response ->
                 Timber.e(response.toString())
                 Pair(response.webSeriesList.map { WebSeries.map(it) }, response.cursor)
@@ -267,7 +268,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  },\n" +
                 "  \"cursor\": \"<Hash Key for current iterable element>\"\n" +
                 "}"
-        val jsonAdapter = moshi.adapter(VideosResponse::class.java)
+        val jsonAdapter = moshi.adapter(VideoGroupResponse::class.java)
 //        return Single.just(jsonAdapter.fromJson(json))
         return videoGroupService.getVideosOfVideoGroup(videoGroupId, pagingBody.toMap())
             .map { response ->
@@ -353,8 +354,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(WebSeriesDetailResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getWebSeriesDetail(id)
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getWebSeriesDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 WebSeries.map(response.webSeries)
@@ -396,8 +397,9 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "  }\n" +
                 "}"
         val jsonAdapter = moshi.adapter(VideoDetailResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getVideoDetail(id)
+//        return Single.just(jsonAdapter.fromJson(json))
+        Timber.e("id $id")
+        return videoGroupService.getVideoDetail(id)
             .map { response ->
                 Timber.e(response.toString())
                 Video.map(response.video)
@@ -411,5 +413,112 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
             "time_elapsed" to timeElapsed
         )
         return videoGroupService.trackVideo(id, params)
+    }
+
+    fun getRelatedVideos(videoId: String, pagingBody: PagingBody): Single<Pair<List<Video>,String?>> {
+        val json = """{
+  "videos": [
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 1",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 2",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 1",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 2",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },{
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 1",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 2",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 1",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg/1200px-Jubilee_Tower%2C_north_fa%C3%A7ade_with_entrance.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    },
+    {
+      "id": 123,
+      "title_name": "Nakkalites",
+      "title_type": "random",
+      "video_name": " Episode 2",
+      "starring": "Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar",
+      "description": "The days that we feared then are the days that we cherish in our memories now. Let us go back and live those anxious moments once again!",
+      "url": "https://cn2.zuidadianying.com/20171216/ypaJ7651/index.m3u8",
+      "thumbnail_image": "https://www.pixelstalk.net/wp-content/uploads/2016/10/Free-bing-daily-wallpaper-url.jpg",
+      "duration": 12233,
+      "last_played_time": 1233
+    }
+  ]
+}"""
+        val jsonAdapter = moshi.adapter(VideosResponse::class.java)
+        return Single.just(jsonAdapter.fromJson(json))
+//        return videoGroupService.getRelatedVideos(videoId, pagingBody.toMap())
+            .map { it.videos.map { videoEntity -> Video.map(videoEntity) } to it.cursor }
+
     }
 }

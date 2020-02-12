@@ -45,6 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
                     android:src="@drawable/logo_small" />
             </androidx.appcompat.widget.Toolbar>
 
@@ -61,6 +62,7 @@
                 android:id="@+id/tab_layout"
                 style="@style/TabLayoutStyle"
                 android:background="@color/colorPrimary"
+                android:elevation="6dp"
                 app:onTabSelect="@{onTabSelect}"
                 app:setupWithViewPager="@{viewPager}" />
 
@@ -68,6 +70,7 @@
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/grey_900_2"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -11,8 +11,9 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     val description = video.description
     val name = video.videoName
     val showProgress = video.lastPlayedTime != null && video.duration != null
-    val duration = video.duration?.toTimeString(withLiteral = false, includeZeros = true)
-    val position = video.lastPlayedTime?.toTimeString(withLiteral = false, includeZeros = true)
+    val duration = (video.duration ?: 0).toTimeString(withLiteral = false, includeZeros = true)
+    val position =
+        (video.lastPlayedTime ?: 0).toTimeString(withLiteral = false, includeZeros = true)
     val progress = if (video.lastPlayedTime != null && video.duration != null) {
         (100 * (video.lastPlayedTime / video.duration.toFloat())).toInt()
     } else {

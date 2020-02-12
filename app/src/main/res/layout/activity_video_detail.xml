@@ -61,30 +61,12 @@
                         app:layout_collapseParallaxMultiplier="0.7" />
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:src="@drawable/video_overlay_gradient" />
-
-                    <ImageView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
                         android:layout_gravity="center"
                         android:onClick="@{() -> onPlayClick.invoke(vm)}"
                         android:src="@drawable/ic_play_arrow_black_24dp" />
 
-                    <ImageView
-                        android:id="@+id/volume_button"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:layout_gravity="end|bottom"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/background_item_selected"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/ic_volume_on" />
                 </FrameLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -94,7 +76,7 @@
                     app:layout_collapseMode="pin"
                     app:title=" "
                     app:titleTextColor="@color/white"
-                    tools:title="" />
+                    tools:title=" " />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
@@ -120,5 +102,12 @@
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"
             app:srcCompat="@drawable/ic_share_white_24dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/video_overlay_gradient"
+            app:layout_anchor="@+id/app_bar"
+            app:layout_anchorGravity="center" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

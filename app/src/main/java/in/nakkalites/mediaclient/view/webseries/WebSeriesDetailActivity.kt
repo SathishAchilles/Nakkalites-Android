@@ -113,12 +113,12 @@ class WebSeriesDetailActivity : BaseActivity() {
 //            }
 //        })
         val recyclerView = binding.recyclerView
-        val gridLayoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
         val viewAdapter = RecyclerViewAdapter<BaseModel>(
             vm.items, videoGroupViewProvider, videoGroupVmBinder
         )
         recyclerView.adapter = viewAdapter
-        recyclerView.layoutManager = gridLayoutManager
+        recyclerView.layoutManager = layoutManager
         vm.fetchWebSeriesDetail(id)
     }
 
@@ -159,9 +159,12 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
         loge("Video clicked ${vm.title}")
-        openVideoPlayerPage(
-            this, vm.id, vm.title, vm.imageUrl, vm.url, vm.durationInMs, vm.lastPlayedTime
+        openVideoDetailPage(
+            this, vm.id, vm.title, vm.imageUrl, vm.url
         )
+//        openVideoPlayerPage(
+//            this, vm.id, vm.title, vm.imageUrl, vm.url, vm.durationInMs, vm.lastPlayedTime
+//        )
     }
 
     private val onSeasonSelected = { seasonPair: Pair<String, String> ->

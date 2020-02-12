@@ -23,8 +23,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> onVideoClick.invoke(vm)}"
         android:orientation="horizontal"
-        android:paddingStart="28dp"
+        android:paddingStart="30dp"
         android:paddingTop="20dp"
         android:paddingEnd="28dp"
         android:paddingBottom="20dp">
@@ -37,15 +38,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="104dp"
+                android:layout_width="112dp"
                 android:layout_height="72dp"
-                android:onClick="@{() -> onVideoClick.invoke(vm)}"
                 app:imageTransforms="@{transformations}"
                 app:imageUrl="@{vm.imageUrl}" />
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_play_arrow_black_24dp" />
 
