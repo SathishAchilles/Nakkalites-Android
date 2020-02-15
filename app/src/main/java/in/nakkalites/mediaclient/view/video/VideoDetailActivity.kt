@@ -24,7 +24,6 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoDetailActivity : BaseActivity() {
@@ -153,10 +152,10 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onShareClick = { vm: VideoDetailItemVm ->
         loge("Video share click ${vm.url}")
-        val intent = Intent(Intent.ACTION_SEND)
-            .setType("text/*")
-            .putExtra(Intent.EXTRA_TEXT, getString(R.string.web_series_share_text, vm.name))
-            .let { Intent.createChooser(it, getString(R.string.share_sheet_title, vm.name)) }
+        val intent = shareTextIntent(
+            getString(R.string.share_sheet_title, vm.name),
+            getString(R.string.web_series_share_text, vm.name)
+        )
         startActivity(intent)
     }
 
@@ -166,7 +165,9 @@ class VideoDetailActivity : BaseActivity() {
             is VideoDetailItemVm -> {
                 (itemBinding as ItemVideoDetailBinding).vm = vm1
                 itemBinding.onShareClick = onShareClick
-//                itemBinding.seekbar.setPadding(0, 0, 0, 0)
+                itemBinding.seekbar.setPadding(
+                    itemBinding.seekbar.paddingStart, 0, itemBinding.seekbar.paddingEnd, 0
+                )
                 itemBinding.seekbar.setOnTouchListener { _, _ -> true }
             }
             is VideoVm -> {

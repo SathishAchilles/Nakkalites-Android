@@ -23,7 +23,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
-    private lateinit var pagingBody: PagingBody
+    private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     val items = ObservableArrayList<BaseModel>()
     private val isDataLoading = ObservableBoolean()
     var id: String? = null

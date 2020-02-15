@@ -22,7 +22,7 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseView
     internal val isRefreshing = ObservableBoolean()
     val items = ObservableArrayList<BaseModel>()
     private val isLoading = ObservableBoolean()
-    private lateinit var pagingBody: PagingBody
+    private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState

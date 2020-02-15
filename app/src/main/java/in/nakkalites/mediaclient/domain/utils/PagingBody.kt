@@ -12,9 +12,7 @@ import java.util.concurrent.atomic.AtomicReference
  * This class is thread-safe.
  */
 class PagingBody(
-    offset: Int = 0,
-    cursor: String? = null,
-    private val limit: Int = PAGE_SIZE,
+    offset: Int = 0, cursor: String? = null, private val limit: Int = PAGE_SIZE,
     private val pagingCallback: PagingCallback?
 ) {
     private val offsetAtomicInt: AtomicInteger = AtomicInteger(offset)
@@ -54,9 +52,7 @@ class PagingBody(
             .apply {
                 put("offset", offsetAtomicInt.get())
                 put("limit", limit)
-                cursorAtomicString.get()?.also {
-                    put("cursor", it)
-                }
+                cursorAtomicString.get()?.also { put("cursor", it) }
             }.toMap()
     }
 

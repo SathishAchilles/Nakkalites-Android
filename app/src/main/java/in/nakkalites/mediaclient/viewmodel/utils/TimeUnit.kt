@@ -1,15 +1,12 @@
 package `in`.nakkalites.mediaclient.viewmodel.utils
 
-import com.kizitonwose.time.Interval
-import com.kizitonwose.time.days
-import com.kizitonwose.time.hours
-import com.kizitonwose.time.milliseconds
-import com.kizitonwose.time.minutes
+import com.kizitonwose.time.*
 import kotlin.math.floor
 
 data class TimeUnit(
     val totalMillis: Long, val days: Long, val hours: Long, val minutes: Long, val seconds: Long,
-    val showDays: Boolean, val showHours: Boolean, val showMinutes: Boolean, val showSeconds: Boolean
+    val showDays: Boolean, val showHours: Boolean, val showMinutes: Boolean,
+    val showSeconds: Boolean
 ) {
     companion object {
         fun createTimeUnit(
@@ -32,18 +29,23 @@ data class TimeUnit(
                 else -> -1
             }
             val seconds = when {
-                showMinutes -> totalMillis.milliseconds.inMinutes.value.fraction.minutes.inSeconds.floor
+                showMinutes -> {
+                    totalMillis.milliseconds.inMinutes.value.fraction.minutes.inSeconds.floor
+                }
                 showSeconds -> totalMillis.milliseconds.inSeconds.floor
                 else -> -1
             }
             return TimeUnit(
-                totalMillis, days, hours, minutes, seconds, showDays, showHours, showMinutes, showSeconds
+                totalMillis, days, hours, minutes, seconds, showDays, showHours, showMinutes,
+                showSeconds
             )
         }
     }
 
     override fun toString(): String {
-        return "TimeUnit(totalMillis=$totalMillis, days=$days, hours=$hours, minutes=$minutes, seconds=$seconds, showDays=$showDays, showHours=$showHours, showMinutes=$showMinutes, showSeconds=$showSeconds)"
+        return "TimeUnit(totalMillis=$totalMillis, days=$days, hours=$hours, minutes=$minutes, " +
+                "seconds=$seconds, showDays=$showDays, showHours=$showHours, " +
+                "showMinutes=$showMinutes, showSeconds=$showSeconds)"
     }
 }
 

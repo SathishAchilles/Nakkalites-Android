@@ -72,7 +72,13 @@ fun Activity.setPortraitOrientation() {
 }
 
 fun Activity.setLandScapeOrientation() {
-    var uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+    val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     window.decorView.systemUiVisibility = uiOptions
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 }
+
+fun shareTextIntent(shareTitle : String, shareText :String) : Intent =
+    Intent(Intent.ACTION_SEND)
+        .setType("text/*")
+        .putExtra(Intent.EXTRA_TEXT, shareText)
+        .let { Intent.createChooser(it, shareTitle) }

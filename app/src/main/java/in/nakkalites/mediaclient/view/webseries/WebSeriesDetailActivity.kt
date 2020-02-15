@@ -142,10 +142,10 @@ class WebSeriesDetailActivity : BaseActivity() {
 
         override fun onShareClick(vm: WebSeriesDetailItemVm) {
             loge("Webseries shared ${vm.name}")
-            val intent = Intent(Intent.ACTION_SEND)
-                .setType("text/*")
-                .putExtra(Intent.EXTRA_TEXT, getString(R.string.web_series_share_text, vm.name))
-                .let { Intent.createChooser(it, getString(R.string.share_sheet_title, vm.name)) }
+            val intent = shareTextIntent(
+                getString(R.string.share_sheet_title, vm.name),
+                getString(R.string.web_series_share_text, vm.name)
+            )
             startActivity(intent)
         }
     }

@@ -84,7 +84,7 @@ class VideoPlayerActivity : BaseActivity() {
         binding.vm = vm
         vm.setArgs(id, name, thumbnail, url)
         videoObserver = VideoObserver(
-            this, id, url, duration ?: 0L, lastPlayedTime ?: 0L, binding.playerView, vm,
+            this, id, url, duration ?: 0L, lastPlayedTime ?: 0L,vm.name, binding.playerView, vm,
             bandwidthMeter, trackSelector, simpleCache, okClient, loadControl
         )
         lifecycle.addObserver(videoObserver)
@@ -106,6 +106,7 @@ class VideoPlayerActivity : BaseActivity() {
             }
         })
         orientationManager.enable()
+        setLandScapeOrientation()
     }
 
     override fun onPause() {
@@ -119,6 +120,4 @@ class VideoPlayerActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    private fun setLandscapeOrientation() {
-    }
 }

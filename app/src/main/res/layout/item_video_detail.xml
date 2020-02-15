@@ -18,61 +18,60 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
         android:layout_marginBottom="18dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 android:text="@{vm.position}"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
 
-            <SeekBar
-                android:id="@+id/seekbar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:clickable="false"
-                android:colorControlActivated="@color/white"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:maxHeight="3dp"
-                android:minHeight="3dp"
-                android:progress="@{vm.progress}"
-                android:progressBackgroundTint="@color/grey_300"
-                android:progressTint="@color/green_a700"
-                android:thumb="@drawable/bg_scrubber"
-                tools:progress="50" />
-
             <TextView
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
                 android:text="@{vm.duration}"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
-        </LinearLayout>
+        </RelativeLayout>
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clickable="false"
+            android:colorControlActivated="@color/white"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:progress="@{vm.progress}"
+            android:progressBackgroundTint="@color/grey_300"
+            android:progressTint="@color/green_a700"
+            android:thumb="@drawable/bg_scrubber"
+            tools:progress="50" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/bold"
             android:shadowColor="#80000000"
@@ -100,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/green_button"
@@ -129,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/bold"
             android:lineSpacingExtra="4.8sp"
@@ -142,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/normal"
             android:lineSpacingExtra="3.9sp"

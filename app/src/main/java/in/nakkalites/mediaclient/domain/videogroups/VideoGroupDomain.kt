@@ -70,7 +70,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "      }\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"video_groups\": [\n" +
+                "  \"video_list\": [\n" +
                 "    {\n" +
                 "      \"id\": 0,\n" +
                 "      \"header_name\": \"popular\",\n" +

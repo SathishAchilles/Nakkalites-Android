@@ -61,6 +61,11 @@
                         app:layout_collapseParallaxMultiplier="0.7" />
 
                     <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:src="@drawable/video_overlay_gradient"/>
+
+                    <ImageView
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_gravity="center"
@@ -90,7 +95,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:spanCount="@{spanCount}"
             app:spanSizeLookup="@{spanSizeLookup}"
-            tools:listitem="@layout/item_video"/>
+            tools:listitem="@layout/item_video" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -103,11 +108,5 @@
             app:layout_anchorGravity="bottom|end"
             app:srcCompat="@drawable/ic_share_white_24dp" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/video_overlay_gradient"
-            app:layout_anchor="@+id/app_bar"
-            app:layout_anchorGravity="center" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

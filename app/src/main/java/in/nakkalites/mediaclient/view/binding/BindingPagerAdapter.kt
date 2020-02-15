@@ -51,7 +51,6 @@ class BindingPagerAdapter<T : BaseModel>(
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        super.destroyItem(container, position, `object`)
         container.removeView(`object` as View)
     }
 

@@ -36,6 +36,7 @@ fun Long.toTimeString(withLiteral: Boolean = false, includeZeros: Boolean = fals
             append(timeUnit.minutes.toFormattedTimeString())
             if (withLiteral) append("m")
         } else if (includeZeros) {
+            if (isNotEmpty() || !withLiteral) append(":")
             append("00")
             if (withLiteral) append("m")
         }
@@ -44,6 +45,7 @@ fun Long.toTimeString(withLiteral: Boolean = false, includeZeros: Boolean = fals
             append(timeUnit.seconds.toFormattedTimeString())
             if (withLiteral) append("s")
         } else if (includeZeros) {
+            if (isNotEmpty() || !withLiteral) append(":")
             append("00")
             if (withLiteral) append("s")
         }

@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.view.utils.shareTextIntent
 import android.app.Activity
 import android.graphics.Color
 import android.net.Uri
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit
 
 class VideoObserver(
     private val activity: Activity, private val id: String, url: String,
-    private val duration: Long, private val lastPlayedTime: Long,
+    private val duration: Long, private val lastPlayedTime: Long, private val name: String?,
     private val playerView: PlayerView, private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
@@ -55,6 +56,7 @@ class VideoObserver(
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
     private val backButton = activity.findViewById<ImageView>(R.id.back)
+    private val shareButton = activity.findViewById<ImageView>(R.id.share)
     private var currentSecond: Long = 0
         set(value) {
             field = value
@@ -97,6 +99,13 @@ class VideoObserver(
                 )
             }
         }
+        shareButton.setOnClickListener {
+            val intent = shareTextIntent(
+                activity.getString(R.string.share_sheet_title, name),
+                activity.getString(R.string.video_share_text, name)
+            )
+            activity.startActivity(intent)
+        }
         changeVolumeIcon(player, volumeButton)
         volumeButton.setOnClickListener {
             player.volume = if (player.volume == 0f) 1f else 0f
@@ -104,7 +113,7 @@ class VideoObserver(
         }
         with(player) {
             prepare(mediaSource)
-                Timber.e("${player.currentWindowIndex} $lastPlayedTime")
+            Timber.e("${player.currentWindowIndex} $lastPlayedTime")
             if (lastPlayedTime != 0L) {
                 seekTo(player.currentWindowIndex, lastPlayedTime)
             }
