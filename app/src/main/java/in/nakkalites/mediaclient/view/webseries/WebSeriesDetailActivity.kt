@@ -21,8 +21,6 @@ import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,8 +39,6 @@ class WebSeriesDetailActivity : BaseActivity() {
     private val thumbnail by lazy {
         intent.getStringExtra(AppConstants.WEBSERIES_THUMBNAIL)
     }
-    private var menu: Menu? = null
-
 
     companion object {
         @JvmStatic
@@ -69,49 +65,7 @@ class WebSeriesDetailActivity : BaseActivity() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        this.menu = menu
-        menuInflater.inflate(R.menu.menu_share, menu)
-        hideOption(R.id.action_share)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.itemId
-        if (id == R.id.action_share) {
-
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun hideOption(id: Int) {
-        val item = menu?.findItem(id)
-        item?.isVisible = false
-    }
-
-    private fun showOption(id: Int) {
-        val item = menu?.findItem(id)
-        item?.isVisible = true
-    }
-
     fun init() {
-//        binding.appBar.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
-//            var isShow = false
-//            var scrollRange = -1
-//            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-//                if (scrollRange == -1) {
-//                    scrollRange = appBarLayout.totalScrollRange +
-//                }
-//                if (scrollRange + verticalOffset == 0) {
-//                    isShow = true
-//                    showOption(R.id.action_share)
-//                } else if (isShow) {
-//                    isShow = false
-//                    hideOption(R.id.action_share)
-//                }
-//            }
-//        })
         val recyclerView = binding.recyclerView
         val layoutManager = LinearLayoutManager(this)
         val viewAdapter = RecyclerViewAdapter<BaseModel>(

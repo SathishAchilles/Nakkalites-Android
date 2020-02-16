@@ -24,7 +24,7 @@ data class BannerEntity(
     @field:Json(name = "title") val title: String,
     @field:Json(name = "web_series") val webSeries: WebSeriesEntity?,
     @field:Json(name = "type") val type: String,
-    @field:Json(name = "video") val video: VideoEntity?
+    @field:Json(name = "single") val video: VideoEntity?
 )
 
 @JsonClass(generateAdapter = true)

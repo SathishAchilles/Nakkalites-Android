@@ -80,7 +80,7 @@ data class Season(
 }
 
 fun getBannerType(type: String) = when (type) {
-    "video" -> BannerType.VIDEO
-    "webseries" -> BannerType.WEB_SERIES
+    "Single" -> BannerType.VIDEO
+    "WebSeries" -> BannerType.WEB_SERIES
     else -> null
 }
