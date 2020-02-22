@@ -526,8 +526,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
   ]
 }"""
         val jsonAdapter = moshi.adapter(VideosResponse::class.java)
-        return Single.just(jsonAdapter.fromJson(json))
-//        return videoGroupService.getRelatedVideos(videoId, pagingBody.toMap())
+//        return Single.just(jsonAdapter.fromJson(json))
+        return videoGroupService.getRelatedVideos(videoId, pagingBody.toMap())
             .map { it.videos.map { videoEntity -> Video.map(videoEntity) } to it.cursor }
 
     }
