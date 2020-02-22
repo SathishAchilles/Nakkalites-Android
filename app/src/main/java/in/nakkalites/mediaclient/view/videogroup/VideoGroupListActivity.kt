@@ -57,7 +57,7 @@ class VideoGroupListActivity : BaseActivity() {
     private fun init() {
         val recyclerView = binding.recyclerView
         val scrollPager = RecyclerViewScrollPager(this,
-            { recyclerView }, Runnable { vm.fetchVideoGroups(videoGroupId) },
+            { recyclerView }, Runnable { vm.fetchVideoGroups(videoGroupId, videoGroupName) },
             { vm.loading() }, false
         )
         val gridLayoutManager = LinearLayoutManager(this)
@@ -71,7 +71,7 @@ class VideoGroupListActivity : BaseActivity() {
         recyclerView.layoutManager = gridLayoutManager
         scrollPager.attachScrollEvent()
         vm.initPagingBody(scrollPager.pagingCallback)
-        vm.fetchVideoGroups(videoGroupId)
+        vm.fetchVideoGroups(videoGroupId, videoGroupName)
     }
 
     private val onVideoClick = { vm: VideoVm ->

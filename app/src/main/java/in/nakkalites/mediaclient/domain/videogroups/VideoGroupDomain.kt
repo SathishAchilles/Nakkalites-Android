@@ -234,7 +234,9 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
             }
     }
 
-    fun getVideos(videoGroupId: String, pagingBody: PagingBody): Single<Pair<VideoGroup, String?>> {
+    fun getVideos(
+        videoGroupId: String, category: String?, pagingBody: PagingBody
+    ): Single<Pair<VideoGroup, String?>> {
         val json = "{\n" +
                 "  \"video_group\": {\n" +
                 "    \"id\": 0,\n" +
@@ -270,7 +272,12 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "}"
         val jsonAdapter = moshi.adapter(VideoGroupResponse::class.java)
 //        return Single.just(jsonAdapter.fromJson(json))
-        return videoGroupService.getVideosOfVideoGroup(videoGroupId, pagingBody.toMap())
+        val params = mutableMapOf<String, Any>()
+            .apply {
+                category?.let { put("category", category) }
+                putAll(pagingBody.toMap())
+            }
+        return videoGroupService.getVideosOfVideoGroup(videoGroupId, params)
             .map { response ->
                 Timber.e(response.toString())
                 Pair(VideoGroup.map(response.videoGroup), response.cursor)
@@ -415,7 +422,10 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
         return videoGroupService.trackVideo(id, params)
     }
 
-    fun getRelatedVideos(videoId: String, pagingBody: PagingBody): Single<Pair<List<Video>,String?>> {
+    fun getRelatedVideos(
+        videoId: String,
+        pagingBody: PagingBody
+    ): Single<Pair<List<Video>, String?>> {
         val json = """{
   "videos": [
     {

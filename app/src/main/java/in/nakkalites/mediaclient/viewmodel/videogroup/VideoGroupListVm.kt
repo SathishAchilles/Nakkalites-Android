@@ -40,8 +40,8 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
         pagingBody = PagingBody(pagingCallback = pagingCallback)
     }
 
-    internal fun fetchVideoGroups(videoGroupId: String) {
-        disposables += videoGroupDomain.getVideos(videoGroupId, pagingBody)
+    internal fun fetchVideoGroups(videoGroupId: String, category: String?) {
+        disposables += videoGroupDomain.getVideos(videoGroupId, category, pagingBody)
             .doAfterSuccess {
                 pagingBody.onNextPage(it.first.videos.size, it.second)
             }
