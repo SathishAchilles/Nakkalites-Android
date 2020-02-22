@@ -11,6 +11,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.Window
+import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.LoadControl
@@ -18,10 +21,16 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.net.CookieManager
+import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
+
 
 class VideoPlayerActivity : BaseActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
@@ -67,11 +76,24 @@ class VideoPlayerActivity : BaseActivity() {
             .putExtra(AppConstants.DURATION, duration)
     }
 
+    private var cookieStore = HashMap<HttpUrl, List<Cookie>>()
+    private val cookieJar = object : CookieJar {
+        override fun loadForRequest(url: HttpUrl): List<Cookie> {
+            val cookies = cookieStore[url]
+            return cookies?.let { it } ?: listOf()
+        }
+
+        override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+            cookieStore[url] = cookies
+        }
+    }
+
     private val okClient: OkHttpClient
         get() = OkHttpClient.Builder()
             .connectTimeout(
                 DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS
             )
+            .cookieJar(cookieJar)
             .readTimeout(
                 DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS
             )
@@ -79,12 +101,19 @@ class VideoPlayerActivity : BaseActivity() {
             .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
         binding.vm = vm
         vm.setArgs(id, name, thumbnail, url)
+        val cookieManager = CookieManager()
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         videoObserver = VideoObserver(
-            this, id, url, duration ?: 0L, lastPlayedTime ?: 0L,vm.name, binding.playerView, vm,
+            this, id, url, duration ?: 0L, lastPlayedTime ?: 0L, vm.name, binding.playerView, vm,
             bandwidthMeter, trackSelector, simpleCache, okClient, loadControl
         )
         lifecycle.addObserver(videoObserver)
@@ -120,4 +149,7 @@ class VideoPlayerActivity : BaseActivity() {
         super.onDestroy()
     }
 
+    override fun dispatchKeyEvent(event: KeyEvent?): Boolean { // If the event was not handled then see if the player view can handle it.
+        return super.dispatchKeyEvent(event) || videoObserver.playerView.dispatchKeyEvent(event)
+    }
 }

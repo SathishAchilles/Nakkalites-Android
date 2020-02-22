@@ -29,7 +29,7 @@ class HeadersInterceptor(private val userDataStore: UserDataStore) : Interceptor
 
     private fun proceedToNextInterceptor(chain: Interceptor.Chain): Boolean {
         val request = chain.request()
-        return false /*!request.isValidApiUrl()*/
+        return !request.isValidApiUrl()
     }
 
     private fun rewriteHeaders(request: Request): Request = request.newBuilder()

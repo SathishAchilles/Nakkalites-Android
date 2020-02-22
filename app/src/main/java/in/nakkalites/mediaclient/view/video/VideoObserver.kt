@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit
 class VideoObserver(
     private val activity: Activity, private val id: String, url: String,
     private val duration: Long, private val lastPlayedTime: Long, private val name: String?,
-    private val playerView: PlayerView, private val playerTracker: PlayerTracker,
+    val playerView: PlayerView, private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
 ) : LifecycleObserver {
@@ -69,6 +69,11 @@ class VideoObserver(
         initializePlayer()
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume() {
+        hideSystemUi()
+    }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() {
         playerTracker.shouldPauseCurrentVideo = true
@@ -79,6 +84,15 @@ class VideoObserver(
     fun onDestroy() {
         releasePlayer()
         disposables.clear()
+    }
+
+    private fun hideSystemUi() {
+        playerView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
     }
 
     private fun initializePlayer() {
@@ -133,14 +147,20 @@ class VideoObserver(
 
         player.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                if (playbackState == Player.STATE_READY) {
-                    progressBar.visibility = View.GONE
-                    playPauseButton.visibility = View.VISIBLE
-                    videoDuration = player.duration / 1000
-                    playerTracker.duration = videoDuration!!
-                } else if (playbackState == Player.STATE_BUFFERING) {
-                    progressBar.visibility = View.VISIBLE
-                    playPauseButton.visibility = View.GONE
+                when (playbackState) {
+                    Player.STATE_READY -> {
+                        progressBar.visibility = View.GONE
+                        playPauseButton.visibility = View.VISIBLE
+                        videoDuration = player.duration / 1000
+                        playerTracker.duration = videoDuration!!
+                    }
+                    Player.STATE_BUFFERING -> {
+                        progressBar.visibility = View.VISIBLE
+                        playPauseButton.visibility = View.GONE
+                    }
+                    else -> {
+                        progressBar.visibility = View.GONE
+                    }
                 }
             }
         })
