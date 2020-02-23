@@ -97,7 +97,7 @@ class VideoPlayerActivity : BaseActivity() {
             .readTimeout(
                 DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS
             )
-            .addInterceptor(stethoInterceptor)
+            .addNetworkInterceptor(stethoInterceptor)
             .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
