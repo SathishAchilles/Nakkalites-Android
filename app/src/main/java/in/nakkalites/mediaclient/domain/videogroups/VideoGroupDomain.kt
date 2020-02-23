@@ -423,8 +423,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
     }
 
     fun getRelatedVideos(
-        videoId: String,
-        pagingBody: PagingBody
+        videoId: String, pagingBody: PagingBody
     ): Single<Pair<List<Video>, String?>> {
         val json = """{
   "videos": [
@@ -528,6 +527,10 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
         val jsonAdapter = moshi.adapter(VideosResponse::class.java)
 //        return Single.just(jsonAdapter.fromJson(json))
         return videoGroupService.getRelatedVideos(videoId, pagingBody.toMap())
+            .map {
+                Timber.e("related videos " + it.videos.toString())
+                it
+            }
             .map { it.videos.map { videoEntity -> Video.map(videoEntity) } to it.cursor }
 
     }

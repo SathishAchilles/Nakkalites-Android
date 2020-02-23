@@ -16,7 +16,7 @@ interface VideoGroupService {
     @GET(HttpConstants.VIDEO_GROUP_DETAIL)
     fun getVideosOfVideoGroup(
         @Path("video-group-id") id: String, @QueryMap paging: StringAnyMap
-    ): Single<VideosResponse>
+    ): Single<VideoGroupResponse>
 
     @GET(HttpConstants.WEBSERIES_DETAIL)
     fun getWebSeriesDetail(@Path("webseries-id") id: String): Single<WebSeriesDetailResponse>

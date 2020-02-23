@@ -21,6 +21,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
@@ -33,6 +35,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     val pageTitle = ObservableField<String>()
+    var isPageLoaded = AtomicBoolean(false)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
@@ -55,7 +58,6 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
 
     fun fetchVideoDetail(id: String) {
         disposables += getRequestObservable(id, pagingBody)
-            .map { handleEmptyPage(it.toMutableList()) }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isDataLoading, items))
             .subscribeBy(
@@ -75,11 +77,17 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
             }
             .onErrorReturn { Pair(listOf(), null) }
             .map {
-                listOf<BaseModel>(VideoListHeader()) +
-                        it.first.mapIndexed { index, video -> VideoVm(video, index) }
+                if (pagingBody.isFirstPage() && it.first.isNotEmpty()) {
+                    listOf<BaseModel>(VideoListHeader())
+                } else {
+                    listOf()
+                } + it.first.mapIndexed { index, video -> VideoVm(video, index) }
             }
-        return if (pagingBody.isFirstPage()) {
+        return if (pagingBody.isFirstPage() && !isPageLoaded.get()) {
             val videoDetail = videoGroupDomain.getVideoDetail(id)
+                .doOnSuccess {
+                    isPageLoaded.set(true)
+                }
                 .map { video ->
                     duration = video.duration
                     lastPlayedTime = video.lastPlayedTime
@@ -88,7 +96,10 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                 .map { video ->
                     listOf<BaseModel>(VideoDetailItemVm(video))
                 }
-            Single.zip(videoDetail, relatedVideos, BiFunction { t1, t2 -> t1 + t2 })
+            Single.zip(videoDetail, relatedVideos, BiFunction { t1, t2 ->
+                Timber.e(t1.toString() + " " + t2.toString())
+                t1 + t2
+            })
         } else {
             relatedVideos
         }

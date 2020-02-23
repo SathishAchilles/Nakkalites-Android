@@ -12,6 +12,14 @@
             type="VideoVm" />
 
         <variable
+            name="height"
+            type="Integer" />
+
+        <variable
+            name="width"
+            type="Integer" />
+
+        <variable
             name="onVideoClick"
             type="kotlin.jvm.functions.Function1&lt;VideoVm,kotlin.Unit&gt;" />
 
@@ -36,10 +44,11 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="115dp"
+                android:layout_height="wrap_content"
                 android:onClick="@{() -> onVideoClick.invoke(vm)}"
                 app:imageTransforms="@{transformations}"
-                app:imageUrl="@{vm.thumbnail}" />
+                app:imageUrl="@{vm.thumbnail}"
+                />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"

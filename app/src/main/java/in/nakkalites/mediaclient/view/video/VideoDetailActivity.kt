@@ -174,6 +174,8 @@ class VideoDetailActivity : BaseActivity() {
                 (itemBinding as ItemVideoGridBinding).onVideoClick = onVideoClick
                 itemBinding.vm = vm1
                 itemBinding.transformations = getDefaultTransformations()
+                itemBinding.height = dpToPx(115)
+                itemBinding.width = (displayWidth() - dpToPx(8)) / 2
             }
         }
     }

@@ -10,7 +10,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Empty Page"
-            android:textColor="@color/cyan_400" />
+            android:padding="10dp"
+            android:text="@string/empty_message"
+            android:textColor="@color/white" />
     </LinearLayout>
 </layout>
