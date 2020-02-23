@@ -47,8 +47,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> onVideoClick.invoke(vm)}"
                 app:imageTransforms="@{transformations}"
-                app:imageUrl="@{vm.thumbnail}"
-                />
+                app:imageUrl="@{vm.thumbnail}" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"

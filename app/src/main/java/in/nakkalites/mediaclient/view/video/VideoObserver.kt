@@ -60,9 +60,8 @@ class VideoObserver(
     private var currentSecond: Long = 0
         set(value) {
             field = value
-            videoDuration?.let {
-                playerTracker.timeElapsed = it
-            }
+            Timber.e("current time $currentSecond")
+            playerTracker.timeElapsed = field * 1000
         }
 
     init {
@@ -152,7 +151,7 @@ class VideoObserver(
                     Player.STATE_READY -> {
                         progressBar.visibility = View.GONE
                         playPauseButton.visibility = View.VISIBLE
-                        videoDuration = player.duration / 1000
+                        videoDuration = player.duration
                         playerTracker.duration = videoDuration!!
                     }
                     Player.STATE_BUFFERING -> {
