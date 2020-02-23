@@ -16,7 +16,7 @@ interface VideoGroupService {
     @GET(HttpConstants.VIDEO_GROUP_DETAIL)
     fun getVideosOfVideoGroup(
         @Path("video-group-id") id: String, @QueryMap paging: StringAnyMap
-    ): Single<VideoGroupResponse>
+    ): Single<VideosResponse>
 
     @GET(HttpConstants.WEBSERIES_DETAIL)
     fun getWebSeriesDetail(@Path("webseries-id") id: String): Single<WebSeriesDetailResponse>
@@ -30,6 +30,9 @@ interface VideoGroupService {
     ): Single<VideosResponse>
 
     @POST(HttpConstants.VIDEO_TRACK)
+    @Headers(
+        "Content-Type:application/json"
+    )
     fun trackVideo(
         @Path("video-id") id: String, @Body params: StringAnyMap
     ): Completable

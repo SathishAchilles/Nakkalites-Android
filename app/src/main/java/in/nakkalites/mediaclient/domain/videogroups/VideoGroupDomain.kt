@@ -236,7 +236,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
 
     fun getVideos(
         videoGroupId: String, category: String?, pagingBody: PagingBody
-    ): Single<Pair<VideoGroup, String?>> {
+    ): Single<Pair<List<Video>, String?>> {
         val json = "{\n" +
                 "  \"video_group\": {\n" +
                 "    \"id\": 0,\n" +
@@ -280,7 +280,7 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
         return videoGroupService.getVideosOfVideoGroup(videoGroupId, params)
             .map { response ->
                 Timber.e(response.toString())
-                Pair(VideoGroup.map(response.videoGroup), response.cursor)
+                response.videos.map { videoEntity -> Video.map(videoEntity) } to response.cursor
             }
     }
 

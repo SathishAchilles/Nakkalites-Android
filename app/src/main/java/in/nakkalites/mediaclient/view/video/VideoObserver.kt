@@ -43,7 +43,7 @@ class VideoObserver(
 
     private val disposables = CompositeDisposable()
     private val MAX_FORWARD_BACKWARD_IN_MS = 10 * 1000 // 10 seconds
-    private var videoDuration: Long? = null
+    private var videoDuration: Long? = duration
     private val player = ExoPlayerFactory.newSimpleInstance(
         activity, DefaultRenderersFactory(activity), trackSelector, loadControl
     )
@@ -127,9 +127,10 @@ class VideoObserver(
         }
         with(player) {
             prepare(mediaSource)
-            Timber.e("${player.currentWindowIndex} $lastPlayedTime")
+            Timber.e("previous ${player.currentWindowIndex} $lastPlayedTime")
             if (lastPlayedTime != 0L) {
                 seekTo(player.currentWindowIndex, lastPlayedTime)
+                Timber.e("seekTo ${player.currentWindowIndex} $lastPlayedTime")
             }
             playWhenReady = !playerTracker.shouldPauseCurrentVideo
         }

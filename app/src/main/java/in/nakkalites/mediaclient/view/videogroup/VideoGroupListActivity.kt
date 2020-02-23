@@ -64,7 +64,7 @@ class VideoGroupListActivity : BaseActivity() {
         val viewAdapter = RecyclerViewAdapter<BaseModel>(
             vm.items, videoViewProvider,
             ViewModelBinders.videoViewModelProvider(
-                this, dpToPx(250), displayWidth() - dpToPx(40), onVideoClick
+                this, dpToPx(250), displayWidth(), onVideoClick
             )
         )
         recyclerView.adapter = viewAdapter

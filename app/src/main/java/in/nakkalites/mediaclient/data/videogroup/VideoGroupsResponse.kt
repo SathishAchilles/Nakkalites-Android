@@ -14,7 +14,7 @@ data class VideoGroupsResponse(
 
 @JsonClass(generateAdapter = true)
 data class VideoGroupResponse(
-    @field:Json(name = "videos") val videoGroup: VideoGroupEntity
+    @field:Json(name = "video_group") val videoGroup: VideoGroupEntity
 ) : Page() {
     override val pageSize = videoGroup.videos.size
 }

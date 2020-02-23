@@ -144,7 +144,7 @@ class VideoDetailActivity : BaseActivity() {
         })
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.name}")
+        loge("Video clicked ${vm.lastPlayedTime}")
         openVideoPlayerPage(
             this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
         )

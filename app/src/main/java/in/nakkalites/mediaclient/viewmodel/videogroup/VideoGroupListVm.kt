@@ -43,19 +43,17 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
     internal fun fetchVideoGroups(videoGroupId: String, category: String?) {
         disposables += videoGroupDomain.getVideos(videoGroupId, category, pagingBody)
             .doAfterSuccess {
-                pagingBody.onNextPage(it.first.videos.size, it.second)
+                pagingBody.onNextPage(it.first.size, it.second)
             }
             .map {
-                Pair(it.first.name, it.first.videos
-                    .map { video -> VideoVm(video, showVideoTitle = true) })
+                it.first.map { video -> VideoVm(video, showVideoTitle = true) }
             }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))
             .subscribeBy(
                 onSuccess = {
-                    pageTitle.set(it.first)
-                    items.addAll(it.second)
-                    loge("items ${it.second}")
+                    items.addAll(it)
+                    loge("items $it")
                 },
                 onError = {
                     viewState.value = Event(Result.Error(Unit, throwable = it))

@@ -57,7 +57,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:progress="@{vm.progressPercent}"
-                android:progressDrawable="@color/harlequin"
+                android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
                 tools:progress="10" />
         </FrameLayout>
