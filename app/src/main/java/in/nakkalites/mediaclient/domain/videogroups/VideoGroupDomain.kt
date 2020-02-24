@@ -274,7 +274,11 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
 //        return Single.just(jsonAdapter.fromJson(json))
         val params = mutableMapOf<String, Any>()
             .apply {
-                category?.let { put("category", category) }
+                category?.let {
+                    put(
+                        "type", category
+                    )
+                }
                 putAll(pagingBody.toMap())
             }
         return videoGroupService.getVideosOfVideoGroup(videoGroupId, params)

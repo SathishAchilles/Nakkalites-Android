@@ -23,8 +23,14 @@
     <string name="open_source_licenses">Open Source Licenses</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="licenses_html_path" translatable="false">file:///android_asset/licenses.html</string>
-    <string name="web_series_share_text">Share %s</string>
-    <string name="video_share_text">Share %s</string>
+    <string name="web_series_share_text">Hey… Did you watch Nakkalites oda new web series \"%s\"\n\n
+Youtube LA illaye…\n\n
+Download their new app and watch exclusively.\n\n
+%s</string>
+    <string name="video_share_text">Hey… Did you watch Nakkalites oda new video \"%s\"\n\n
+Youtube LA illaye…\n\n
+Download their new app and watch exclusively.\n\n
+%s</string>
     <string name="starring">Starring</string>
     <string name="episode_title">%s - %s</string>
     <string name="related_videos">Related Videos</string>

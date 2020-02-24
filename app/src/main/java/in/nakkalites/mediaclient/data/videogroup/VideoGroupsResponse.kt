@@ -31,6 +31,7 @@ data class BannerEntity(
 data class VideoGroupEntity(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "header_name") val name: String,
+    @field:Json(name = "type") val type: String,
     @field:Json(name = "videos") val videos: List<VideoEntity> = listOf()
 )
 

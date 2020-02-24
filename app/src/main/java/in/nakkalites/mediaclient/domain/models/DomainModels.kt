@@ -58,11 +58,11 @@ data class Banner(
 }
 
 data class VideoGroup(
-    val id: String, val name: String, val videos: List<Video>
+    val id: String, val name: String, val type: String, val videos: List<Video>
 ) {
     companion object {
         fun map(videoGroupEntity: VideoGroupEntity): VideoGroup = VideoGroup(
-            videoGroupEntity.id, videoGroupEntity.name,
+            videoGroupEntity.id, videoGroupEntity.name, videoGroupEntity.type,
             videoGroupEntity.videos.map { Video.map(it) }
         )
     }

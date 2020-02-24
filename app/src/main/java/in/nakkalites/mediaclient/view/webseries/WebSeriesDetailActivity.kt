@@ -98,7 +98,9 @@ class WebSeriesDetailActivity : BaseActivity() {
             loge("Webseries shared ${vm.name}")
             val intent = shareTextIntent(
                 getString(R.string.share_sheet_title, vm.name),
-                getString(R.string.web_series_share_text, vm.name)
+                getString(
+                    R.string.web_series_share_text, vm.name, playStoreUrl()
+                )
             )
             startActivity(intent)
         }

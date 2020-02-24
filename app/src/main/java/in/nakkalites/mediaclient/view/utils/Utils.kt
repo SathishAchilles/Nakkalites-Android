@@ -63,6 +63,8 @@ fun Activity.playStoreIntent() = Intent(
     Intent.ACTION_VIEW, Uri.parse(AppConstants.PLAY_STORE_URL + packageName)
 )
 
+fun Activity.playStoreUrl() = AppConstants.PLAY_STORE_COMPLETE_URL
+
 fun Activity.setPortraitOrientation() {
     var uiOptions = View.SYSTEM_UI_FLAG_VISIBLE
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -78,7 +80,7 @@ fun Activity.setLandScapeOrientation() {
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 }
 
-fun shareTextIntent(shareTitle : String, shareText :String) : Intent =
+fun shareTextIntent(shareTitle: String, shareText: String): Intent =
     Intent(Intent.ACTION_SEND)
         .setType("text/*")
         .putExtra(Intent.EXTRA_TEXT, shareText)

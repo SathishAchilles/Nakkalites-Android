@@ -29,13 +29,19 @@ class VideoGroupListActivity : BaseActivity() {
     private val videoGroupName by lazy {
         intent.getStringExtra(AppConstants.VIDEO_GROUP_NAME)
     }
+    private val videoGroupCategory by lazy {
+        intent.getStringExtra(AppConstants.VIDEO_GROUP_CATEGORY)
+    }
 
     companion object {
         @JvmStatic
-        fun createIntent(ctx: Context, videoGroupId: String, videoGroupName: String): Intent =
+        fun createIntent(
+            ctx: Context, videoGroupId: String, videoGroupName: String, category : String
+        ): Intent =
             Intent(ctx, VideoGroupListActivity::class.java)
                 .putExtra(AppConstants.VIDEO_GROUP_ID, videoGroupId)
                 .putExtra(AppConstants.VIDEO_GROUP_NAME, videoGroupName)
+                .putExtra(AppConstants.VIDEO_GROUP_CATEGORY, category)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +63,7 @@ class VideoGroupListActivity : BaseActivity() {
     private fun init() {
         val recyclerView = binding.recyclerView
         val scrollPager = RecyclerViewScrollPager(this,
-            { recyclerView }, Runnable { vm.fetchVideoGroups(videoGroupId, videoGroupName) },
+            { recyclerView }, Runnable { vm.fetchVideoGroups(videoGroupId, videoGroupCategory) },
             { vm.loading() }, false
         )
         val gridLayoutManager = LinearLayoutManager(this)
@@ -71,7 +77,7 @@ class VideoGroupListActivity : BaseActivity() {
         recyclerView.layoutManager = gridLayoutManager
         scrollPager.attachScrollEvent()
         vm.initPagingBody(scrollPager.pagingCallback)
-        vm.fetchVideoGroups(videoGroupId, videoGroupName)
+        vm.fetchVideoGroups(videoGroupId, videoGroupCategory)
     }
 
     private val onVideoClick = { vm: VideoVm ->

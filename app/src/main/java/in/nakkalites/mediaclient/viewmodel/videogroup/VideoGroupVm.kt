@@ -8,6 +8,7 @@ import androidx.databinding.ObservableArrayList
 class VideoGroupVm(videoGroup: VideoGroup) : BaseModel {
     val id = videoGroup.id
     val name = videoGroup.name
+    val category = videoGroup.type
     val items = ObservableArrayList<VideoVm>()
 
     init {

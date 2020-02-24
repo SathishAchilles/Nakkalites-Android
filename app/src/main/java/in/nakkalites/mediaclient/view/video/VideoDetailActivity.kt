@@ -154,7 +154,7 @@ class VideoDetailActivity : BaseActivity() {
         loge("Video share click ${vm.url}")
         val intent = shareTextIntent(
             getString(R.string.share_sheet_title, vm.name),
-            getString(R.string.web_series_share_text, vm.name)
+            getString(R.string.video_share_text, vm.name, playStoreUrl())
         )
         startActivity(intent)
     }

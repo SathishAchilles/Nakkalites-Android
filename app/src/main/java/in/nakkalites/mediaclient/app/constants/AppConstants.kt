@@ -9,6 +9,7 @@ object AppConstants {
 
     const val VIDEO_GROUP_ID = "VIDEO_GROUP_ID"
     const val VIDEO_GROUP_NAME = "VIDEO_GROUP_NAME"
+    const val VIDEO_GROUP_CATEGORY = "VIDEO_GROUP_CATEGORY"
     const val WEBSERIES_ID = "WEBSERIES_ID"
     const val WEBSERIES_NAME = "WEBSERIES_NAME"
     const val WEBSERIES_THUMBNAIL = "WEBSERIES_THUMBNAIL"
@@ -22,4 +23,5 @@ object AppConstants {
     const val WEB_VIEW_TITLE = "WEB_VIEW_TITLE"
 
     const val PLAY_STORE_URL = "market://details?id="
+    const val PLAY_STORE_COMPLETE_URL = "https://play.google.com/store/apps/details?id=in.nakkalites.mediaclient"
 }

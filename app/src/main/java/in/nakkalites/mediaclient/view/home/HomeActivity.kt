@@ -200,7 +200,7 @@ class HomeActivity : BaseActivity() {
 
     private val onVideoGroupClick = { vm: VideoGroupVm ->
         loge("Video Group clicked ${vm.name}")
-        startActivity(VideoGroupListActivity.createIntent(this, vm.id, vm.name))
+        startActivity(VideoGroupListActivity.createIntent(this, vm.id, vm.name, vm.category))
     }
 
     private val onVideoClick = { vm: VideoVm ->
