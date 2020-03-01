@@ -31,9 +31,10 @@
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/grey_900_2"
-                app:title="@{vm.pageTitle}"
+                app:expandedTitleMarginBottom="16dp"
+                app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle">
+                app:title="@{vm.pageTitle}">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -43,22 +44,25 @@
                     <ImageView
                         android:id="@+id/expandedImage"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
                         app:fit="@{true}"
+                        android:layout_height="300dp"
+                        app:centerCrop="@{true}"
                         app:imageUrl="@{vm.thumbnail}"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7" />
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:src="@drawable/video_overlay_gradient" />
+                        android:layout_height="300dp"
+                        android:src="@drawable/video_overlay_gradient"
+                        android:visibility="visible" />
                 </FrameLayout>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     style="@style/Toolbar"
                     android:layout_height="?attr/actionBarSize"
+                    app:expandedTitleGravity="bottom"
                     app:layout_collapseMode="pin"
                     app:titleTextColor="@color/white"
                     tools:title="Pavan" />

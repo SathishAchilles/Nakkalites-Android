@@ -14,7 +14,7 @@ class SeasonEpisodeItemVm(
     val showDuration = episode.duration != null
     val durationInMs = episode.duration
     val lastPlayedTime = episode.lastPlayedTime
-    val duration = episode.duration?.toTimeString(withLiteral = true, includeZeros = false) ?: ""
+    val duration = episode.duration?.toTimeString(withLiteral = false, includeZeros = false) ?: ""
     val imageUrl = episode.thumbnailImage
     val url = episode.url
     val showProgress = episode.duration != null && episode.lastPlayedTime != null

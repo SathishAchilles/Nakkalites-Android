@@ -169,6 +169,7 @@ class VideoDetailActivity : BaseActivity() {
                     itemBinding.seekbar.paddingStart, 0, itemBinding.seekbar.paddingEnd, 0
                 )
                 itemBinding.seekbar.setOnTouchListener { _, _ -> true }
+                itemBinding.seekbar.thumb.mutate().alpha = 0
             }
             is VideoVm -> {
                 (itemBinding as ItemVideoGridBinding).onVideoClick = onVideoClick

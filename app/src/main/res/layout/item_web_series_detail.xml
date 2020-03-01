@@ -40,8 +40,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@{@drawable/ic_play_arrow_black_24dp}" />
 
             <TextView
@@ -117,7 +117,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="16dp"
             android:background="@color/grey_800" />
     </LinearLayout>
 </layout>

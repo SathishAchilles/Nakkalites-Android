@@ -38,7 +38,7 @@ fun SwipeRefreshLayout.setDefaultColors() {
 }
 
 fun getDefaultTransformations(): List<Transformation> =
-    listOf<Transformation>(RoundedCornersTransformation(50, 0))
+    listOf<Transformation>(RoundedCornersTransformation(20, 0))
 
 fun Context.dpToPx(dp: Int): Int {
     val density = resources.displayMetrics.density

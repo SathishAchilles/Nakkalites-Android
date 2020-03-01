@@ -42,13 +42,16 @@
                 android:layout_height="72dp"
                 app:imageTransforms="@{transformations}"
                 app:imageUrl="@{vm.imageUrl}" />
-
             <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/video_overlay_gradient"
+                android:visibility="visible"/>
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_play_arrow_black_24dp" />
-
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
@@ -82,15 +85,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/medium"
             android:lineSpacingExtra="3.6sp"
             android:text="@{vm.duration}"
             android:textColor="@color/grey_600"
             android:textSize="14sp"
             android:visibility="@{vm.showDuration}"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/video"
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="20 min" />

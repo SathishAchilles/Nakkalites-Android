@@ -28,8 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:onClick="@{() -> onBannerClick.invoke(vm)}"
-            android:paddingStart="30dp"
-            android:paddingEnd="30dp"
+            android:paddingStart="24dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="24dp"
             app:fit="@{true}"
             app:imageTransforms="@{transformations}"
             app:imageUrl="@{vm.thumbnail}" />

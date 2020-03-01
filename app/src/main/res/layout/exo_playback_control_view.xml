@@ -5,7 +5,7 @@
     android:id="@+id/controls_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="@drawable/video_overlay_gradient"
     tools:ignore="UnusedResources">
 
     <View
@@ -85,7 +85,7 @@
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/exo_icon_play" />
+            app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
 
         <ImageButton
             android:id="@id/exo_pause"
@@ -132,7 +132,8 @@
             android:focusable="true"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_volume_on" />
+            app:srcCompat="@drawable/ic_volume_on"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"
