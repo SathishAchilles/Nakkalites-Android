@@ -15,6 +15,11 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
     </style>
 
+    <style name="AppTheme.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+    </style>
+
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

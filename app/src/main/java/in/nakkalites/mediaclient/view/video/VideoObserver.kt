@@ -2,13 +2,20 @@ package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
+import `in`.nakkalites.mediaclient.view.utils.setLandScapeOrientation
+import `in`.nakkalites.mediaclient.view.utils.setPortraitOrientation
 import `in`.nakkalites.mediaclient.view.utils.shareTextIntent
+import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.net.Uri
 import android.view.KeyEvent
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -34,9 +41,9 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
-    private val activity: Activity, private val id: String, url: String,
-    private val duration: Long, private val lastPlayedTime: Long, private val name: String?,
-    val playerView: PlayerView, private val playerTracker: PlayerTracker,
+    private val activity: Activity, private val videoWrapper: FrameLayout, private val id: String,
+    url: String, duration: Long, private val lastPlayedTime: Long,
+    private val name: String?, val playerView: PlayerView, private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
 ) : LifecycleObserver {
@@ -57,11 +64,19 @@ class VideoObserver(
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
     private val backButton = activity.findViewById<ImageView>(R.id.back)
     private val shareButton = activity.findViewById<ImageView>(R.id.share)
+    private val fullscreen = activity.findViewById<ImageView>(R.id.fullscreen_button)
+    private val remainingTimeView = activity.findViewById<TextView>(R.id.remaining_duration)
     private var currentSecond: Long = 0
         set(value) {
             field = value
             Timber.e("current time $currentSecond")
             playerTracker.timeElapsed = field * 1000
+        }
+    private var remainingTime: Long = 0
+        set(value) {
+            field = value
+            Timber.e("remainingTime $remainingTime")
+            remainingTimeView.text = value.toTimeString(withLiteral = false, includeZeros = true)
         }
 
     init {
@@ -115,11 +130,23 @@ class VideoObserver(
         shareButton.setOnClickListener {
             val intent = shareTextIntent(
                 activity.getString(R.string.share_sheet_title, name),
-                activity.getString(R.string.video_share_text, name)
+                activity.getString(R.string.video_share_text, name, activity.playStoreUrl())
             )
             activity.startActivity(intent)
         }
         changeVolumeIcon(player, volumeButton)
+        fullscreen.visibility = View.GONE
+//        val parent = playerView.parent as FrameLayout
+//        if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
+//            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_enter)
+//            videoWrapper.tag = parent
+//        } else {
+//            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_exit)
+//            videoWrapper.tag = null
+//        }
+//        fullscreen.setOnClickListener {
+//            changeFullscreenButton(parent)
+//        }
         volumeButton.setOnClickListener {
             player.volume = if (player.volume == 0f) 1f else 0f
             changeVolumeIcon(player, volumeButton)
@@ -143,7 +170,10 @@ class VideoObserver(
                         || player.playbackState == Player.STATE_ENDED
             }
             .map { player.currentPosition }
-            .subscribe { currentSecond = it / 1000 }
+            .subscribe {
+                currentSecond = it / 1000
+                remainingTime = player.duration - player.currentPosition
+            }
 
         player.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -152,6 +182,7 @@ class VideoObserver(
                         progressBar.visibility = View.GONE
                         playPauseButton.visibility = View.VISIBLE
                         videoDuration = player.duration
+                        remainingTime = player.duration - player.currentPosition
                         playerTracker.duration = videoDuration!!
                     }
                     Player.STATE_BUFFERING -> {
@@ -166,6 +197,20 @@ class VideoObserver(
         })
         playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
         playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
+    }
+
+    private fun changeFullscreenButton(parent: FrameLayout) {
+        if (videoWrapper.tag == null) {
+            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_enter)
+            activity.setLandScapeOrientation()
+            videoWrapper.tag = parent
+        } else {
+            if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+                activity.setPortraitOrientation()
+            }
+            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_exit)
+            videoWrapper.tag = null
+        }
     }
 
     private fun changeVolumeIcon(player: SimpleExoPlayer, volumeButton: ImageView) {

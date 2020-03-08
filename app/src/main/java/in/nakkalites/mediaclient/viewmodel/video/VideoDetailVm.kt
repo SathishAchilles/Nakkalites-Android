@@ -34,8 +34,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var url: String? = null
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
-    val pageTitle = ObservableField<String>()
-    var isPageLoaded = AtomicBoolean(false)
+    private val isPageLoaded = AtomicBoolean(false)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
@@ -45,7 +44,6 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
         this.name = name
         this.thumbnail = thumbnail
         this.url = url
-        pageTitle.set(name.toCamelCase())
     }
 
     fun loading(): Boolean {

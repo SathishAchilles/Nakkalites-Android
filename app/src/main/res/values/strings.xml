@@ -36,4 +36,5 @@ Download their new app and watch exclusively.\n\n
     <string name="related_videos">Related Videos</string>
     <string name="share">Share</string>
     <string name="empty_message">Oops! Nothing to show here</string>
+    <string name="s_x_e_y">S%sE%s</string>
 </resources>

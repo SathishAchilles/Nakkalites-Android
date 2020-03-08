@@ -4,5 +4,6 @@
         <item>@font/bold</item>
         <item>@font/normal</item>
         <item>@font/medium</item>
+        <item>@font/black</item>
     </array>
 </resources>

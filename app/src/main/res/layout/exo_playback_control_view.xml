@@ -34,10 +34,10 @@
         android:id="@+id/share"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="12dp"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
         android:background="@color/transparent"
         android:clickable="true"
         android:focusable="true"
@@ -132,27 +132,32 @@
             android:focusable="true"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_volume_on"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_volume_on" />
+
+        <ImageButton
+            android:id="@+id/fullscreen_button"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/background_item_selected"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            app:srcCompat="@drawable/exo_controls_fullscreen_exit" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginBottom="25dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
-            <TextView
-                android:id="@id/exo_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="5dp"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                tools:ignore="SmallSp" />
 
             <com.google.android.exoplayer2.ui.DefaultTimeBar
                 android:id="@+id/exo_progress"
@@ -169,14 +174,14 @@
                 app:unplayed_color="@color/grey_500" />
 
             <TextView
-                android:id="@id/exo_duration"
+                android:id="@+id/remaining_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginEnd="5dp"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
+
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

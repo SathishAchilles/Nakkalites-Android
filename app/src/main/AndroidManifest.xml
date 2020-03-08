@@ -18,7 +18,8 @@
         <activity android:name=".view.webview.WebViewActivity" />
         <activity
             android:name=".view.video.VideoPlayerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.FullScreen"/>
         <activity android:name=".view.video.VideoDetailActivity" />
         <activity android:name=".view.webseries.WebSeriesDetailActivity" />
         <activity android:name=".view.videogroup.VideoGroupListActivity" />

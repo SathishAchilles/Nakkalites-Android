@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
@@ -106,6 +107,12 @@ class VideoPlayerActivity : BaseActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+        window.decorView.setOnSystemUiVisibilityChangeListener {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
         binding.vm = vm
@@ -113,8 +120,9 @@ class VideoPlayerActivity : BaseActivity() {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         videoObserver = VideoObserver(
-            this, id, url, duration ?: 0L, lastPlayedTime ?: 0L, vm.name, binding.playerView, vm,
-            bandwidthMeter, trackSelector, simpleCache, okClient, loadControl
+            this, binding.videoPlayerWrapper, id, url, duration ?: 0L, lastPlayedTime ?: 0L,
+            vm.name, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
+            okClient, loadControl
         )
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {
@@ -151,5 +159,15 @@ class VideoPlayerActivity : BaseActivity() {
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean { // If the event was not handled then see if the player view can handle it.
         return super.dispatchKeyEvent(event) || videoObserver.playerView.dispatchKeyEvent(event)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        }
     }
 }

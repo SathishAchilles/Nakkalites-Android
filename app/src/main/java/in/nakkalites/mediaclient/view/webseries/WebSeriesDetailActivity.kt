@@ -90,8 +90,10 @@ class WebSeriesDetailActivity : BaseActivity() {
         })
 
     private val callbacks: WebSeriesDetailCallbacks = object : WebSeriesDetailCallbacks {
-        override fun onVideoClick(vm: VideoVm) {
-            onVideoClick.invoke(vm)
+        override fun onVideoClick(vm: VideoVm?) {
+            if (vm != null){
+                onVideoClick.invoke(vm)
+            }
         }
 
         override fun onShareClick(vm: WebSeriesDetailItemVm) {

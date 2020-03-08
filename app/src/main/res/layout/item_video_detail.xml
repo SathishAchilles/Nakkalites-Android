@@ -24,7 +24,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginBottom="19dp"
+            android:orientation="horizontal"
+            android:visibility="@{vm.showProgress}">
 
             <SeekBar
                 android:id="@+id/seekbar"
@@ -60,9 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="19dp"
             android:layout_marginEnd="24dp"
-            android:fontFamily="@font/bold"
+            android:fontFamily="@font/black"
             android:shadowColor="#80000000"
             android:shadowDy="2"
             android:shadowRadius="5"

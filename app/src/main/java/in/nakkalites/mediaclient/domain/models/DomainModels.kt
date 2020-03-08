@@ -30,16 +30,16 @@ data class Video(
 
 data class WebSeries(
     val id: String, val name: String, val thumbnailImage: String, val webSeriesCount: Int,
-    val nextWebSeriesNumber: Int?, val nextEpisodeNumber: Int, val description: String,
-    val nextVideoId: String?, val starring: String?, val seasons: List<Season>
+    val nextSeasonNumber: Int, val nextEpisodeNumber: Int, val description: String,
+    val nextVideo: Video?, val starring: String?, val seasons: List<Season>
 ) {
     companion object {
         fun map(webSeriesEntity: WebSeriesEntity): WebSeries = WebSeries(
             webSeriesEntity.id, webSeriesEntity.name,
             webSeriesEntity.thumbnail, webSeriesEntity.seasonsCount,
-            webSeriesEntity.nextWebseriesNumber, webSeriesEntity.nextEpisodeNumber ?: 1,
-            webSeriesEntity.description, webSeriesEntity.nextVideoId, webSeriesEntity.starring,
-            webSeriesEntity.seasons.map { Season.map(it) }
+            webSeriesEntity.nextSeasonNumber ?: 1, webSeriesEntity.nextEpisodeNumber ?: 1,
+            webSeriesEntity.description, webSeriesEntity.nextVideo?.let { Video.map(it) },
+            webSeriesEntity.starring, webSeriesEntity.seasons.map { Season.map(it) }
         )
     }
 }

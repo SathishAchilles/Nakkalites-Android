@@ -58,12 +58,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:progress="@{vm.progressPercent}"
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
-                tools:progress="10" />
+                app:width="@{width}"
+                tools:progress="85" />
         </FrameLayout>
 
         <TextView

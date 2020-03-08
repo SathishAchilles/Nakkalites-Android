@@ -10,8 +10,6 @@ import android.content.pm.ActivityInfo
 import android.graphics.Point
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -53,11 +51,6 @@ fun Activity.displayDimens() =
 fun Activity.displayWidth() = displayDimens().x
 
 fun Activity.displayHeight() = displayDimens().y
-
-fun runOnUiThread(runnable: Runnable?) {
-    Handler(Looper.getMainLooper())
-        .post(runnable)
-}
 
 fun Activity.playStoreIntent() = Intent(
     Intent.ACTION_VIEW, Uri.parse(AppConstants.PLAY_STORE_URL + packageName)

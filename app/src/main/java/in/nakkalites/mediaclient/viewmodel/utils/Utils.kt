@@ -22,7 +22,7 @@ fun String.formatEn(vararg args: Any?): String = format(Locale.US, *args)
 fun Long.toTimeString(withLiteral: Boolean = false, includeZeros: Boolean = false): String =
     StringBuilder().run {
         val timeUnit = TimeUnit.createTimeUnit(
-            this@toTimeString, showHours = true, showMinutes = true, showSeconds = true
+            this@toTimeString, showHours = false, showMinutes = true, showSeconds = true
         )
         if (timeUnit.hours != -1L) {
             if (timeUnit.hours > 0) {

@@ -3,8 +3,8 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <corners android:bottomLeftRadius="5dp"
-                    android:bottomRightRadius="5dp" />
+                <corners android:bottomLeftRadius="2dp"
+                    android:bottomRightRadius="2dp" />
                 <solid android:color="@color/harlequin" />
             </shape>
         </clip>

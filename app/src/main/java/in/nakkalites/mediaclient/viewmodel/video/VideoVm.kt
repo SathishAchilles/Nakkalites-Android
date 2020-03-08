@@ -49,6 +49,6 @@ class VideoVm(
         }
 
     init {
-        loge("${video.lastPlayedTime} ${video.duration} $progressPercent")
+        loge(" ${video.videoName} ${video.lastPlayedTime} ${video.duration} $progressPercent")
     }
 }

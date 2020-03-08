@@ -12,14 +12,6 @@
             type="VideoVm" />
 
         <variable
-            name="height"
-            type="Integer" />
-
-        <variable
-            name="width"
-            type="Integer" />
-
-        <variable
             name="onVideoClick"
             type="kotlin.jvm.functions.Function1&lt;VideoVm,kotlin.Unit&gt;" />
 
@@ -44,8 +36,9 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:onClick="@{() -> onVideoClick.invoke(vm)}"
+                app:fit="@{true}"
                 app:imageTransforms="@{transformations}"
                 app:imageUrl="@{vm.thumbnail}" />
 
@@ -54,8 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_gravity="bottom"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:progress="@{vm.progressPercent}"
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
