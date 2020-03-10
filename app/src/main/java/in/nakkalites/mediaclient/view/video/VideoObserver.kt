@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit
 
 class VideoObserver(
     private val activity: Activity, private val videoWrapper: FrameLayout, private val id: String,
-    url: String, duration: Long, private val lastPlayedTime: Long,
+    url: String, duration: Long, private var lastPlayedTime: Long,
     private val name: String?, val playerView: PlayerView, private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
