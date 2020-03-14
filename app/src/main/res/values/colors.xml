@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#181818</color>
-    <color name="colorAccent">#35DBC7</color>
+    <color name="colorAccent">#0089FF</color>
     <color name="white">#FFFFFF</color>
     <color name="grey_400">#C4C4C4</color>
     <color name="grey_900">#212121</color>
@@ -31,5 +31,11 @@
     <color name="grey_300_2">#D8D8D8</color>
     <color name="grey_900_4">#2B2B2B</color>
     <color name="grey_600_2">#6B6B6B</color>
-    <color name="blue_grey_900">#363636</color>
+    <color name="grey_900_5">#222222</color>
+    <color name="light_blue_800">#0071D2</color>
+    <color name="light_blue_a700">#008AFF</color>
+    <color name="light_blue_a700_2">#0089FF</color>
+    <color name="light_blue_800_2">#0065BB</color>
+    <color name="blue_900">#004EC1</color>
+    <color name="teal_900">#000623</color>
 </resources>

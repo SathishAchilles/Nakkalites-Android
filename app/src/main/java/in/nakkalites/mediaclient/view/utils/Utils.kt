@@ -4,12 +4,14 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.view.widgets.RoundedCornersTransformation
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Point
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -78,3 +80,6 @@ fun shareTextIntent(shareTitle: String, shareText: String): Intent =
         .setType("text/*")
         .putExtra(Intent.EXTRA_TEXT, shareText)
         .let { Intent.createChooser(it, shareTitle) }
+
+fun ContentResolver.isRotationEnabled()=
+    Settings.System.getInt(this, Settings.System.ACCELEROMETER_ROTATION, 0) == 1

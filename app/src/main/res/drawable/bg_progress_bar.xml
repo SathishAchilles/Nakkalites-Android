@@ -3,9 +3,9 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <corners android:bottomLeftRadius="2dp"
-                    android:bottomRightRadius="2dp" />
-                <solid android:color="@color/harlequin" />
+                <corners android:bottomLeftRadius="5dp"
+                    android:bottomRightRadius="5dp" />
+                <solid android:color="@color/light_blue_a700_2" />
             </shape>
         </clip>
     </item>

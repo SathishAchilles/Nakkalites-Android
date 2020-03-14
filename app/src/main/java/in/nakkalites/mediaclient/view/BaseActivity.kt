@@ -17,7 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
             if (upIsBack) { // calls either overridden onBackPressed() or super.onBackPressed()
                 toolbar.setNavigationOnClickListener { onBackPressed() }
             } else {
-                toolbar.setNavigationOnClickListener { v: View? ->
+                toolbar.setNavigationOnClickListener {
                     val intent = NavUtils.getParentActivityIntent(this@BaseActivity)
                     intent!!.flags =
                         Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP

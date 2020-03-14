@@ -176,7 +176,7 @@ class HomeActivity : BaseActivity() {
                 }
                 viewPager.clipToPadding = false
                 viewPager.pageMargin = dpToPx(30)
-                viewPager.offscreenPageLimit = 1
+                viewPager.offscreenPageLimit = 2
                 val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
                 val currentItemHorizontalMarginPx =
                     resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)

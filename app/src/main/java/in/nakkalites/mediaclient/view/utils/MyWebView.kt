@@ -31,10 +31,6 @@ class MyWebView : WebView {
         getFixedContext(context), attrs, defStyleAttr, defStyleRes
     )
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, privateBrowsing: Boolean) : super(
-        getFixedContext(context), attrs, defStyleAttr, privateBrowsing
-    )
-
     companion object {
         @SuppressLint("NewApi")
         @JvmStatic

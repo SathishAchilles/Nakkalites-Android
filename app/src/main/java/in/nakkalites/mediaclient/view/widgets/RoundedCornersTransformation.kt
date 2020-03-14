@@ -80,12 +80,6 @@ class RoundedCornersTransformation(
                 drawDiagonalFromTopLeftRoundRect(canvas, paint, right, bottom)
             CornerType.DIAGONAL_FROM_TOP_RIGHT ->
                 drawDiagonalFromTopRightRoundRect(canvas, paint, right, bottom)
-            else -> canvas.drawRoundRect(
-                RectF(mMargin.toFloat(), mMargin.toFloat(), right, bottom),
-                mRadius.toFloat(),
-                mRadius.toFloat(),
-                paint
-            )
         }
     }
 

@@ -6,15 +6,13 @@ import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
 
 class SeasonEpisodeItemVm(
     val seasonId: String, val seasonName: String, episodeNumber: Int, episode: Video
-) :
-    BaseModel {
+) : BaseModel {
     val id = episode.id
     val title = episode.videoName
-    //        DisplayText.Singular(R.string.episode_title, listOf(episodeNumber, episode.videoName))
     val showDuration = episode.duration != null
     val durationInMs = episode.duration
     val lastPlayedTime = episode.lastPlayedTime
-    val duration = episode.duration?.toTimeString(withLiteral = false, includeZeros = false) ?: ""
+    val duration = episode.duration?.toTimeString(withLiteral = false, includeZeros = true) ?: ""
     val imageUrl = episode.thumbnailImage
     val url = episode.url
     val showProgress = episode.duration != null && episode.lastPlayedTime != null

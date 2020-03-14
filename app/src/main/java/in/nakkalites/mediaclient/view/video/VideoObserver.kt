@@ -9,6 +9,7 @@ import `in`.nakkalites.mediaclient.view.utils.shareTextIntent
 import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.view.KeyEvent
@@ -135,18 +136,17 @@ class VideoObserver(
             activity.startActivity(intent)
         }
         changeVolumeIcon(player, volumeButton)
-        fullscreen.visibility = View.GONE
-//        val parent = playerView.parent as FrameLayout
-//        if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT) {
-//            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_enter)
-//            videoWrapper.tag = parent
-//        } else {
-//            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_exit)
-//            videoWrapper.tag = null
-//        }
-//        fullscreen.setOnClickListener {
-//            changeFullscreenButton(parent)
-//        }
+        val parent = playerView.parent as FrameLayout
+        if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            fullscreen.setImageResource(R.drawable.ic_exit_fullscreen)
+            videoWrapper.tag = null
+        } else {
+            fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)
+            videoWrapper.tag = parent
+        }
+        fullscreen.setOnClickListener {
+            changeFullscreenButton(parent)
+        }
         volumeButton.setOnClickListener {
             player.volume = if (player.volume == 0f) 1f else 0f
             changeVolumeIcon(player, volumeButton)
@@ -201,16 +201,24 @@ class VideoObserver(
 
     private fun changeFullscreenButton(parent: FrameLayout) {
         if (videoWrapper.tag == null) {
-            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_enter)
-            activity.setLandScapeOrientation()
-            videoWrapper.tag = parent
+            setLandscapeOrientation(parent)
         } else {
-            if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-                activity.setPortraitOrientation()
-            }
-            fullscreen.setImageResource(R.drawable.exo_controls_fullscreen_exit)
-            videoWrapper.tag = null
+            setPortraitOrientation(parent)
         }
+    }
+
+    fun setLandscapeOrientation(parent: FrameLayout) {
+        fullscreen.setImageResource(R.drawable.ic_exit_fullscreen)
+        activity.setLandScapeOrientation()
+        videoWrapper.tag = parent
+    }
+
+    fun setPortraitOrientation(parent: FrameLayout) {
+        if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+            activity.setPortraitOrientation()
+        }
+        fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)
+        videoWrapper.tag = null
     }
 
     private fun changeVolumeIcon(player: SimpleExoPlayer, volumeButton: ImageView) {

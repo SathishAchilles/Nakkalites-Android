@@ -46,7 +46,7 @@
     <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">@color/blue_grey_900</item>
+        <item name="android:background">@color/grey_900_5</item>
         <item name="android:elevation" tools:ignore="NewApi">4dp</item>
         <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
         <item name="elevation">4dp</item>
@@ -56,7 +56,7 @@
         <item name="tabPaddingStart">12dp</item>
         <item name="tabMode">fixed</item>
         <item name="tabIndicatorHeight">2dp</item>
-        <item name="tabBackground">@color/blue_grey_900</item>
+        <item name="tabBackground">@color/grey_900_5</item>
         <item name="tabIndicatorColor">@color/white</item>
         <item name="tabSelectedTextColor">@color/white</item>
         <item name="tabTextColor">@color/grey_400</item>

@@ -3,10 +3,10 @@ package `in`.nakkalites.mediaclient.viewmodel.utils
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 
 open class DummyVm(val layoutId: Int) : BaseModel {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val that = o as DummyVm
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val that = other as DummyVm
         return layoutId == that.layoutId
     }
 

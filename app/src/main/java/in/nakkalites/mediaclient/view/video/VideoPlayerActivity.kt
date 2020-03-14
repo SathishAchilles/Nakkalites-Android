@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.View
 import android.view.Window
@@ -136,13 +137,18 @@ class VideoPlayerActivity : BaseActivity() {
             OrientationManager.OrientationChangeListener {
             override fun onOrientationChanged(newOrientation: Int) {
                 if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    setLandScapeOrientation()
+                    videoObserver.setLandscapeOrientation(binding.videoPlayerWrapper)
                 } else {
-                    setPortraitOrientation()
+                    videoObserver.setPortraitOrientation(binding.videoPlayerWrapper)
                 }
             }
         })
-        orientationManager.enable()
+        if (contentResolver.isRotationEnabled()) {
+            val handler = Handler()
+            handler.postDelayed(Runnable {
+                orientationManager.enable()
+            }, 500)
+        }
         setLandScapeOrientation()
     }
 

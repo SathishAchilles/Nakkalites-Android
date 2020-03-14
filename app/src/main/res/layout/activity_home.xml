@@ -22,7 +22,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue_grey_900"
+        android:background="@color/grey_900_5"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="in.nakkalites.mediaclient.view.home.HomeActivity">
 
@@ -36,7 +36,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
-                android:background="@color/blue_grey_900"
+                android:background="@color/grey_900_5"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ToolbarPopupTheme"
@@ -62,7 +62,7 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 style="@style/TabLayoutStyle"
-                android:background="@color/blue_grey_900"
+                android:background="@color/grey_900_5"
                 android:elevation="6dp"
                 app:onTabSelect="@{onTabSelect}"
                 app:setupWithViewPager="@{viewPager}" />
