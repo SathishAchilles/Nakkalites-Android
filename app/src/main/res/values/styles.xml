@@ -2,14 +2,13 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@null</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:fontFamily">@font/normal</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
         <item name="collapsedTitleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
         <item name="expandedTitleTextAppearance">@style/CollapsingToolbarTitleStyle</item>
         <item name="spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle</item>
@@ -18,7 +17,6 @@
 
     <style name="AppTheme.FullScreen">
         <item name="android:windowFullscreen">true</item>
-        <item name="android:navigationBarColor">@color/transparent</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
@@ -27,18 +25,11 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
         <item name="titleTextAppearance">@style/ToolbarTitleTextAppearance</item>
-        <item name="subtitleTextAppearance">@style/ToolbarSubtitleTextAppearance</item>
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="ToolbarTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:fontFamily">@font/bold</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="ToolbarSubtitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:fontFamily">@font/bold</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -57,20 +48,19 @@
         <item name="tabMode">fixed</item>
         <item name="tabIndicatorHeight">2dp</item>
         <item name="tabBackground">@color/grey_900_5</item>
-        <item name="tabIndicatorColor">@color/white</item>
-        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/blue_400</item>
+        <item name="tabSelectedTextColor">@color/blue_400</item>
         <item name="tabTextColor">@color/grey_400</item>
     </style>
 
     <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@font/medium</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
         <item name="textAllCaps">false</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:lineSpacingExtra">2sp</item>
     </style>
 
-    <!--Style for  custom tab view-->
     <style name="MyTitleStyle" parent="android:Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -88,7 +78,7 @@
 
     <style name="CollapsingToolbarTitleStyle" parent="@android:style/TextAppearance">
         <item name="android:textSize">24sp</item>
-        <item name="android:fontFamily">@font/bold</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
@@ -98,7 +88,7 @@
 
     <style name="SpinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@font/medium</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
         <item name="android:textColor">@color/white</item>
     </style>
 

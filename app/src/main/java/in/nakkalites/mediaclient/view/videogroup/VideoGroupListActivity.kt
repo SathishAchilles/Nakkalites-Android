@@ -36,12 +36,11 @@ class VideoGroupListActivity : BaseActivity() {
     companion object {
         @JvmStatic
         fun createIntent(
-            ctx: Context, videoGroupId: String, videoGroupName: String, category : String
-        ): Intent =
-            Intent(ctx, VideoGroupListActivity::class.java)
-                .putExtra(AppConstants.VIDEO_GROUP_ID, videoGroupId)
-                .putExtra(AppConstants.VIDEO_GROUP_NAME, videoGroupName)
-                .putExtra(AppConstants.VIDEO_GROUP_CATEGORY, category)
+            ctx: Context, videoGroupId: String, videoGroupName: String, category: String
+        ): Intent = Intent(ctx, VideoGroupListActivity::class.java)
+            .putExtra(AppConstants.VIDEO_GROUP_ID, videoGroupId)
+            .putExtra(AppConstants.VIDEO_GROUP_NAME, videoGroupName)
+            .putExtra(AppConstants.VIDEO_GROUP_CATEGORY, category)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +69,7 @@ class VideoGroupListActivity : BaseActivity() {
         val viewAdapter = RecyclerViewAdapter<BaseModel>(
             vm.items, videoViewProvider,
             ViewModelBinders.videoViewModelProvider(
-                this, dpToPx(250), displayWidth(), onVideoClick
+                this, dpToPx(250), displayWidth() - dpToPx(20), onVideoClick
             )
         )
         recyclerView.adapter = viewAdapter

@@ -44,9 +44,9 @@
                     <ImageView
                         android:id="@+id/expandedImage"
                         android:layout_width="match_parent"
-                        app:fit="@{true}"
                         android:layout_height="300dp"
                         app:centerCrop="@{true}"
+                        app:fit="@{true}"
                         app:imageUrl="@{vm.thumbnail}"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7" />
@@ -64,6 +64,7 @@
                     android:layout_height="?attr/actionBarSize"
                     app:expandedTitleGravity="bottom"
                     app:layout_collapseMode="pin"
+                    app:titleTextAppearance="@style/CollapsingToolbarTitleStyle"
                     app:titleTextColor="@color/white"
                     tools:title="Pavan" />
 

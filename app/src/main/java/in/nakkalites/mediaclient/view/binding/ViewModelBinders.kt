@@ -1,8 +1,10 @@
 package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ItemVideoBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoGroupBinding
+import `in`.nakkalites.mediaclient.view.utils.dpToPx
 import `in`.nakkalites.mediaclient.view.utils.getDefaultTransformations
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
@@ -26,6 +28,9 @@ object ViewModelBinders {
                     viewDataBinding.transformations = getDefaultTransformations()
                     viewDataBinding.height = height
                     viewDataBinding.width = width
+                    viewDataBinding.progressWidth = width - (context.dpToPx(
+                        context.resources.getDimension(R.dimen.video_progress_padding).toInt()
+                    ))
                 }
             }
         }

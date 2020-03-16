@@ -1,8 +1,8 @@
 ext.versions = [
-        buildTools          : '28.0.3',
-        compileSdk          : 28,
+        buildTools          : '29.0.3',
+        compileSdk          : 29,
         minSdk              : 21,
-        targetSdk           : 28,
+        targetSdk           : 29,
 
         agp                 : '3.6.1',
         androidX            : '1.1.0',

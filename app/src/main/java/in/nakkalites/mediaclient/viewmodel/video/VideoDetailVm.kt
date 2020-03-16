@@ -10,10 +10,8 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
-import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Single

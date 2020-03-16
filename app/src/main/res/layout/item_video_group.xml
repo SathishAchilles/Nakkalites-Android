@@ -32,13 +32,13 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:drawableEnd="@{showDeeplinkArrow ? @drawable/ic_chevron_right_black_24dp : null}"
-            android:fontFamily="@font/black"
+            android:fontFamily="@font/inter_bold"
             android:onClick="@{() -> onVideoGroupClick.invoke(vm)}"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@{vm.name}"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
             tools:drawableEnd="@drawable/ic_chevron_right_black_24dp"
             tools:text="Popular Videos" />
 

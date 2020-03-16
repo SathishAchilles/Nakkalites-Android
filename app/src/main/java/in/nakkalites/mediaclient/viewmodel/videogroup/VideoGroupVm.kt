@@ -13,7 +13,7 @@ class VideoGroupVm(videoGroup: VideoGroup) : BaseModel {
 
     init {
         val list = videoGroup.videos.mapIndexed { index, video ->
-            VideoVm(video, index, addMarginStart = true, showVideoTitle = false)
+            VideoVm(video, index, addMarginStart = true)
         }
         items.addAll(list)
     }

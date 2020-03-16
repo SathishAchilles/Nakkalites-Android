@@ -15,10 +15,10 @@ class SeasonEpisodeItemVm(
     val duration = episode.duration?.toTimeString(withLiteral = false, includeZeros = true) ?: ""
     val imageUrl = episode.thumbnailImage
     val url = episode.url
-    val showProgress = episode.duration != null && episode.lastPlayedTime != null
     val progressPercent = if (episode.lastPlayedTime != null && episode.duration != null) {
         (100 * (episode.lastPlayedTime / episode.duration.toFloat())).toInt()
     } else {
         0
     }
+    val showProgress = progressPercent != 0
 }

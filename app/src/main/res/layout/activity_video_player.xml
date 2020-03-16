@@ -24,7 +24,8 @@
             android:layout_height="match_parent"
             android:focusable="true"
             app:show_buffering="when_playing"
-            app:show_shuffle_button="true" />
+            app:show_shuffle_button="true"
+            app:resize_mode="zoom"/>
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/progress_bar"
@@ -33,6 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            app:SpinKit_Color="@color/cyan_400" />
+            app:SpinKit_Color="@color/progress_bar" />
     </FrameLayout>
 </layout>

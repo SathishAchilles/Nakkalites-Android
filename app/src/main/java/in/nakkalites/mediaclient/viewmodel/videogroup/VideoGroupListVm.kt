@@ -46,7 +46,7 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                 pagingBody.onNextPage(it.first.size, it.second)
             }
             .map {
-                it.first.map { video -> VideoVm(video, showVideoTitle = true) }
+                it.first.map { video -> VideoVm(video) }
             }
             .observeOn(AndroidSchedulers.mainThread())
             .compose(RxTransformers.dataLoading(isLoading, items))

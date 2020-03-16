@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.view.video
 
+import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
@@ -70,13 +71,11 @@ class VideoObserver(
     private var currentSecond: Long = 0
         set(value) {
             field = value
-            Timber.e("current time $currentSecond")
             playerTracker.timeElapsed = field * 1000
         }
     private var remainingTime: Long = 0
         set(value) {
             field = value
-            Timber.e("remainingTime $remainingTime")
             remainingTimeView.text = value.toTimeString(withLiteral = false, includeZeros = true)
         }
 
@@ -138,11 +137,11 @@ class VideoObserver(
         changeVolumeIcon(player, volumeButton)
         val parent = playerView.parent as FrameLayout
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            fullscreen.setImageResource(R.drawable.ic_exit_fullscreen)
-            videoWrapper.tag = null
-        } else {
             fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)
             videoWrapper.tag = parent
+        } else {
+            fullscreen.setImageResource(R.drawable.ic_exit_fullscreen)
+            videoWrapper.tag = null
         }
         fullscreen.setOnClickListener {
             changeFullscreenButton(parent)
@@ -200,6 +199,7 @@ class VideoObserver(
     }
 
     private fun changeFullscreenButton(parent: FrameLayout) {
+        loge("orientation ${activity.requestedOrientation}")
         if (videoWrapper.tag == null) {
             setLandscapeOrientation(parent)
         } else {
@@ -214,7 +214,11 @@ class VideoObserver(
     }
 
     fun setPortraitOrientation(parent: FrameLayout) {
-        if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+        if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+            || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
+        ) {
             activity.setPortraitOrientation()
         }
         fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)

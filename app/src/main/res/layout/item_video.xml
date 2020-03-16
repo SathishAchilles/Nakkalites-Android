@@ -20,6 +20,10 @@
             type="Integer" />
 
         <variable
+            name="progressWidth"
+            type="Integer" />
+
+        <variable
             name="onVideoClick"
             type="kotlin.jvm.functions.Function1&lt;VideoVm,kotlin.Unit&gt;" />
 
@@ -50,30 +54,18 @@
                 app:imageTransforms="@{transformations}"
                 app:imageUrl="@{vm.thumbnail}"
                 app:resizeHeight="@{height}"
-                app:resizeWidth="@{width}"
-                tools:src="@drawable/ic_launcher_background" />
+                app:resizeWidth="@{width}" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="3dp"
+                android:layout_gravity="bottom|center_horizontal"
                 android:progress="@{vm.progressPercent}"
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
-                app:width="@{width}"
+                app:width="@{progressWidth}"
                 tools:progress="85" />
         </FrameLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/normal"
-            android:text="@{vm.name}"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:visibility="@{vm.titleVisibility}" />
     </LinearLayout>
 </layout>

@@ -21,34 +21,53 @@
         android:background="@drawable/bg_sign_up">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/bg_grey_tint"/>
+            android:src="@drawable/bg_grey_tint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toTopOf="@+id/txt_login"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_logo_sign_up" />
+
+        <TextView
+            android:id="@+id/txt_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="60dp"
+            android:fontFamily="@font/inter_bold"
+            android:text="@string/sign_up_intro"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="100dp"
             android:text="@string/continue_with_google"
-            app:buttonSize="standard"
-            app:circleCrop="true"
+            app:buttonSize="wide"
             app:colorScheme="dark"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="parent"
-            app:layout_constraintRight_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/progress_bar"
-            style="@style/SpinKitView.ThreeBounce"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:SpinKit_Color="@color/cyan_400"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="parent"
-            app:layout_constraintRight_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
-
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

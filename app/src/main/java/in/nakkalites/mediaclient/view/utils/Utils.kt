@@ -34,7 +34,7 @@ inline fun argumentError(message: Any? = null): Nothing =
     throw IllegalArgumentException(message?.toString())
 
 fun SwipeRefreshLayout.setDefaultColors() {
-    setColorSchemeColors(ContextCompat.getColor(context, R.color.cyan_400))
+    setColorSchemeColors(ContextCompat.getColor(context, R.color.progress_bar))
 }
 
 fun getDefaultTransformations(): List<Transformation> =

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:SpinKit_Color="@color/cyan_400" />
+            app:SpinKit_Color="@color/progress_bar" />
 
         <TextView
             android:layout_width="wrap_content"

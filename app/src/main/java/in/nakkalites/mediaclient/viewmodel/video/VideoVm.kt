@@ -8,7 +8,7 @@ import androidx.annotation.DimenRes
 
 class VideoVm(
     video: Video, position: Int = -1, addMarginStart: Boolean = false,
-    val showVideoTitle: Boolean = false
+    showVideoTitle: Boolean = false
 ) : BaseModel {
     val id = video.id
     val name = video.videoName
@@ -16,12 +16,12 @@ class VideoVm(
     val thumbnail = video.thumbnailImage
     val description = video.description
     val titleVisibility = showVideoTitle
-    val showProgress = video.lastPlayedTime != null
     val progressPercent: Int = if (video.lastPlayedTime != null && video.duration != null) {
         (100 * (video.lastPlayedTime / video.duration.toFloat())).toInt()
     } else {
         0
     }
+    val showProgress = progressPercent != 0
     val duration = video.duration
     val lastPlayedTime = video.lastPlayedTime
 
@@ -35,14 +35,14 @@ class VideoVm(
 
     @DimenRes
     val marginGridStart =
-        if (position %2 == 0) {
+        if (position % 2 == 0) {
             R.dimen.horizontal_list_margin_start_initial
         } else {
             R.dimen.video_default_margin
         }
     @DimenRes
     val marginGridEnd =
-        if (position %2 == 0) {
+        if (position % 2 == 0) {
             R.dimen.video_default_margin
         } else {
             R.dimen.horizontal_list_margin_start_initial

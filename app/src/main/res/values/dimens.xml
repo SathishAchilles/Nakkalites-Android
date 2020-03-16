@@ -6,4 +6,5 @@
     <dimen name="video_default_margin">5dp</dimen>
     <dimen name="viewpager_next_item_visible">26dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
+    <dimen name="video_progress_padding">2dp</dimen>
 </resources>

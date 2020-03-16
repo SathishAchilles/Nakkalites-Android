@@ -149,7 +149,7 @@ class VideoPlayerActivity : BaseActivity() {
                 orientationManager.enable()
             }, 500)
         }
-        setLandScapeOrientation()
+        videoObserver.setLandscapeOrientation(binding.videoPlayerWrapper)
     }
 
     override fun onPause() {

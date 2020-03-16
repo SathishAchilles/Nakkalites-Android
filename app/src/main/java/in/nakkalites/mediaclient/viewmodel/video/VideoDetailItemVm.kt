@@ -11,7 +11,6 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     val thumbnail = video.thumbnailImage
     val description = video.description
     val name = video.videoName
-    val showProgress = video.lastPlayedTime == null || video.duration == null
     val duration = ((video.duration ?: 0) - (video.lastPlayedTime ?: 0))
         .toTimeString(withLiteral = false, includeZeros = true)
     val progress = if (video.lastPlayedTime != null && video.duration != null) {
@@ -19,6 +18,7 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     } else {
         0
     }
+    val showProgress = progress != 0
     val starring = video.starring
 
     init {
