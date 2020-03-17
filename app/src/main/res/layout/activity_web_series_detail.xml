@@ -64,7 +64,6 @@
                     android:layout_height="?attr/actionBarSize"
                     app:expandedTitleGravity="bottom"
                     app:layout_collapseMode="pin"
-                    app:titleTextAppearance="@style/CollapsingToolbarTitleStyle"
                     app:titleTextColor="@color/white"
                     tools:title="Pavan" />
 

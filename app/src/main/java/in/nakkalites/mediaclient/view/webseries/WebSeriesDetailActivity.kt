@@ -21,6 +21,7 @@ import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -53,6 +54,14 @@ class WebSeriesDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_web_series_detail)
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
+        binding.toolbarLayout.apply {
+            setCollapsedTitleTypeface(
+                ResourcesCompat.getFont(this@WebSeriesDetailActivity, R.font.inter_regular)
+            )
+            setExpandedTitleTypeface(
+                ResourcesCompat.getFont(this@WebSeriesDetailActivity, R.font.inter_bold)
+            )
+        }
         binding.vm = vm
         vm.setArgs(id, name, thumbnail)
         init()
@@ -91,7 +100,7 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val callbacks: WebSeriesDetailCallbacks = object : WebSeriesDetailCallbacks {
         override fun onVideoClick(vm: VideoVm?) {
-            if (vm != null){
+            if (vm != null) {
                 onVideoClick.invoke(vm)
             }
         }
