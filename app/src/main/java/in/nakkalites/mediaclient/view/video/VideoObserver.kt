@@ -26,6 +26,7 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -100,15 +101,6 @@ class VideoObserver(
         disposables.clear()
     }
 
-    private fun hideSystemUi() {
-        playerView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-    }
-
     private fun initializePlayer() {
         if (BuildConfig.DEBUG) {
             player.addAnalyticsListener(EventLogger(trackSelector))
@@ -118,8 +110,12 @@ class VideoObserver(
         }
         playPauseButton.setOnClickListener {
             playerTracker.shouldPauseCurrentVideo = player.playWhenReady
+            if (player.playWhenReady) {
+                hideSystemUi()
+            }
             if (player.playbackState == Player.STATE_ENDED) {
                 player.seekTo(player.currentWindowIndex, C.TIME_UNSET)
+                lastPlayedTime = 0
                 player.playWhenReady = true
             } else {
                 playerView.dispatchMediaKeyEvent(
@@ -198,27 +194,38 @@ class VideoObserver(
         playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
     }
 
+    private fun hideSystemUi() {
+        playerView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LOW_PROFILE
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+    }
+
     private fun changeFullscreenButton(parent: FrameLayout) {
         loge("orientation ${activity.requestedOrientation}")
         if (videoWrapper.tag == null) {
             setLandscapeOrientation(parent)
         } else {
-            setPortraitOrientation(parent)
+            setPortraitOrientation()
         }
     }
 
     fun setLandscapeOrientation(parent: FrameLayout) {
+        this.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
         fullscreen.setImageResource(R.drawable.ic_exit_fullscreen)
         activity.setLandScapeOrientation()
         videoWrapper.tag = parent
     }
 
-    fun setPortraitOrientation(parent: FrameLayout) {
+    fun setPortraitOrientation() {
         if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
         ) {
+        this.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             activity.setPortraitOrientation()
         }
         fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)
