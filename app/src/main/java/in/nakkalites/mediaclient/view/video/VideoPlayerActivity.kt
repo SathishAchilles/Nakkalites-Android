@@ -176,7 +176,7 @@ class VideoPlayerActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         return super.dispatchKeyEvent(event) || videoObserver.playerView.dispatchKeyEvent(event)
     }
 

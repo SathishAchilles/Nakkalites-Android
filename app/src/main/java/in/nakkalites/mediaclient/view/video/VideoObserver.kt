@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.logging.logv
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
@@ -22,8 +23,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.github.ybq.android.spinkit.SpinKitView
+import com.google.ads.interactivemedia.v3.api.AdEvent.AdEventType
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
+import com.google.android.exoplayer2.source.ads.AdsMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
@@ -62,6 +66,11 @@ class VideoObserver(
     private val mediaSource = HlsMediaSource.Factory(mediaDataSourceFactory)
         .setAllowChunklessPreparation(true)
         .createMediaSource(Uri.parse(url))
+    private val imaAdsLoader =
+        ImaAdsLoader(activity, Uri.parse(activity.getString(R.string.ad_tag_url)))
+    private val adsMediaSource: AdsMediaSource = AdsMediaSource(
+        mediaSource, mediaDataSourceFactory, imaAdsLoader, playerView
+    )
     private val playPauseButton = activity.findViewById<View>(R.id.play_pause)
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
     private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
@@ -146,16 +155,8 @@ class VideoObserver(
             player.volume = if (player.volume == 0f) 1f else 0f
             changeVolumeIcon(player, volumeButton)
         }
-        with(player) {
-            prepare(mediaSource)
-            Timber.e("previous ${player.currentWindowIndex} $lastPlayedTime")
-            if (lastPlayedTime != 0L) {
-                seekTo(player.currentWindowIndex, lastPlayedTime)
-                Timber.e("seekTo ${player.currentWindowIndex} $lastPlayedTime")
-            }
-            playWhenReady = !playerTracker.shouldPauseCurrentVideo
-        }
         playerView.setShutterBackgroundColor(Color.TRANSPARENT)
+        imaAdsLoader.setPlayer(player)
         playerView.player = player
         playerView.requestFocus()
         disposables += Observable.interval(1, TimeUnit.SECONDS)
@@ -189,9 +190,54 @@ class VideoObserver(
                     }
                 }
             }
+
+            override fun onPlayerError(error: ExoPlaybackException) {
+                super.onPlayerError(error)
+                loge("Listener-onPlayerError...")
+                player.stop()
+                player.prepare(adsMediaSource)
+                player.playWhenReady = true
+            }
         })
         playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
         playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
+
+
+        //IMA event listeners
+        imaAdsLoader.adsLoader.addAdsLoadedListener { adsManagerLoadedEvent ->
+            val imaAdsManager = adsManagerLoadedEvent.adsManager
+            imaAdsManager.addAdEventListener { adEvent ->
+                logv("AdEvent: " + adEvent.type.toString())
+                when (adEvent.type) {
+                    AdEventType.LOADED -> {
+                    }
+                    AdEventType.PAUSED -> {
+                    }
+                    AdEventType.STARTED -> {
+                    }
+                    AdEventType.COMPLETED -> {
+                    }
+                    AdEventType.ALL_ADS_COMPLETED -> {
+                    }
+                    AdEventType.CONTENT_RESUME_REQUESTED -> {
+//                        player.stop()
+//                        player.prepare(adsMediaSource)
+//                        player.playWhenReady = true
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
+        with(player) {
+            prepare(adsMediaSource)
+            Timber.e("previous ${player.currentWindowIndex} $lastPlayedTime")
+            if (lastPlayedTime != 0L) {
+                seekTo(player.currentWindowIndex, lastPlayedTime)
+                Timber.e("seekTo ${player.currentWindowIndex} $lastPlayedTime")
+            }
+            playWhenReady = !playerTracker.shouldPauseCurrentVideo
+        }
     }
 
     private fun hideSystemUi() {
@@ -225,7 +271,7 @@ class VideoObserver(
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
         ) {
-        this.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+            this.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             activity.setPortraitOrientation()
         }
         fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)
@@ -240,6 +286,7 @@ class VideoObserver(
 
     private fun releasePlayer() {
         player.release()
+//        imaAdsLoader.release()
     }
 
     private fun createDataSourceFactory(
