@@ -3,6 +3,7 @@ package `in`.nakkalites.mediaclient.view.home
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.*
 import `in`.nakkalites.mediaclient.domain.models.BannerType
@@ -27,6 +28,7 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -264,8 +266,18 @@ class HomeActivity : BaseActivity() {
                 Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.TERMS_CONDITIONS))
             R.id.privacy_policy ->
                 Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.PRIVACY_POLICY))
+            R.id.contact_us_mail -> {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.type = "text/plain"
+                intent.data = Uri.parse("mailto:${AppConstants.CONTACT_EMAIL}");
+                Intent.createChooser(intent, "Send Email to Nakkalites via")
+            }
             else -> null
         }
-        intent?.let(::startActivity)?.let { true } ?: false
+        try {
+            intent?.let(::startActivity)?.let { true } ?: false
+        } catch (e: ActivityNotFoundException) {
+            //no-op
+        }
     }
 }

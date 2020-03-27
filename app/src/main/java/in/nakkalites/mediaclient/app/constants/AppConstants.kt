@@ -23,5 +23,6 @@ object AppConstants {
     const val WEB_VIEW_TITLE = "WEB_VIEW_TITLE"
 
     const val PLAY_STORE_URL = "market://details?id="
+    const val CONTACT_EMAIL = "contact@nakkalites.in"
     const val PLAY_STORE_COMPLETE_URL = "https://play.google.com/store/apps/details?id=in.nakkalites.mediaclient"
 }
