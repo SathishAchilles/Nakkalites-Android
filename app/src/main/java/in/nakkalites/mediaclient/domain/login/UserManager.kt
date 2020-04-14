@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.domain.login
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.UserService
@@ -29,7 +28,6 @@ class UserManager(private val userService: UserService, private val userDataStor
             email?.let { put("email", email) }
             photoUrl?.let { put("photo_url", it.toString()) }
         }
-        loge("params $params $id $displayName $email $photoUrl")
 //        return Single.just(LoginResponse(UserEntity("123", "Pavan", "thynameisp1@gmail.com", null, ""))
         return userService.login(params)
             .doOnSuccess {

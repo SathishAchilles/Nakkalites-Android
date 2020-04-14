@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
@@ -40,7 +39,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import okhttp3.OkHttpClient
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
@@ -202,7 +200,6 @@ class VideoObserver(
     }
 
     private fun changeFullscreenButton(parent: FrameLayout) {
-        loge("orientation ${activity.requestedOrientation}")
         if (videoWrapper.tag == null) {
             setLandscapeOrientation(parent)
         } else {
@@ -223,7 +220,7 @@ class VideoObserver(
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
             || activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE
         ) {
-        this.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+            this.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             activity.setPortraitOrientation()
         }
         fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)

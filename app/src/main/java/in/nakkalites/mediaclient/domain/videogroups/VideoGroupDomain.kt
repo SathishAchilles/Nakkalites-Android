@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.domain.videogroups
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.data.videogroup.*
 import `in`.nakkalites.mediaclient.domain.BaseDomain
 import `in`.nakkalites.mediaclient.domain.models.Banner
@@ -16,7 +15,6 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
     BaseDomain {
 
     fun getAllVideoGroups(pagingBody: PagingBody): Single<Triple<List<Banner>, List<VideoGroup>, String?>> {
-        loge(pagingBody.toMap().toString())
         val json = "{\n" +
                 "  \"banners\": [\n" +
                 "    {\n" +

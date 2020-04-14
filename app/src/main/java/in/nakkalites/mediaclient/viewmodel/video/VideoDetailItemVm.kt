@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
@@ -21,7 +20,4 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     val showProgress = progress != 0
     val starring = video.starring
 
-    init {
-        loge("video ${video.lastPlayedTime} ${video.duration} $progress $showProgress")
-    }
 }

@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.videogroup
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoGroupListBinding
@@ -80,7 +79,6 @@ class VideoGroupListActivity : BaseActivity() {
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.name}")
         openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
     }
 
