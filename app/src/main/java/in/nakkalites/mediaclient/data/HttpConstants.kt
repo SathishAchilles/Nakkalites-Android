@@ -2,8 +2,8 @@ package `in`.nakkalites.mediaclient.data
 
 object HttpConstants {
     const val TIMEOUT: Long = 30
-    const val BASE_URL_DEV: String = "https://sleepy-lowlands-51142.herokuapp.com/api/"
-    const val BASE_URL_PROD: String = "https://www.nakkalites.com/api/"
+    const val BASE_URL_DEV: String = "https://nakkalites-dev.herokuapp.com/api/"
+    const val BASE_URL_PROD: String = "https://nakkalites-prod.herokuapp.com/api/"
     const val LOGIN = "v1/users/sign_in"
     const val VIDEO_GROUPS = "v1/video_groups"
     const val WEBSERIES = "v1/web_series"
@@ -12,12 +12,12 @@ object HttpConstants {
     const val VIDEO_DETAIL = "v1/videos/{video-id}"
     const val VIDEO_TRACK = "v1/videos/{video-id}/track"
     const val VIDEO_RELATED = "v1/videos/{video-id}/related"
-    const val TERMS_CONDITIONS = "https://www.nakkalites.com/api/terms-conditions"
-    const val PRIVACY_POLICY = "https://www.nakkalites.com/api/privacy"
+    const val TERMS_CONDITIONS = "https://d2s2797e1jgkv9.cloudfront.net/html/NakkalitesTermsandconditions.html"
+    const val PRIVACY_POLICY = "https://d2s2797e1jgkv9.cloudfront.net/html/NakkalitesPrivacypolicy.html"
 }
 
 object HttpStatus {
     const val SUCCESS = 200
     const val UNAUTHORIZED = 401
-    const val LOGOUT = 462
+    const val LOGOUT = 423
 }

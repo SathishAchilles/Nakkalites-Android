@@ -277,7 +277,7 @@ class HomeActivity : BaseActivity() {
         try {
             intent?.let(::startActivity)?.let { true } ?: false
         } catch (e: ActivityNotFoundException) {
-            //no-op
+            false
         }
     }
 }

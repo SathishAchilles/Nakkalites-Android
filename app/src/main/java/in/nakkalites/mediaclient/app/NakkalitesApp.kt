@@ -8,6 +8,7 @@ import `in`.nakkalites.mediaclient.app.di.viewModelModule
 import `in`.nakkalites.mediaclient.app.utils.RxErrorHandler
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.domain.login.UserManager
+import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import android.app.Application
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
@@ -20,6 +21,7 @@ import org.koin.core.context.startKoin
 class NakkalitesApp : Application() {
     private val debug = BuildConfig.DEBUG
     val userManager: UserManager by inject()
+    val logoutHandler: LogoutHandler by inject()
 
     override fun onCreate() {
         super.onCreate()

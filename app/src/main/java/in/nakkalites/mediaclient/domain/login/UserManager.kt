@@ -41,4 +41,6 @@ class UserManager(private val userService: UserService, private val userDataStor
     fun isUserLoggedIn() = userDataStore.getUser() != null
 
     fun getUser() = userDataStore.getUser()
+
+    fun clearAppData() = userDataStore.clearAppData()
 }

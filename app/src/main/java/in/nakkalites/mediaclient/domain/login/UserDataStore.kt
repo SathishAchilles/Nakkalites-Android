@@ -35,4 +35,6 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
     }
 
     fun getAccessToken(): String = prefs.getStringOrEmpty(PrefsConstants.ACCESS_TOKEN)
+
+    fun clearAppData() = prefs.edit().clear().apply()
 }

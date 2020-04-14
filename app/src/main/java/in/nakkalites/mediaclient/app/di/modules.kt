@@ -8,6 +8,7 @@ import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.login.UserManager
+import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
@@ -73,6 +74,9 @@ val applicationModule = module {
     }
     single {
         FirebaseRemoteConfig.getInstance()
+    }
+    single {
+        LogoutHandler(get(), get())
     }
 }
 
