@@ -11,7 +11,6 @@ import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Single
-import timber.log.Timber
 
 class VideoGroupDomain(private val videoGroupService: VideoGroupService, val moshi: Moshi) :
     BaseDomain {
@@ -145,7 +144,6 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
 //        return Single.just(jsonAdapter.fromJson(json))
         return videoGroupService.getVideoGroups(pagingBody.toMap())
             .map { response ->
-                Timber.e(response.toString())
                 Triple(
                     response.banners.map { entity -> Banner.map(entity) },
                     response.videoGroups.map { entity -> VideoGroup.map(entity) },
@@ -229,7 +227,6 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
 //        return Single.just(jsonAdapter.fromJson(json))
         return videoGroupService.getWebSeriesList(pagingBody.toMap())
             .map { response ->
-                Timber.e(response.toString())
                 Pair(response.webSeriesList.map { WebSeries.map(it) }, response.cursor)
             }
     }
@@ -274,16 +271,11 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
 //        return Single.just(jsonAdapter.fromJson(json))
         val params = mutableMapOf<String, Any>()
             .apply {
-                category?.let {
-                    put(
-                        "type", category
-                    )
-                }
+                category?.let { put("type", category) }
                 putAll(pagingBody.toMap())
             }
         return videoGroupService.getVideosOfVideoGroup(videoGroupId, params)
             .map { response ->
-                Timber.e(response.toString())
                 response.videos.map { videoEntity -> Video.map(videoEntity) } to response.cursor
             }
     }
@@ -368,7 +360,6 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
 //        return Single.just(jsonAdapter.fromJson(json))
         return videoGroupService.getWebSeriesDetail(id)
             .map { response ->
-                Timber.e(response.toString())
                 WebSeries.map(response.webSeries)
             }
     }
@@ -409,10 +400,8 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
                 "}"
         val jsonAdapter = moshi.adapter(VideoDetailResponse::class.java)
 //        return Single.just(jsonAdapter.fromJson(json))
-        Timber.e("id $id")
         return videoGroupService.getVideoDetail(id)
             .map { response ->
-                Timber.e(response.toString())
                 Video.map(response.video)
             }
     }
@@ -531,10 +520,6 @@ class VideoGroupDomain(private val videoGroupService: VideoGroupService, val mos
         val jsonAdapter = moshi.adapter(VideosResponse::class.java)
 //        return Single.just(jsonAdapter.fromJson(json))
         return videoGroupService.getRelatedVideos(videoId, pagingBody.toMap())
-            .map {
-                Timber.e("related videos " + it.videos.toString())
-                it
-            }
             .map { it.videos.map { videoEntity -> Video.map(videoEntity) } to it.cursor }
 
     }

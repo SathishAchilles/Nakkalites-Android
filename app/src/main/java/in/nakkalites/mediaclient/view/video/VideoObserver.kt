@@ -148,10 +148,8 @@ class VideoObserver(
         }
         with(player) {
             prepare(mediaSource)
-            Timber.e("previous ${player.currentWindowIndex} $lastPlayedTime")
             if (lastPlayedTime != 0L) {
                 seekTo(player.currentWindowIndex, lastPlayedTime)
-                Timber.e("seekTo ${player.currentWindowIndex} $lastPlayedTime")
             }
             playWhenReady = !playerTracker.shouldPauseCurrentVideo
         }

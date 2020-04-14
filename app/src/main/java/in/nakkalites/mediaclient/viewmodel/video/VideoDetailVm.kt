@@ -93,7 +93,6 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                     listOf<BaseModel>(VideoDetailItemVm(video))
                 }
             Single.zip(videoDetail, relatedVideos, BiFunction { t1, t2 ->
-                Timber.e(t1.toString() + " " + t2.toString())
                 t1 + t2
             })
         } else {

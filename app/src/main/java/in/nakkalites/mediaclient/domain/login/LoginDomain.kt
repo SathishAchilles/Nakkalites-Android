@@ -34,7 +34,6 @@ class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : Base
         return userManager.login(type, id, displayName, email, photoUrl)
             .map { it.user }
             .map {
-                Timber.e(it.toString())
                 User(it.id, it.name, it.email, it.imageUrl)
             }
     }

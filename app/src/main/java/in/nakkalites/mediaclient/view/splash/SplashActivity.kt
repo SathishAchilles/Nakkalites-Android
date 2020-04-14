@@ -21,7 +21,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class SplashActivity : BaseActivity() {
@@ -69,15 +68,12 @@ class SplashActivity : BaseActivity() {
         val latestVersion = remoteConfig.getLong("latest_version")
         val lastOptionalVersion = remoteConfig.getLong("last_optional_version")
         val lastMandatoryVersion = remoteConfig.getLong("last_mandatory_version")
-        Timber.e("$latestVersion $lastMandatoryVersion $lastOptionalVersion")
         when {
             currentVersion >= latestVersion -> {
                 vm.hasConfigRetrieved = true
-                Timber.e("currentVersion >= latestVersion")
             }
             lastMandatoryVersion > currentVersion -> {
                 // Update App
-                Timber.e("lastMandatoryVersion > currentVersion")
                 MaterialDialog(this)
                     .show {
                         cancelable(false)
@@ -91,7 +87,6 @@ class SplashActivity : BaseActivity() {
             }
             lastOptionalVersion > currentVersion -> {
                 // Tell user to update or skip
-                Timber.e("lastOptionalVersion > currentVersion")
                 MaterialDialog(this)
                     .show {
                         cancelable(true)
@@ -108,7 +103,6 @@ class SplashActivity : BaseActivity() {
                     }
             }
             else -> {
-                Timber.e("else")
                 vm.hasConfigRetrieved = true
             }
         }

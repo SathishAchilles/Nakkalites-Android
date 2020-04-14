@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.domain.utils
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.NakkalitesApp
 import `in`.nakkalites.mediaclient.data.HttpStatus
@@ -14,8 +13,6 @@ fun Activity.errorHandler(error: Throwable, shouldHandleError: () -> Boolean = {
     Timber.e(error)
     when {
         error is HttpException && error.code() == HttpStatus.LOGOUT -> {
-            Timber.e("Logout ${error.code()}")
-            loge("Logout ${error.code()}")
             (application as NakkalitesApp).logoutHandler.logout()
         }
         else -> if (shouldHandleError()) {

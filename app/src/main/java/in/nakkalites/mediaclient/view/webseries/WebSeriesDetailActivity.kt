@@ -132,7 +132,6 @@ class WebSeriesDetailActivity : BaseActivity() {
     }
 
     private val onSeasonSelected = { seasonPair: Pair<String, String> ->
-        Timber.e(seasonPair.first)
         vm.onSeasonSelected(seasonPair)
     }
 

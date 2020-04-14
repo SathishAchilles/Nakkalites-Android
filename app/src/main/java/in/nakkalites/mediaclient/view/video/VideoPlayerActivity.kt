@@ -148,7 +148,6 @@ class VideoPlayerActivity : BaseActivity() {
         orientationManager = OrientationManager(this, orientationChangeListener = object :
             OrientationManager.OrientationChangeListener {
             override fun onOrientationChanged(newOrientation: Int) {
-                Timber.e("orientation $newOrientation")
                 if (newOrientation == Configuration.ORIENTATION_LANDSCAPE) {
                     videoObserver.setLandscapeOrientation(binding.videoPlayerWrapper)
                 } else {

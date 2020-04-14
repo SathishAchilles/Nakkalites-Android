@@ -14,7 +14,6 @@ class HeadersFactory(private val userDataStore: UserDataStore) {
             Headers.APP_ACCESS_TOKEN to userDataStore.getAccessToken(),
             Headers.APP_USER_ID to getUserId()
         )
-        Timber.e(headerMap.toString())
         return headerMap
     }
 
