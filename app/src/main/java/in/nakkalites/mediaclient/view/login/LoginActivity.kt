@@ -1,7 +1,6 @@
 package `in`.nakkalites.mediaclient.view.login
 
 import `in`.nakkalites.logging.logThrowable
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
@@ -28,7 +27,6 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 
 class LoginActivity : BaseActivity() {
@@ -101,7 +99,6 @@ class LoginActivity : BaseActivity() {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val account = task.getResult(ApiException::class.java)
                 vm.login(account)
-                loge("Logged in ${account?.email} ${account?.displayName} ${account?.account} ${account?.photoUrl}")
             } catch (e: Throwable) {
                 logThrowable(e)
                 Snackbar

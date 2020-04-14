@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.webseries
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityWebSeriesDetailBinding
@@ -25,7 +24,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class WebSeriesDetailActivity : BaseActivity() {
 
@@ -106,7 +104,6 @@ class WebSeriesDetailActivity : BaseActivity() {
         }
 
         override fun onShareClick(vm: WebSeriesDetailItemVm) {
-            loge("Webseries shared ${vm.name}")
             val intent = shareTextIntent(
                 getString(R.string.share_sheet_title, vm.name),
                 getString(
@@ -118,14 +115,12 @@ class WebSeriesDetailActivity : BaseActivity() {
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.name}")
         openVideoPlayerPage(
             this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
         )
     }
 
     private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
-        loge("Video clicked ${vm.title}")
         openVideoPlayerPage(
             this, vm.id, vm.title, vm.imageUrl, vm.url, vm.durationInMs, vm.lastPlayedTime
         )

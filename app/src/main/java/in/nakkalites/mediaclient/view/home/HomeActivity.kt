@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.home
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
@@ -202,12 +201,10 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onVideoGroupClick = { vm: VideoGroupVm ->
-        loge("Video Group clicked ${vm.name}")
         startActivity(VideoGroupListActivity.createIntent(this, vm.id, vm.name, vm.category))
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.name}")
         openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
     }
 
@@ -224,7 +221,6 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onBannerClick = { vm: BannerVm ->
-        loge("Banner clicked ${vm.name}")
         when (vm.type) {
             BannerType.WEB_SERIES -> onWebSeriesClick(vm.webSeriesVm!!)
             BannerType.VIDEO -> onVideoClick(vm.videoVm!!)
@@ -249,7 +245,6 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onWebSeriesClick = { vm1: WebSeriesVm ->
-        loge("Web Series clicked ${vm1.name}")
         startActivity(WebSeriesDetailActivity.createIntent(this, vm1.id, vm1.name, vm1.thumbnail))
     }
 

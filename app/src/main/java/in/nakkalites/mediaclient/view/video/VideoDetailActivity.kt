@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoDetailBinding
@@ -144,14 +143,12 @@ class VideoDetailActivity : BaseActivity() {
         })
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.lastPlayedTime}")
         openVideoPlayerPage(
             this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
         )
     }
 
     private val onShareClick = { vm: VideoDetailItemVm ->
-        loge("Video share click ${vm.url}")
         val intent = shareTextIntent(
             getString(R.string.share_sheet_title, vm.name),
             getString(R.string.video_share_text, vm.name, playStoreUrl())

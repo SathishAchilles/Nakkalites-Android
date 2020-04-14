@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.view.binding
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ItemVideoBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoGroupBinding
@@ -24,7 +23,6 @@ object ViewModelBinders {
                 is VideoVm -> {
                     (viewDataBinding as ItemVideoBinding).onVideoClick = onVideoClick
                     viewDataBinding.vm = viewModel
-                    loge(viewModel.name)
                     viewDataBinding.transformations = getDefaultTransformations()
                     viewDataBinding.height = height
                     viewDataBinding.width = width

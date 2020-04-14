@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
@@ -42,9 +41,7 @@ class VideoPlayerVm(
         disposable = videoGroupDomain.trackVideo(id!!, duration, timeElapsed)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onComplete = {
-                    loge("onComplete")
-                },
+                onComplete = {},
                 onError = {
                     viewState.value = Event(Result.Error(Unit, throwable = it))
                 }
