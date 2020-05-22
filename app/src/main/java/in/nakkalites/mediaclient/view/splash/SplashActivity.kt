@@ -2,6 +2,8 @@ package `in`.nakkalites.mediaclient.view.splash
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivitySplashBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
@@ -19,6 +21,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.kizitonwose.time.milliseconds
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +30,7 @@ class SplashActivity : BaseActivity() {
     private lateinit var binding: ActivitySplashBinding
     val vm: SplashVm by viewModel()
     val remoteConfig by inject<FirebaseRemoteConfig>()
+    val analyticsManager by inject<AnalyticsManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,7 @@ class SplashActivity : BaseActivity() {
                 else -> showLoading()
             }
         })
+        trackAppOpened()
         fetchConfig()
         vm.updateViewState()
     }
@@ -45,6 +50,14 @@ class SplashActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         updateConfig()
+    }
+
+    private fun trackAppOpened() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.APP_OPENED)
+        analyticsManager.logUserProperty(
+            AnalyticsConstants.Property.LAST_APP_OPENED,
+            System.currentTimeMillis().milliseconds.longValue.toString()
+        )
     }
 
     private fun fetchConfig() {

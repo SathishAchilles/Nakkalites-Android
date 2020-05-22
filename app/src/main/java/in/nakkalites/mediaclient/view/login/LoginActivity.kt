@@ -3,6 +3,8 @@ package `in`.nakkalites.mediaclient.view.login
 import `in`.nakkalites.logging.logThrowable
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
 import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
@@ -26,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -34,6 +37,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var googleSignInClient: GoogleSignInClient
     val vm: LoginVm by viewModel()
+    val analyticsManager by inject<AnalyticsManager>()
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -53,7 +57,9 @@ class LoginActivity : BaseActivity() {
             when (it) {
                 is Result.Success -> {
                     hideLoading()
-                    setupCrashlyticsUserDetails(it.data)
+                    val user = it.data
+                    setupCrashlyticsUserDetails(user)
+                    trackUserLoggedIn(user)
                     goToHome()
                 }
                 is Result.Error -> {
@@ -72,6 +78,23 @@ class LoginActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun trackUserLoggedIn(user: User) {
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.EMAIL, user.email)
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.USER_ID, user.id)
+        analyticsManager.logUserProperty(
+            AnalyticsConstants.Property.IMAGE_URL,
+            user.imageUrl
+        )
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.NAME, user.name)
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.EMAIL, user.email)
+            putString(AnalyticsConstants.Property.USER_ID, user.id)
+            putString(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
+            putString(AnalyticsConstants.Property.NAME, user.name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.LOGGED_IN, bundle)
     }
 
     private fun setupCrashlyticsUserDetails(user: User) {

@@ -45,11 +45,12 @@ data class WebSeries(
 }
 
 data class Banner(
-    val title: String, val webSeries: WebSeries?, val type: BannerType?, val video: Video?
+    val id: String, val title: String, val webSeries: WebSeries?, val type: BannerType?,
+    val video: Video?
 ) {
     companion object {
         fun map(bannerEntity: BannerEntity): Banner = Banner(
-            bannerEntity.title,
+            bannerEntity.id, bannerEntity.title,
             bannerEntity.webSeries?.let { WebSeries.map(bannerEntity.webSeries) },
             getBannerType(bannerEntity.type),
             bannerEntity.video?.let { Video.map(bannerEntity.video) }

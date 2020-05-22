@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm
 
 class BannerVm(banner: Banner) : BaseModel {
+    val id = banner.id
     val name = banner.title
     val type = banner.type
     val thumbnail = when (banner.type) {

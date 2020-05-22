@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
@@ -24,7 +25,7 @@ import `in`.nakkalites.mediaclient.viewmodel.webview.WebViewVm
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.LoadControl
@@ -36,6 +37,7 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -77,6 +79,12 @@ val applicationModule = module {
     }
     single {
         LogoutHandler(get(), get())
+    }
+    single {
+        FirebaseAnalytics.getInstance(androidContext())
+    }
+    single {
+        AnalyticsManager(get())
     }
 }
 

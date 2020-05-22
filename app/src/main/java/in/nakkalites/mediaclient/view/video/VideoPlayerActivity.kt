@@ -1,7 +1,9 @@
 package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoPlayerBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
@@ -32,7 +34,6 @@ import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.util.concurrent.TimeUnit
@@ -41,6 +42,7 @@ import java.util.concurrent.TimeUnit
 class VideoPlayerActivity : BaseActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
     val vm by viewModel<VideoPlayerVm>()
+    val analyticsManager by inject<AnalyticsManager>()
     private val id by lazy {
         intent.getStringExtra(AppConstants.VIDEO_ID)
     }
@@ -130,6 +132,7 @@ class VideoPlayerActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
         binding.vm = vm
         vm.setArgs(id, name, thumbnail, url)
+        trackVideoPlayerPageOpened()
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         videoObserver = VideoObserver(
@@ -140,6 +143,9 @@ class VideoPlayerActivity : BaseActivity() {
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {
             when (it) {
+                is Result.Success -> {
+                    trackVideoPaused(id, name, it.data.first, it.data.second)
+                }
                 is Result.Error -> {
                     errorHandler(it.throwable)
                 }
@@ -196,4 +202,23 @@ class VideoPlayerActivity : BaseActivity() {
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
+
+    private fun trackVideoPlayerPageOpened() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.VIDEO_PLAYER_PAGE_OPENED, bundle)
+    }
+
+    private fun trackVideoPaused(id: String, name: String, duration: Long, timeElapsed: Long) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+            putLong(AnalyticsConstants.Property.VIDEO_DURATION, duration)
+            putLong(AnalyticsConstants.Property.VIDEO_TIME_ELAPSED, timeElapsed)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.VIDEO_PAUSED, bundle)
+    }
+
 }

@@ -1,7 +1,9 @@
 package `in`.nakkalites.mediaclient.view.video
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityVideoDetailBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoDetailBinding
 import `in`.nakkalites.mediaclient.databinding.ItemVideoGridBinding
@@ -23,12 +25,14 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.GridLayoutManager
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoDetailActivity : BaseActivity() {
 
     private lateinit var binding: ActivityVideoDetailBinding
     val vm by viewModel<VideoDetailVm>()
+    val analyticsManager by inject<AnalyticsManager>()
     private val id by lazy {
         intent.getStringExtra(AppConstants.VIDEO_ID)
     }
@@ -62,6 +66,7 @@ class VideoDetailActivity : BaseActivity() {
         binding.vm = vm
         binding.onPlayClick = onPlayClick
         vm.setArgs(id, name, thumbnail, url)
+        trackVideoDetailPageOpened()
         init()
         vm.viewStates().observe(this, EventObserver {
             when (it) {
@@ -146,6 +151,7 @@ class VideoDetailActivity : BaseActivity() {
         openVideoPlayerPage(
             this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
         )
+        trackVideoClicked(vm.id, vm.name)
     }
 
     private val onShareClick = { vm: VideoDetailItemVm ->
@@ -154,6 +160,7 @@ class VideoDetailActivity : BaseActivity() {
             getString(R.string.video_share_text, vm.name, playStoreUrl())
         )
         startActivity(intent)
+        trackVideoShareClicked()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -180,6 +187,7 @@ class VideoDetailActivity : BaseActivity() {
         openVideoPlayerPage(
             this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration, vm.lastPlayedTime
         )
+        trackVideoPlayCTAClicked(vm.id!!, vm.name!!)
     }
 
     private fun spanSizeLookup(items: ObservableArrayList<BaseModel>) =
@@ -193,4 +201,36 @@ class VideoDetailActivity : BaseActivity() {
                 }
             }
         }
+
+    private fun trackVideoDetailPageOpened() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.VIDEO_DETAIL_PAGE_OPENED, bundle)
+    }
+
+    private fun trackVideoClicked(id: String, name: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.VIDEO_DETAIL_VIDEO_CLICKED, bundle)
+    }
+
+    private fun trackVideoPlayCTAClicked(id: String, name: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.VIDEO_DETAIL_PLAY_CTA_CLICKED, bundle)
+    }
+
+    private fun trackVideoShareClicked() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.VIDEO_DETAIL_SHARE_CTA_CLICKED, bundle)
+    }
 }

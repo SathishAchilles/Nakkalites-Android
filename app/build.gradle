@@ -72,6 +72,7 @@ dependencies {
     implementation deps.androidX.core
     implementation deps.androidX.viewModel
     implementation deps.androidX.liveData
+    implementation deps.androidX.preferences
     implementation deps.androidX.recyclerView
     implementation deps.androidX.viewPager
     implementation deps.dotsIndicator
