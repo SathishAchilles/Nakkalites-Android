@@ -80,23 +80,6 @@ class LoginActivity : BaseActivity() {
         })
     }
 
-    private fun trackUserLoggedIn(user: User) {
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.EMAIL, user.email)
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.USER_ID, user.id)
-        analyticsManager.logUserProperty(
-            AnalyticsConstants.Property.IMAGE_URL,
-            user.imageUrl
-        )
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.NAME, user.name)
-        val bundle = Bundle().apply {
-            putString(AnalyticsConstants.Property.EMAIL, user.email)
-            putString(AnalyticsConstants.Property.USER_ID, user.id)
-            putString(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
-            putString(AnalyticsConstants.Property.NAME, user.name)
-        }
-        analyticsManager.logEvent(AnalyticsConstants.Event.LOGGED_IN, bundle)
-    }
-
     private fun setupCrashlyticsUserDetails(user: User) {
         if (!BuildConfig.DEBUG) {
             Crashlytics.setUserIdentifier(user.id)
@@ -163,5 +146,25 @@ class LoginActivity : BaseActivity() {
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .let { startActivity(it) }
+    }
+
+    private fun trackUserLoggedIn(user: User) {
+        analyticsManager.setUserId(user.id)
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.EMAIL, user.email)
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.USER_ID, user.id)
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
+        analyticsManager.logUserProperty(AnalyticsConstants.Property.NAME, user.name)
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.EMAIL, user.email)
+            putString(AnalyticsConstants.Property.USER_ID, user.id)
+            putString(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
+            putString(AnalyticsConstants.Property.NAME, user.name)
+        }
+        val eventName = if (user.isFirstLogin) {
+            AnalyticsConstants.Event.SIGN_UP
+        } else {
+            AnalyticsConstants.Event.LOGGED_IN
+        }
+        analyticsManager.logEvent(eventName, bundle)
     }
 }

@@ -11,4 +11,8 @@ class AnalyticsManager(private val firebaseAnalytics: FirebaseAnalytics) {
     fun logUserProperty(key: String, value: String?) {
         value?.let { firebaseAnalytics.setUserProperty(key, value) }
     }
+
+    fun setUserId(userId: String?) {
+        userId?.let { firebaseAnalytics.setUserId(it) }
+    }
 }
