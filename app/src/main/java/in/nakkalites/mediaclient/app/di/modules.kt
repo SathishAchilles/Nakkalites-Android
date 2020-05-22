@@ -84,7 +84,7 @@ val applicationModule = module {
         FirebaseAnalytics.getInstance(androidContext())
     }
     single {
-        AnalyticsManager(get())
+        AnalyticsManager(get(), get())
     }
 }
 

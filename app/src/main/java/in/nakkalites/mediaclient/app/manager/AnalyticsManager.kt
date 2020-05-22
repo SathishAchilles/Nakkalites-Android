@@ -2,11 +2,14 @@ package `in`.nakkalites.mediaclient.app.manager
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import android.os.Build
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 
-class AnalyticsManager(private val firebaseAnalytics: FirebaseAnalytics) {
+class AnalyticsManager(
+    private val firebaseAnalytics: FirebaseAnalytics, private val userManager: UserManager
+) {
     private val defaultProperties: Map<String, String?> = mapOf(
         Property.APP_VERSION_CODE to BuildConfig.VERSION_CODE.toString(),
         Property.APP_VERSION_NAME to BuildConfig.VERSION_NAME,
@@ -24,6 +27,10 @@ class AnalyticsManager(private val firebaseAnalytics: FirebaseAnalytics) {
 
     fun logEvent(eventName: String, properties: Bundle = Bundle()) {
         properties.putAll(defaultPropertiesBundle)
+        userManager.getUser()?.let {
+            properties.putString(Property.USER_ID, it.id)
+            properties.putString(Property.USER_NAME, it.name)
+        }
         firebaseAnalytics.logEvent(eventName, properties)
     }
 

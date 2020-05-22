@@ -141,6 +141,7 @@ class LoginActivity : BaseActivity() {
     private val callback = object : LoginViewCallbacks {
         override fun onSignUpClick() {
             startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
+            trackSignUpClicked()
         }
     }
 
@@ -151,17 +152,21 @@ class LoginActivity : BaseActivity() {
             .let { startActivity(it) }
     }
 
+    private fun trackSignUpClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.SIGN_UP_CTA_CLICKED)
+    }
+
     private fun trackUserLoggedIn(user: User) {
         analyticsManager.setUserId(user.id)
-        analyticsManager.logUserProperty(Property.EMAIL, user.email)
+        analyticsManager.logUserProperty(Property.USER_EMAIL, user.email)
         analyticsManager.logUserProperty(Property.USER_ID, user.id)
-        analyticsManager.logUserProperty(Property.IMAGE_URL, user.imageUrl)
-        analyticsManager.logUserProperty(Property.NAME, user.name)
+        analyticsManager.logUserProperty(Property.USER_IMAGE_URL, user.imageUrl)
+        analyticsManager.logUserProperty(Property.USER_NAME, user.name)
         val bundle = Bundle().apply {
-            putString(Property.EMAIL, user.email)
+            putString(Property.USER_EMAIL, user.email)
             putString(Property.USER_ID, user.id)
-            putString(Property.IMAGE_URL, user.imageUrl)
-            putString(Property.NAME, user.name)
+            putString(Property.USER_IMAGE_URL, user.imageUrl)
+            putString(Property.USER_NAME, user.name)
             putString(FirebaseAnalytics.Param.METHOD, "google_sso")
         }
         val eventName = if (user.isFirstLogin) {
