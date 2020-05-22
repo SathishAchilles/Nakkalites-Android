@@ -3,6 +3,7 @@ package `in`.nakkalites.mediaclient.view.splash
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivitySplashBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
@@ -10,6 +11,7 @@ import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
+import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.view.utils.playStoreIntent
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Intent
@@ -21,7 +23,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.kizitonwose.time.milliseconds
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -53,11 +54,11 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun trackAppOpened() {
-        analyticsManager.logEvent(AnalyticsConstants.Event.APP_OPENED)
-        analyticsManager.logUserProperty(
-            AnalyticsConstants.Property.LAST_APP_OPENED,
-            System.currentTimeMillis().milliseconds.longValue.toString()
-        )
+        analyticsManager.apply {
+            logEvent(AnalyticsConstants.Event.APP_OPENED)
+            logUserProperty(Property.LAST_APP_OPENED, getTimeStampForAnalytics())
+            logDefaultProperties()
+        }
     }
 
     private fun fetchConfig() {

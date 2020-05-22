@@ -4,7 +4,6 @@ import `in`.nakkalites.mediaclient.domain.login.LoginDomain
 import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
-import `in`.nakkalites.mediaclient.view.utils.asResult
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import androidx.lifecycle.LiveData
@@ -22,18 +21,18 @@ class LoginVm(private val loginDomain: LoginDomain) : BaseViewModel() {
 
     fun login(account: GoogleSignInAccount?) {
         if (account != null) {
+            loginState.value = Event(Result.Loading())
             disposables += loginDomain.loginViaGoogle(
-                account.id!!, account.displayName, account.email!!, account.photoUrl
-            )
+                    account.id!!, account.displayName, account.email!!, account.photoUrl
+                )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .asResult(Result.Loading())
                 .subscribeBy(
-                    onNext = {
-                        loginState.value = Event(it)
+                    onSuccess = {
+                        loginState.value = Event(Result.Success(it))
                     },
                     onError = {
-                        loginState.value = Event(it as Result.Error<User>)
+                        loginState.value = Event(Result.Error<User>(null, it))
                     }
                 )
         } else {

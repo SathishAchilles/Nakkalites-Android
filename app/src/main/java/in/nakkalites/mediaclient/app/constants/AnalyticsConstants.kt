@@ -28,7 +28,15 @@ object AnalyticsConstants {
     }
 
     object Property {
+        const val MANUFACTURER = "manufacturer"
+        const val MODEL = "model"
+        const val OS = "os"
+        const val BRAND = "brand"
+        const val OS_VERSION = "os_version"
+        const val APP_VERSION_CODE = "app_version_code"
+        const val APP_VERSION_NAME = "app_version_name"
         const val LAST_APP_OPENED = "last_app_opened"
+        const val FIRST_SIGN_UP_DATE = "first_sign_up_date"
         const val EMAIL = "email"
         const val USER_ID = "user_id"
         const val NAME = "name"

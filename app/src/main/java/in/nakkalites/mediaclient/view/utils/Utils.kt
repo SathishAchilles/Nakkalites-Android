@@ -18,6 +18,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Transformation
 import okhttp3.Request
 import retrofit2.Retrofit
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 inline fun <reified T> Retrofit.create(): T {
     return create(T::class.java)
@@ -83,3 +86,10 @@ fun shareTextIntent(shareTitle: String, shareText: String): Intent =
 
 fun ContentResolver.isRotationEnabled()=
     Settings.System.getInt(this, Settings.System.ACCELEROMETER_ROTATION, 0) == 1
+
+fun getTimeStampForAnalytics(): String? {
+    val dateFormat: DateFormat =
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+    dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+    return dateFormat.format(Date())
+}

@@ -4,6 +4,7 @@ import `in`.nakkalites.logging.logThrowable
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
 import `in`.nakkalites.mediaclient.domain.models.User
@@ -12,6 +13,7 @@ import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
+import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import android.content.Context
@@ -151,21 +153,26 @@ class LoginActivity : BaseActivity() {
 
     private fun trackUserLoggedIn(user: User) {
         analyticsManager.setUserId(user.id)
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.EMAIL, user.email)
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.USER_ID, user.id)
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
-        analyticsManager.logUserProperty(AnalyticsConstants.Property.NAME, user.name)
+        analyticsManager.logUserProperty(Property.EMAIL, user.email)
+        analyticsManager.logUserProperty(Property.USER_ID, user.id)
+        analyticsManager.logUserProperty(Property.IMAGE_URL, user.imageUrl)
+        analyticsManager.logUserProperty(Property.NAME, user.name)
         val bundle = Bundle().apply {
-            putString(AnalyticsConstants.Property.EMAIL, user.email)
-            putString(AnalyticsConstants.Property.USER_ID, user.id)
-            putString(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
-            putString(AnalyticsConstants.Property.NAME, user.name)
-            putString(FirebaseAnalytics.Param.METHOD, "google")
+            putString(Property.EMAIL, user.email)
+            putString(Property.USER_ID, user.id)
+            putString(Property.IMAGE_URL, user.imageUrl)
+            putString(Property.NAME, user.name)
+            putString(FirebaseAnalytics.Param.METHOD, "google_sso")
         }
         val eventName = if (user.isFirstLogin) {
             AnalyticsConstants.Event.SIGN_UP
         } else {
             AnalyticsConstants.Event.LOGIN
+        }
+        if (user.isFirstLogin) {
+            analyticsManager.logUserProperty(
+                Property.FIRST_SIGN_UP_DATE, getTimeStampForAnalytics()
+            )
         }
         analyticsManager.logEvent(eventName, bundle)
     }
