@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -159,11 +160,12 @@ class LoginActivity : BaseActivity() {
             putString(AnalyticsConstants.Property.USER_ID, user.id)
             putString(AnalyticsConstants.Property.IMAGE_URL, user.imageUrl)
             putString(AnalyticsConstants.Property.NAME, user.name)
+            putString(FirebaseAnalytics.Param.METHOD, "google")
         }
         val eventName = if (user.isFirstLogin) {
             AnalyticsConstants.Event.SIGN_UP
         } else {
-            AnalyticsConstants.Event.LOGGED_IN
+            AnalyticsConstants.Event.LOGIN
         }
         analyticsManager.logEvent(eventName, bundle)
     }
