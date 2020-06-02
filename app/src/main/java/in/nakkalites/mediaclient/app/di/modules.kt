@@ -37,7 +37,9 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -81,7 +83,10 @@ val applicationModule = module {
         LogoutHandler(get(), get())
     }
     single {
-        FirebaseAnalytics.getInstance(androidContext())
+        FirebaseCrashlytics.getInstance()
+    }
+    single {
+        Firebase.analytics
     }
     single {
         AnalyticsManager(get(), get())

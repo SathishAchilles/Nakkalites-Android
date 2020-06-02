@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.view.splash
 
+import `in`.nakkalites.logging.logd
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
@@ -21,10 +22,13 @@ import android.view.animation.LinearInterpolator
 import androidx.databinding.DataBindingUtil
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class SplashActivity : BaseActivity() {
@@ -45,6 +49,7 @@ class SplashActivity : BaseActivity() {
         })
         trackAppOpened()
         fetchConfig()
+        updateFcmToken()
         vm.updateViewState()
     }
 
@@ -165,5 +170,19 @@ class SplashActivity : BaseActivity() {
                     vm.isViewAnimating = false
                 }
             }
+    }
+
+    private fun updateFcmToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Timber.e(task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+                logd("msg_token_fmt $token")
+            })
     }
 }

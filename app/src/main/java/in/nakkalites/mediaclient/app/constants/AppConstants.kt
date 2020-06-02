@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.app.constants
 
 object AppConstants {
+    const val USER_EMAIL: String = "user_email"
     const val VIDEO_CACHE_DIRECTORY: String = "media"
     const val PICASSO_CACHE = "picasso-cache"
     const val MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024L // 5MB

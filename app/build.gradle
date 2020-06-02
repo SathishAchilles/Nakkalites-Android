@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 apply from: '../dependencies.gradle'
 
@@ -82,6 +82,7 @@ dependencies {
     implementation deps.exoplayer.ui
     implementation deps.firebase.analytics
     implementation deps.firebase.crashlytics
+    implementation deps.firebase.messaging
     implementation deps.firebase.remoteConfig
     implementation deps.google.design
     implementation deps.materialDialogs.core

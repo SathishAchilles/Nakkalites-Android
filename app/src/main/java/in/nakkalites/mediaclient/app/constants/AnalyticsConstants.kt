@@ -39,7 +39,7 @@ object AnalyticsConstants {
         const val LAST_APP_OPENED = "last_app_opened"
         const val FIRST_SIGN_UP_DATE = "first_sign_up_date"
         const val USER_EMAIL = "user_email"
-        const val USER_ID = "user_id"
+        const val USER_ID = "nakkalites_user_id"
         const val USER_NAME = "user_name"
         const val USER_IMAGE_URL = "user_image_url"
         const val WEBSERIES_ID = "webseries_id"

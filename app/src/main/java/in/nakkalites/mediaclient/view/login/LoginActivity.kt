@@ -1,10 +1,10 @@
 package `in`.nakkalites.mediaclient.view.login
 
 import `in`.nakkalites.logging.logThrowable
-import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
+import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
 import `in`.nakkalites.mediaclient.domain.models.User
@@ -23,7 +23,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import com.crashlytics.android.Crashlytics
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -31,6 +30,7 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,6 +41,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     val vm: LoginVm by viewModel()
     val analyticsManager by inject<AnalyticsManager>()
+    val crashlytics by inject<FirebaseCrashlytics>()
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -84,8 +85,9 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun setupCrashlyticsUserDetails(user: User) {
-        if (!BuildConfig.DEBUG) {
-            Crashlytics.setUserIdentifier(user.id)
+        crashlytics.setUserId(user.id)
+        user.email?.let {
+            crashlytics.setCustomKey(AppConstants.USER_EMAIL, it)
         }
     }
 
