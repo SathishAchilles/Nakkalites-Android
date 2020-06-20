@@ -1,8 +1,10 @@
 package `in`.nakkalites.mediaclient.view.home
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.*
 import `in`.nakkalites.mediaclient.domain.models.BannerType
@@ -19,14 +21,12 @@ import `in`.nakkalites.mediaclient.view.webseries.WebSeriesDetailActivity
 import `in`.nakkalites.mediaclient.view.webview.WebViewActivity
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
-import `in`.nakkalites.mediaclient.viewmodel.home.BannerVm
-import `in`.nakkalites.mediaclient.viewmodel.home.BannersVm
-import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
+import `in`.nakkalites.mediaclient.viewmodel.home.*
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesVm
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -40,12 +40,14 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeActivity : BaseActivity() {
     private lateinit var binding: ActivityHomeBinding
     val vm: HomeVm by viewModel()
+    val analyticsManager by inject<AnalyticsManager>()
 
     companion object {
         @JvmStatic
@@ -59,6 +61,7 @@ class HomeActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         setupToolbar(binding.toolbar, showHomeAsUp = false, upIsBack = false)
         init()
+        trackHomePageOpened()
         vm.allVideosGroupsStates().observe(this, EventObserver {
             when (it) {
                 is Result.Error -> {
@@ -91,6 +94,12 @@ class HomeActivity : BaseActivity() {
                     override fun onTabSelected(tab: TabLayout.Tab) {
                         super.onTabSelected(tab)
                         vm.setSelectedTab(tab.position)
+                        val homeTab = HomeTab.fromPosition(tab.position)
+                        if (homeTab == HomeTab.ALL) {
+                            trackHomePageOpened()
+                        } else {
+                            trackWebSeriesTabOpened()
+                        }
                     }
                 }
             it.viewPager.adapter = pagerAdapter
@@ -200,13 +209,13 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onVideoGroupClick = { vm: VideoGroupVm ->
-        loge("Video Group clicked ${vm.name}")
         startActivity(VideoGroupListActivity.createIntent(this, vm.id, vm.name, vm.category))
+        trackVideoGroupClicked(vm.id, vm.name)
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.name}")
         openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+        trackVideoClicked(vm.id, vm.name)
     }
 
     private val bannerProvider = viewProvider { R.layout.item_banner }
@@ -222,10 +231,22 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onBannerClick = { vm: BannerVm ->
-        loge("Banner clicked ${vm.name}")
-        when (vm.type) {
-            BannerType.WEB_SERIES -> onWebSeriesClick(vm.webSeriesVm!!)
-            BannerType.VIDEO -> onVideoClick(vm.videoVm!!)
+        vm.type?.let { type ->
+            when (type) {
+                BannerType.WEB_SERIES -> onWebSeriesClick(vm.webSeriesVm!!)
+                BannerType.VIDEO -> {
+                    vm.videoVm?.let { videoVm ->
+                        openVideoDetailPage(
+                            this, videoVm.id, videoVm.name, videoVm.thumbnail, videoVm.url
+                        )
+                    }
+                    Unit
+                }
+            }
+            trackBannerClicked(
+                vm.id, vm.name, vm.type, vm.videoVm?.id, vm.videoVm?.name, vm.webSeriesVm?.id,
+                vm.webSeriesVm?.name
+            )
         }
     }
 
@@ -247,7 +268,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onWebSeriesClick = { vm1: WebSeriesVm ->
-        loge("Web Series clicked ${vm1.name}")
+        trackWebseriesClicked(vm1.id, vm1.name)
         startActivity(WebSeriesDetailActivity.createIntent(this, vm1.id, vm1.name, vm1.thumbnail))
     }
 
@@ -264,8 +285,74 @@ class HomeActivity : BaseActivity() {
                 Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.TERMS_CONDITIONS))
             R.id.privacy_policy ->
                 Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.PRIVACY_POLICY))
+            R.id.contact_us_mail -> {
+                trackEmailClicked()
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.type = "text/plain"
+                intent.data = Uri.parse("mailto:${AppConstants.CONTACT_EMAIL}");
+                Intent.createChooser(intent, "Send Email to Nakkalites via")
+            }
             else -> null
         }
-        intent?.let(::startActivity)?.let { true } ?: false
+        try {
+            intent?.let(::startActivity)?.let { true } ?: false
+        } catch (e: ActivityNotFoundException) {
+            false
+        }
+    }
+
+    private fun trackHomePageOpened() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.HOME_TAB_OPENED)
+    }
+
+    private fun trackWebSeriesTabOpened() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_TAB_OPENED)
+    }
+
+    private fun trackVideoGroupClicked(id: String, name: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_GROUP_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_GROUP_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.HOME_VIDEO_GROUP_CLICKED, bundle)
+    }
+
+    private fun trackVideoClicked(id: String, name: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.HOME_VIDEO_CLICKED, bundle)
+    }
+
+    private fun trackBannerClicked(
+        id: String, name: String, type: BannerType, videoId: String?, videoName: String?,
+        webSeriesId: String?, webSeriesName: String?
+    ) {
+        val bundle = Bundle().apply {
+            if (type == BannerType.VIDEO) {
+                putString(AnalyticsConstants.Property.VIDEO_ID, videoId)
+                putString(AnalyticsConstants.Property.VIDEO_NAME, videoName)
+            } else if (type == BannerType.WEB_SERIES) {
+                putString(AnalyticsConstants.Property.WEBSERIES_ID, webSeriesId)
+                putString(AnalyticsConstants.Property.WEBSERIES_NAME, webSeriesName)
+            }
+            putString(AnalyticsConstants.Property.BANNER_ID, id)
+            putString(AnalyticsConstants.Property.BANNER_NAME, name)
+            putString(AnalyticsConstants.Property.BANNER_TYPE, type.name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.BANNER_CLICKED, bundle)
+    }
+
+    private fun trackEmailClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.EMAIL_CLICKED)
+    }
+
+    private fun trackWebseriesClicked(id: String, name: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.WEBSERIES_ID, id)
+            putString(AnalyticsConstants.Property.WEBSERIES_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_CLICKED, bundle)
     }
 }

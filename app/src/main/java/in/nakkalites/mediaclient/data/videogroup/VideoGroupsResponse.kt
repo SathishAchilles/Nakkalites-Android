@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class VideoGroupsResponse(
-    @field:Json(name = "banners") val banners: List<BannerEntity>,
+    @field:Json(name = "banners") val banners: List<BannerEntity> = listOf(),
     @field:Json(name = "video_list") val videoGroups: List<VideoGroupEntity> = listOf()
 ) : Page() {
     override val pageSize = videoGroups.size
@@ -21,6 +21,7 @@ data class VideoGroupResponse(
 
 @JsonClass(generateAdapter = true)
 data class BannerEntity(
+    @field:Json(name = "id") val id: String,
     @field:Json(name = "title") val title: String,
     @field:Json(name = "web_series") val webSeries: WebSeriesEntity?,
     @field:Json(name = "type") val type: String,

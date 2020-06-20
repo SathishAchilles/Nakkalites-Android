@@ -1,19 +1,22 @@
 package `in`.nakkalites.mediaclient.view.webseries
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityWebSeriesDetailBinding
 import `in`.nakkalites.mediaclient.databinding.ItemSeasonEpisodeBinding
 import `in`.nakkalites.mediaclient.databinding.ItemSeasonHeaderBinding
 import `in`.nakkalites.mediaclient.databinding.ItemWebSeriesDetailBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
-import `in`.nakkalites.mediaclient.view.binding.*
+import `in`.nakkalites.mediaclient.view.binding.RecyclerViewAdapter
+import `in`.nakkalites.mediaclient.view.binding.ViewProviders
+import `in`.nakkalites.mediaclient.view.binding.viewModelBinder
+import `in`.nakkalites.mediaclient.view.binding.viewProvider
 import `in`.nakkalites.mediaclient.view.utils.*
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
-import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.SeasonEpisodeItemVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.SeasonHeaderVm
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailItemVm
@@ -24,13 +27,14 @@ import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class WebSeriesDetailActivity : BaseActivity() {
 
     private lateinit var binding: ActivityWebSeriesDetailBinding
     val vm by viewModel<WebSeriesDetailVm>()
+    val analyticsManager by inject<AnalyticsManager>()
     private val id by lazy {
         intent.getStringExtra(AppConstants.WEBSERIES_ID)
     }
@@ -64,6 +68,7 @@ class WebSeriesDetailActivity : BaseActivity() {
         }
         binding.vm = vm
         vm.setArgs(id, name, thumbnail)
+        trackWebseriesPageOpened()
         init()
         vm.viewStates().observe(this, EventObserver {
             when (it) {
@@ -100,13 +105,13 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val callbacks: WebSeriesDetailCallbacks = object : WebSeriesDetailCallbacks {
         override fun onVideoClick(vm: VideoVm?) {
-            if (vm != null) {
-                onVideoClick.invoke(vm)
+            vm?.let {
+                onVideoClick.invoke(it)
+                trackWebseriesPlayCTAClicked()
             }
         }
 
         override fun onShareClick(vm: WebSeriesDetailItemVm) {
-            loge("Webseries shared ${vm.name}")
             val intent = shareTextIntent(
                 getString(R.string.share_sheet_title, vm.name),
                 getString(
@@ -114,26 +119,26 @@ class WebSeriesDetailActivity : BaseActivity() {
                 )
             )
             startActivity(intent)
+            trackWebseriesShareClicked()
         }
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        loge("Video clicked ${vm.name}")
         openVideoPlayerPage(
             this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
         )
     }
 
     private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
-        loge("Video clicked ${vm.title}")
         openVideoPlayerPage(
             this, vm.id, vm.title, vm.imageUrl, vm.url, vm.durationInMs, vm.lastPlayedTime
         )
+        trackWebseriesEpisodeClicked(vm)
     }
 
     private val onSeasonSelected = { seasonPair: Pair<String, String> ->
-        Timber.e(seasonPair.first)
         vm.onSeasonSelected(seasonPair)
+        trackWebseriesSeasonsClicked(seasonPair)
     }
 
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
@@ -141,11 +146,6 @@ class WebSeriesDetailActivity : BaseActivity() {
             is WebSeriesDetailItemVm -> {
                 (itemBinding as ItemWebSeriesDetailBinding).vm = vm1
                 itemBinding.callback = callbacks
-            }
-            is VideoGroupVm -> {
-                ViewModelBinders.mapViewGroupVmBinding(
-                    this, onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250), false
-                )
             }
             is SeasonEpisodeItemVm -> {
                 (itemBinding as ItemSeasonEpisodeBinding).transformations =
@@ -158,4 +158,49 @@ class WebSeriesDetailActivity : BaseActivity() {
         }
     }
 
+    private fun trackWebseriesPageOpened() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.WEBSERIES_ID, id)
+            putString(AnalyticsConstants.Property.WEBSERIES_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_PAGE_OPENED, bundle)
+    }
+
+    private fun trackWebseriesPlayCTAClicked() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.WEBSERIES_ID, id)
+            putString(AnalyticsConstants.Property.WEBSERIES_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_PLAY_CTA_CLICKED, bundle)
+    }
+
+    private fun trackWebseriesShareClicked() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.WEBSERIES_ID, id)
+            putString(AnalyticsConstants.Property.WEBSERIES_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_SHARE_CLICKED, bundle)
+    }
+
+    private fun trackWebseriesEpisodeClicked(vm: SeasonEpisodeItemVm) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.WEBSERIES_ID, id)
+            putString(AnalyticsConstants.Property.WEBSERIES_NAME, name)
+            putString(AnalyticsConstants.Property.SEASON_ID, vm.seasonId)
+            putString(AnalyticsConstants.Property.SEASON_NAME, vm.seasonName)
+            putString(AnalyticsConstants.Property.VIDEO_ID, vm.id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, vm.title)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_EPISODE_CLICKED, bundle)
+    }
+
+    private fun trackWebseriesSeasonsClicked(seasonPair: Pair<String, String>) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.WEBSERIES_ID, id)
+            putString(AnalyticsConstants.Property.WEBSERIES_NAME, name)
+            putString(AnalyticsConstants.Property.SEASON_ID, seasonPair.first)
+            putString(AnalyticsConstants.Property.SEASON_NAME, seasonPair.second)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.WEBSERIES_SEASONS_CLICKED, bundle)
+    }
 }

@@ -1,13 +1,18 @@
 package `in`.nakkalites.mediaclient.view.splash
 
+import `in`.nakkalites.logging.logd
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivitySplashBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
+import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.view.utils.playStoreIntent
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Intent
@@ -17,6 +22,8 @@ import android.view.animation.LinearInterpolator
 import androidx.databinding.DataBindingUtil
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.koin.android.ext.android.inject
@@ -28,6 +35,7 @@ class SplashActivity : BaseActivity() {
     private lateinit var binding: ActivitySplashBinding
     val vm: SplashVm by viewModel()
     val remoteConfig by inject<FirebaseRemoteConfig>()
+    val analyticsManager by inject<AnalyticsManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +47,23 @@ class SplashActivity : BaseActivity() {
                 else -> showLoading()
             }
         })
+        trackAppOpened()
         fetchConfig()
+        updateFcmToken()
         vm.updateViewState()
     }
 
     override fun onResume() {
         super.onResume()
         updateConfig()
+    }
+
+    private fun trackAppOpened() {
+        analyticsManager.apply {
+            logEvent(AnalyticsConstants.Event.APP_OPENED)
+            logUserProperty(Property.LAST_APP_OPENED, getTimeStampForAnalytics())
+            logDefaultProperties()
+        }
     }
 
     private fun fetchConfig() {
@@ -69,15 +87,12 @@ class SplashActivity : BaseActivity() {
         val latestVersion = remoteConfig.getLong("latest_version")
         val lastOptionalVersion = remoteConfig.getLong("last_optional_version")
         val lastMandatoryVersion = remoteConfig.getLong("last_mandatory_version")
-        Timber.e("$latestVersion $lastMandatoryVersion $lastOptionalVersion")
         when {
             currentVersion >= latestVersion -> {
                 vm.hasConfigRetrieved = true
-                Timber.e("currentVersion >= latestVersion")
             }
             lastMandatoryVersion > currentVersion -> {
                 // Update App
-                Timber.e("lastMandatoryVersion > currentVersion")
                 MaterialDialog(this)
                     .show {
                         cancelable(false)
@@ -91,7 +106,6 @@ class SplashActivity : BaseActivity() {
             }
             lastOptionalVersion > currentVersion -> {
                 // Tell user to update or skip
-                Timber.e("lastOptionalVersion > currentVersion")
                 MaterialDialog(this)
                     .show {
                         cancelable(true)
@@ -108,7 +122,6 @@ class SplashActivity : BaseActivity() {
                     }
             }
             else -> {
-                Timber.e("else")
                 vm.hasConfigRetrieved = true
             }
         }
@@ -157,5 +170,19 @@ class SplashActivity : BaseActivity() {
                     vm.isViewAnimating = false
                 }
             }
+    }
+
+    private fun updateFcmToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Timber.e(task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                val token = task.result?.token
+                logd("msg_token_fmt $token")
+            })
     }
 }

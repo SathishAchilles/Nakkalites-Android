@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.app.constants
 
 object AppConstants {
+    const val USER_EMAIL: String = "user_email"
     const val VIDEO_CACHE_DIRECTORY: String = "media"
     const val PICASSO_CACHE = "picasso-cache"
     const val MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024L // 5MB
@@ -23,5 +24,6 @@ object AppConstants {
     const val WEB_VIEW_TITLE = "WEB_VIEW_TITLE"
 
     const val PLAY_STORE_URL = "market://details?id="
+    const val CONTACT_EMAIL = "contact@nakkalites.in"
     const val PLAY_STORE_COMPLETE_URL = "https://play.google.com/store/apps/details?id=in.nakkalites.mediaclient"
 }

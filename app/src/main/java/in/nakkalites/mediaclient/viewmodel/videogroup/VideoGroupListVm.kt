@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.videogroup
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
@@ -53,7 +52,6 @@ class VideoGroupListVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
             .subscribeBy(
                 onSuccess = {
                     items.addAll(it)
-                    loge("items $it")
                 },
                 onError = {
                     viewState.value = Event(Result.Error(Unit, throwable = it))

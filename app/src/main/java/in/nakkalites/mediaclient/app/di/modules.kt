@@ -2,12 +2,14 @@ package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.login.UserManager
+import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
@@ -23,7 +25,7 @@ import `in`.nakkalites.mediaclient.viewmodel.webview.WebViewVm
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.LoadControl
@@ -35,6 +37,9 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -73,6 +78,18 @@ val applicationModule = module {
     }
     single {
         FirebaseRemoteConfig.getInstance()
+    }
+    single {
+        LogoutHandler(get(), get())
+    }
+    single {
+        FirebaseCrashlytics.getInstance()
+    }
+    single {
+        Firebase.analytics
+    }
+    single {
+        AnalyticsManager(get(), get())
     }
 }
 

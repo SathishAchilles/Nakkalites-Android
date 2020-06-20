@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
@@ -20,9 +19,9 @@ class VideoPlayerVm(
     var thumbnail: String? = null
     var url: String? = null
     var disposable: Disposable? = null
-    private val viewState = MutableLiveData<Event<Result<Unit>>>()
+    private val viewState = MutableLiveData<Event<Result<Pair<Long, Long>>>>()
 
-    fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
+    fun viewStates(): LiveData<Event<Result<Pair<Long, Long>>>> = viewState
 
     fun setArgs(id: String, name: String, thumbnail: String, url: String) {
         this.id = id
@@ -43,10 +42,10 @@ class VideoPlayerVm(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onComplete = {
-                    loge("onComplete")
+                    viewState.value = Event(Result.Success(duration to timeElapsed))
                 },
                 onError = {
-                    viewState.value = Event(Result.Error(Unit, throwable = it))
+                    viewState.value = Event(Result.Error(throwable = it))
                 }
             )
     }

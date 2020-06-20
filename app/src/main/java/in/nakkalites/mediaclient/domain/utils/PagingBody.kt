@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference
  * This class is thread-safe.
  */
 class PagingBody(
-    offset: Int = 0, cursor: String? = null, private val limit: Int = PAGE_SIZE,
+    offset: Int = 1, cursor: String? = null, private val limit: Int = PAGE_SIZE,
     private val pagingCallback: PagingCallback?
 ) {
     private val offsetAtomicInt: AtomicInteger = AtomicInteger(offset)
@@ -24,7 +24,7 @@ class PagingBody(
     }
 
     fun reset() {
-        offsetAtomicInt.set(0)
+        offsetAtomicInt.set(1)
         cursorAtomicString.set(null)
         hasPagingFinished.set(false)
         pagingCallback?.onReset()
@@ -35,7 +35,7 @@ class PagingBody(
         if (pagingCallback != null && hasPagingFinished.get()) {
             pagingCallback.onFinished()
         }
-        val newOffset = if (hasPagingFinished.get()) 0 else offsetAtomicInt.get() + pageSize
+        val newOffset = if (hasPagingFinished.get()) 1 else offsetAtomicInt.get() + pageSize
         this.offsetAtomicInt.set(newOffset)
         this.cursorAtomicString.set(cursor)
     }
@@ -57,7 +57,7 @@ class PagingBody(
     }
 
     fun isFirstPage(): Boolean {
-        return offsetAtomicInt.get() == 0
+        return offsetAtomicInt.get() == 1
     }
 
     fun hasPagingFinished(): Boolean {

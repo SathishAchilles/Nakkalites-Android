@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
-import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
@@ -40,6 +39,7 @@ class VideoVm(
         } else {
             R.dimen.video_default_margin
         }
+
     @DimenRes
     val marginGridEnd =
         if (position % 2 == 0) {
@@ -48,7 +48,4 @@ class VideoVm(
             R.dimen.horizontal_list_margin_start_initial
         }
 
-    init {
-        loge(" ${video.videoName} ${video.lastPlayedTime} ${video.duration} $progressPercent")
-    }
 }

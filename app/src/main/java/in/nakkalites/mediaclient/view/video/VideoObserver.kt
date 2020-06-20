@@ -155,6 +155,13 @@ class VideoObserver(
             player.volume = if (player.volume == 0f) 1f else 0f
             changeVolumeIcon(player, volumeButton)
         }
+//        with(player) {
+//            prepare(mediaSource)
+//            if (lastPlayedTime != 0L) {
+//                seekTo(player.currentWindowIndex, lastPlayedTime)
+//            }
+//            playWhenReady = !playerTracker.shouldPauseCurrentVideo
+//        }
         playerView.setShutterBackgroundColor(Color.TRANSPARENT)
         imaAdsLoader.setPlayer(player)
         playerView.player = player
@@ -250,7 +257,6 @@ class VideoObserver(
     }
 
     private fun changeFullscreenButton(parent: FrameLayout) {
-        loge("orientation ${activity.requestedOrientation}")
         if (videoWrapper.tag == null) {
             setLandscapeOrientation(parent)
         } else {

@@ -38,7 +38,7 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                 pagingBody.onNextPage(it.second.size, it.third)
             }
             .map {
-                listOf(BannersVm(it.first)) +
+                (if (it.first.isNotEmpty()) listOf(BannersVm(it.first)) else listOf()) +
                         it.second.map { videoGroup ->
                             VideoGroupVm(videoGroup)
                         }
