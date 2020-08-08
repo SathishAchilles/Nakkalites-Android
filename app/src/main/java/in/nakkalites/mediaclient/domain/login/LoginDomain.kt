@@ -6,7 +6,6 @@ import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import com.squareup.moshi.Moshi
 import io.reactivex.Single
-import timber.log.Timber
 
 class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : BaseDomain {
 
@@ -34,7 +33,7 @@ class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : Base
         return userManager.login(type, id, displayName, email, photoUrl)
             .map { it.user }
             .map {
-                User(it.id, it.name, it.email, it.imageUrl)
+                User(it.id, it.name, it.email, it.imageUrl, signupDate = it.signupDate)
             }
     }
 }
