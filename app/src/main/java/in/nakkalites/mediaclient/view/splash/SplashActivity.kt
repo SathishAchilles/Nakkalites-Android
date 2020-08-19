@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivitySplashBinding
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
@@ -36,6 +37,7 @@ class SplashActivity : BaseActivity() {
     val vm: SplashVm by viewModel()
     val remoteConfig by inject<FirebaseRemoteConfig>()
     val analyticsManager by inject<AnalyticsManager>()
+    val userManager by inject<UserManager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,6 +185,7 @@ class SplashActivity : BaseActivity() {
                 // Get new Instance ID token
                 val token = task.result?.token
                 logd("msg_token_fmt $token")
+                vm.updateFCMToken(token)
             })
     }
 }

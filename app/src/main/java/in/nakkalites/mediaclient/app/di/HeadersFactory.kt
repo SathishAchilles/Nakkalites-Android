@@ -2,19 +2,17 @@ package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
-import timber.log.Timber
 
 
 class HeadersFactory(private val userDataStore: UserDataStore) {
 
     fun get(): Map<String, String> {
-        val headerMap =  mutableMapOf(
+        return mutableMapOf(
             Headers.APP_VERSION to BuildConfig.VERSION_NAME,
             Headers.APP_VERSION_CODE to BuildConfig.VERSION_CODE.toString(),
             Headers.APP_ACCESS_TOKEN to userDataStore.getAccessToken(),
             Headers.APP_USER_ID to getUserId()
         )
-        return headerMap
     }
 
     private fun getUserId() = userDataStore.getUser()?.id ?: ""

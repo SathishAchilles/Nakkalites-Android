@@ -36,5 +36,22 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
 
     fun getAccessToken(): String = prefs.getStringOrEmpty(PrefsConstants.ACCESS_TOKEN)
 
+    fun setRefreshToken(refreshToken: String?) {
+        refreshToken?.let {
+            prefs.edit().putString(PrefsConstants.REFRESH_TOKEN, it).apply()
+        }
+    }
+
+    fun getRefreshToken(): String = prefs.getStringOrEmpty(PrefsConstants.REFRESH_TOKEN)
+
+    fun setFcmToken(fcmToken: String?) {
+        fcmToken?.let {
+            prefs.edit().putString(PrefsConstants.FCM_TOKEN, it).apply()
+        }
+    }
+
+    fun getFcmToken(): String = prefs.getStringOrEmpty(PrefsConstants.FCM_TOKEN)
+
+
     fun clearAppData() = prefs.edit().clear().apply()
 }

@@ -12,6 +12,7 @@ object HttpConstants {
     const val VIDEO_DETAIL = "v1/videos/{video-id}"
     const val VIDEO_TRACK = "v1/videos/{video-id}/track"
     const val VIDEO_RELATED = "v1/videos/{video-id}/related"
+    const val TOKEN_REFRESH = "v1/token/refresh"
     const val TERMS_CONDITIONS = "https://d2s2797e1jgkv9.cloudfront.net/html/NakkalitesTermsandconditions.html"
     const val PRIVACY_POLICY = "https://d2s2797e1jgkv9.cloudfront.net/html/NakkalitesPrivacypolicy.html"
 }
