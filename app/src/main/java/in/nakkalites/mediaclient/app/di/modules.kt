@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
@@ -60,6 +61,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 
+const val refreshTokenSubjectProperty = "RefreshTokenSubjectProperty"
+
 val applicationModule = module {
     single<SharedPreferences> {
         PreferenceManager.getDefaultSharedPreferences(androidContext())
@@ -111,7 +114,7 @@ fun netModule(serverUrl: String) = module {
         StethoInterceptorFactory.get(androidContext())
     }
     single {
-        HeadersInterceptor(get())
+        HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
     }
     single {
         getOkHttpBuilder(
@@ -166,6 +169,10 @@ fun netModule(serverUrl: String) = module {
         DefaultLoadControl.Builder()
             .setBufferDurationsMs(6000, 18000, 500, 3000)
             .createDefaultLoadControl()
+    }
+
+    single {
+        RefreshTokenManager(getProperty(refreshTokenSubjectProperty), get(), get())
     }
 }
 

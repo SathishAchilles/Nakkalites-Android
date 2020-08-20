@@ -2,21 +2,24 @@ package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.data.HttpStatus.LOGOUT
 import `in`.nakkalites.mediaclient.data.HttpStatus.UNAUTHORIZED
+import `in`.nakkalites.mediaclient.domain.login.RefreshTokenCallback
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.view.utils.isValidApiUrl
+import io.reactivex.subjects.PublishSubject
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import retrofit2.HttpException
+import java.util.concurrent.CountDownLatch
 
 class HeadersInterceptor(
-    private val userDataStore: UserDataStore/*, private val headersFactory: HeadersFactory*/
+    private val userDataStore: UserDataStore,
+    private val refreshTokenSubject: PublishSubject<RefreshTokenCallback>
 ) : Interceptor {
     private val maxRetries = 3
     private val lock = Any()
-//    val userManager: UserManager by inject()
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (proceedToNextInterceptor(chain)) return chain.proceed(chain.request())
@@ -58,11 +61,9 @@ class HeadersInterceptor(
     }
 
     private fun refreshAccessToken() {
-//        val refreshToken = userDataStore.getRefreshToken()
-//        val headers = headersFactory.get()
-//        val response = userManager.refreshToken(headers, refreshToken).blockingGet()
-//        userDataStore.setAccessToken(response.accessToken)
-//        userDataStore.setRefreshToken(response.refreshToken)
+        val countDownLatch = CountDownLatch(1)
+        refreshTokenSubject.onNext(RefreshTokenCallback { countDownLatch.countDown() })
+        countDownLatch.await()
     }
 }
 

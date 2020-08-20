@@ -46,7 +46,7 @@ class SplashVm(private val userManager: UserManager) : BaseViewModel() {
 
     fun updateFCMToken(token: String?) {
         token?.let {
-            userManager.sendFCMToken(it)
+            userManager.updateFcmToken(it)
                 .observeOn(Schedulers.io())
                 .subscribeBy(
                     onComplete = { logd(message = "FCM Token updated") },

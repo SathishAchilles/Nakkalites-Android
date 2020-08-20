@@ -15,11 +15,11 @@ class UserManager(private val userService: UserService, private val userDataStor
         userDataStore.setUser(User.map(userEntity))
     }
 
-    private fun setAccessToken(accessToken: String?) {
+    fun setAccessToken(accessToken: String?) {
         userDataStore.setAccessToken(accessToken)
     }
 
-    private fun setRefreshToken(refreshToken: String?) {
+    fun setRefreshToken(refreshToken: String?) {
         userDataStore.setRefreshToken(refreshToken)
     }
 
@@ -61,8 +61,7 @@ class UserManager(private val userService: UserService, private val userDataStor
             }
     }
 
-    fun sendFCMToken(fcmToken: String): Completable {
-        setFcmToken(fcmToken)
+    fun updateFcmToken(fcmToken: String): Completable {
         val params = mutableMapOf<String, Any>(
             "fcm_token" to fcmToken
         )
@@ -72,6 +71,8 @@ class UserManager(private val userService: UserService, private val userDataStor
     fun isUserLoggedIn() = userDataStore.getUser() != null
 
     fun getUser() = userDataStore.getUser()
+
+    fun getRefreshToken() = userDataStore.getRefreshToken()
 
     fun clearAppData() = userDataStore.clearAppData()
 }
