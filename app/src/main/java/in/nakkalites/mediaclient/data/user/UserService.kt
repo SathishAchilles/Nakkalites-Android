@@ -22,6 +22,6 @@ interface UserService {
         @Body params: StringAnyMap
     ): Single<RefreshTokenResponse>
 
-    @POST(HttpConstants.LOGIN)
+    @POST(HttpConstants.FCM_REFRESH)
     fun updateFcmToken(@Body params: StringAnyMap): Completable
 }
