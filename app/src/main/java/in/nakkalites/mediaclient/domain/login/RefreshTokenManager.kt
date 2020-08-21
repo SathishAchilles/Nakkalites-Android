@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.app.di.HeadersFactory
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
@@ -13,6 +14,7 @@ class RefreshTokenManager(
 ) {
     init {
         val disposable = refreshTokenSubject
+            .subscribeOn(mainThread())
             .observeOn(io())
             .subscribeBy(onNext = { refreshAccessToken(it) },
                 onError = { loge("RefreshTokenManager failed", throwable = it) })

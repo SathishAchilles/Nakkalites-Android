@@ -9,6 +9,7 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
@@ -47,7 +48,7 @@ class SplashVm(private val userManager: UserManager) : BaseViewModel() {
     fun updateFCMToken(token: String?) {
         token?.let {
             userManager.updateFcmToken(it)
-                .observeOn(Schedulers.io())
+                .observeOn(mainThread())
                 .subscribeBy(
                     onComplete = { logd(message = "FCM Token updated") },
                     onError = { throwable ->
