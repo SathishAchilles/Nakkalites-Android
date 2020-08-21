@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.data.PrefsConstants
+import `in`.nakkalites.mediaclient.data.utils.generateUnhyphenatedUuid
 import `in`.nakkalites.mediaclient.data.utils.getStringOrEmpty
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.content.SharedPreferences
@@ -50,8 +51,15 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
         }
     }
 
-    fun getFcmToken(): String = prefs.getStringOrEmpty(PrefsConstants.FCM_TOKEN)
+    fun generateInstanceIdIfNotAvailable() {
+        if (!isInstanceIdAvailable()) {
+            prefs.edit().putString(PrefsConstants.INSTANCE_ID, generateUnhyphenatedUuid()).apply()
+        }
+    }
 
+    fun getInstanceIdOrEmpty() = prefs.getStringOrEmpty(PrefsConstants.INSTANCE_ID)
+
+    private fun isInstanceIdAvailable() = prefs.contains(PrefsConstants.INSTANCE_ID)
 
     fun clearAppData() = prefs.edit().clear().apply()
 }
