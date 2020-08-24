@@ -26,5 +26,5 @@ object Headers {
     const val APP_USER_ID = "App-User-Id"
     const val APP_ACCESS_TOKEN = "Authorization"
     const val X_CLIENT_OS = "X-Client-OS"
-    const val X_CLIENT_ID = "X-Client-Id"
+    const val X_CLIENT_ID = "X-Client-ID"
 }
