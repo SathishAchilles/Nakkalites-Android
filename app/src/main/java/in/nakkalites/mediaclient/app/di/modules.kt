@@ -42,6 +42,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.readystatesoftware.chuck.ChuckInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
@@ -119,8 +120,12 @@ fun netModule(serverUrl: String) = module {
         HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
     }
     single {
+        ChuckInterceptor(androidContext())
+    }
+    single {
         getOkHttpBuilder(
-            androidContext(), listOf(get<HeadersInterceptor>(), get<StethoInterceptor>())
+            androidContext(),
+            listOf(get<HeadersInterceptor>(), get<StethoInterceptor>(), get<ChuckInterceptor>())
         )
     }
     single {
