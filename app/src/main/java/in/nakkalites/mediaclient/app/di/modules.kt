@@ -179,7 +179,7 @@ fun netModule(serverUrl: String) = module {
     }
 
     single {
-        RefreshTokenManager(getProperty(refreshTokenSubjectProperty), get(), get())
+        RefreshTokenManager(getProperty(refreshTokenSubjectProperty), get(), get(), get())
     }
 }
 

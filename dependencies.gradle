@@ -4,7 +4,7 @@ ext.versions = [
         minSdk              : 21,
         targetSdk           : 29,
 
-        agp                 : '4.0.0',
+        agp                 : '4.0.1',
         androidX            : '1.1.0',
         chuck               : '1.1.0',
         constraintLayout    : '1.1.3',

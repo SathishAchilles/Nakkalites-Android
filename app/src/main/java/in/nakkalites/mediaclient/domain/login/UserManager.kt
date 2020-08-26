@@ -23,10 +23,6 @@ class UserManager(private val userService: UserService, private val userDataStor
         userDataStore.setRefreshToken(refreshToken)
     }
 
-    private fun setFcmToken(fcmToken: String?) {
-        userDataStore.setFcmToken(fcmToken)
-    }
-
     fun login(
         type: String, id: String, displayName: String?, email: String?, photoUrl: Uri?
     ): Single<LoginResponse> {
@@ -62,6 +58,7 @@ class UserManager(private val userService: UserService, private val userDataStor
     }
 
     fun updateFcmToken(fcmToken: String): Completable {
+        userDataStore.setFcmToken(fcmToken)
         val params = mutableMapOf<String, Any>(
             "fcm_token" to fcmToken
         )
