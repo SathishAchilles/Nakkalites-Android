@@ -12,7 +12,6 @@ import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
-import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
@@ -27,7 +26,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
 import androidx.preference.PreferenceManager
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.LoadControl
 import com.google.android.exoplayer2.database.DatabaseProvider
@@ -114,22 +112,12 @@ val viewModelModule = module {
 
 fun netModule(serverUrl: String) = module {
     single {
-        StethoInterceptorFactory.get(androidContext())
-    }
-    single {
-        HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
-    }
-    single {
-        ChuckInterceptor(androidContext())
-    }
-    single {
-        getOkHttpBuilder(
-            androidContext(),
-            listOf(get<HeadersInterceptor>(), get<StethoInterceptor>(), get<ChuckInterceptor>())
+        val headersInterceptor = HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
+        val chuckInterceptor = ChuckInterceptor(androidContext())
+        val okHttpClientBuilder = getOkHttpBuilder(
+            androidContext(), listOf(headersInterceptor, chuckInterceptor)
         )
-    }
-    single {
-        StethoHelper.injectStethoIfDebug(androidContext(), get())
+        StethoHelper.injectStethoIfDebug(androidContext(), okHttpClientBuilder)
             .connectTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
@@ -166,8 +154,7 @@ fun netModule(serverUrl: String) = module {
         SimpleCache(cacheFolder, evictor, databaseProvider)
     }
     single {
-        DefaultBandwidthMeter.Builder(androidContext())
-            .build()
+        DefaultBandwidthMeter.Builder(androidContext()).build()
     }
     single<MappingTrackSelector> {
         DefaultTrackSelector(AdaptiveTrackSelection.Factory())
@@ -177,7 +164,6 @@ fun netModule(serverUrl: String) = module {
             .setBufferDurationsMs(6000, 18000, 500, 3000)
             .createDefaultLoadControl()
     }
-
     single {
         RefreshTokenManager(getProperty(refreshTokenSubjectProperty), get(), get(), get())
     }
