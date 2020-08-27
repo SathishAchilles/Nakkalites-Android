@@ -1,9 +1,11 @@
 package `in`.nakkalites.mediaclient.domain.login
 
+import `in`.nakkalites.mediaclient.data.PrefsConstants
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
 import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.UserService
+import `in`.nakkalites.mediaclient.data.utils.generateUnhyphenatedUuid
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Completable
@@ -27,8 +29,8 @@ class UserManager(private val userService: UserService, private val userDataStor
         type: String, id: String, displayName: String?, email: String?, photoUrl: Uri?
     ): Single<LoginResponse> {
         val params = mutableMapOf<String, Any>(
-            "id" to id,
-            "type" to type
+            "provider_id" to id,
+            "provider_type" to type
         ).apply {
             displayName?.let { put("name", displayName) }
             email?.let { put("email", email) }
@@ -70,6 +72,8 @@ class UserManager(private val userService: UserService, private val userDataStor
     fun getUser() = userDataStore.getUser()
 
     fun getRefreshToken() = userDataStore.getRefreshToken()
+
+    fun generateInstanceIdIfNotAvailable() = userDataStore.generateInstanceIdIfNotAvailable()
 
     fun clearAppData() = userDataStore.clearAppData()
 }

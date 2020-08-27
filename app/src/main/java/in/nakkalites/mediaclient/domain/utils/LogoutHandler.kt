@@ -33,5 +33,6 @@ class LogoutHandler(private val context: Context, private val userManager: UserM
 
     private fun clearAppData(userManager: UserManager) {
         userManager.clearAppData()
+        userManager.generateInstanceIdIfNotAvailable()
     }
 }
