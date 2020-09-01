@@ -22,23 +22,22 @@ class RefreshTokenManager(
             .subscribeBy(
                 onNext = {
                     try {
-                        refreshAccessToken(it)
+                        refreshAccessToken()
                     } catch (e: Exception) {
                         if (e is HttpException && e.code() == HttpStatus.LOGOUT) {
                             logoutHandler.logout()
                         }
-                        it.callback.invoke()
                     }
+                    it.callback.invoke()
                 },
                 onError = { loge("RefreshTokenManager failed", throwable = it) })
     }
 
     @Throws(HttpException::class)
-    private fun refreshAccessToken(refreshTokenCallback: RefreshTokenCallback) {
+    private fun refreshAccessToken() {
         val refreshToken = userManager.getRefreshToken()
         val headers = HeadersFactory(userDataStore).get()
-        val response = userManager.refreshToken(headers, refreshToken).blockingGet()
-        refreshTokenCallback.callback.invoke()
+        userManager.refreshToken(headers, refreshToken).blockingGet()
     }
 }
 
