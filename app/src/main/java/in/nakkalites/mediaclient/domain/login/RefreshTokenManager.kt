@@ -27,6 +27,7 @@ class RefreshTokenManager(
                         if (e is HttpException && e.code() == HttpStatus.LOGOUT) {
                             logoutHandler.logout()
                         }
+                        it.callback.invoke()
                     }
                 },
                 onError = { loge("RefreshTokenManager failed", throwable = it) })
