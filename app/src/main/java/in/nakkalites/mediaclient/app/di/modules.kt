@@ -12,6 +12,7 @@ import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
@@ -111,6 +112,9 @@ val viewModelModule = module {
 }
 
 fun netModule(serverUrl: String) = module {
+    single {
+        StethoInterceptorFactory.get(androidContext())
+    }
     single {
         val headersInterceptor = HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
         val chuckInterceptor = ChuckInterceptor(androidContext())
