@@ -16,19 +16,23 @@ class RefreshTokenManager(
     private val userDataStore: UserDataStore, private val logoutHandler: LogoutHandler
 ) {
     init {
-        val disposable = refreshTokenSubject
+        refreshTokenSubject
             .subscribeOn(mainThread())
             .observeOn(io())
             .subscribeBy(
                 onNext = {
+                    val callback = it.callback
                     try {
                         refreshAccessToken()
+                        callback.invoke()
                     } catch (e: Exception) {
                         if (e is HttpException && e.code() == HttpStatus.LOGOUT) {
+                            callback.invoke()
                             logoutHandler.logout()
+                        } else {
+                            callback.invoke()
                         }
                     }
-                    it.callback.invoke()
                 },
                 onError = { loge("RefreshTokenManager failed", throwable = it) })
     }

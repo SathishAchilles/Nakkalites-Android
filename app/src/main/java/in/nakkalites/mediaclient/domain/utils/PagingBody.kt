@@ -35,7 +35,7 @@ class PagingBody(
         if (pagingCallback != null && hasPagingFinished.get()) {
             pagingCallback.onFinished()
         }
-        val newOffset = if (hasPagingFinished.get()) 1 else offsetAtomicInt.get() + pageSize
+        val newOffset = if (hasPagingFinished.get()) 1 else offsetAtomicInt.get() + 1
         this.offsetAtomicInt.set(newOffset)
         this.cursorAtomicString.set(cursor)
     }
@@ -50,7 +50,7 @@ class PagingBody(
     fun toMap(): Map<String, Any> {
         return mutableMapOf<String, Any>()
             .apply {
-                put("offset", offsetAtomicInt.get())
+                put("page", offsetAtomicInt.get())
                 put("limit", limit)
                 cursorAtomicString.get()?.also { put("cursor", it) }
             }.toMap()
