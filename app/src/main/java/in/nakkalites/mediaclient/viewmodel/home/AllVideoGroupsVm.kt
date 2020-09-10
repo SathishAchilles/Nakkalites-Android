@@ -8,6 +8,7 @@ import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
+import `in`.nakkalites.mediaclient.viewmodel.utils.DummyVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
@@ -52,6 +53,9 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                     items.addAll(it)
                 },
                 onError = {
+                    if (pagingBody.isFirstPage()) {
+                        items.add(DummyVm(R.layout.item_error))
+                    }
                     viewState.value = Event(Result.Error(Unit, throwable = it))
                 }
             )
