@@ -53,9 +53,6 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseVie
                     items.addAll(it)
                 },
                 onError = {
-                    if (pagingBody.isFirstPage()) {
-                        items.add(DummyVm(R.layout.item_error))
-                    }
                     viewState.value = Event(Result.Error(Unit, throwable = it))
                 }
             )

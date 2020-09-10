@@ -50,9 +50,6 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain) : BaseView
                     viewState.value = Event(Result.Success(Unit))
                 },
                 onError = {
-                    if (pagingBody.isFirstPage()) {
-                        items.add(DummyVm(R.layout.item_error))
-                    }
                     viewState.value = Event(Result.Error(Unit, throwable = it))
                 }
             )
