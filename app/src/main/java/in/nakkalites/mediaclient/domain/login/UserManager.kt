@@ -1,11 +1,9 @@
 package `in`.nakkalites.mediaclient.domain.login
 
-import `in`.nakkalites.mediaclient.data.PrefsConstants
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
 import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.UserService
-import `in`.nakkalites.mediaclient.data.utils.generateUnhyphenatedUuid
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Completable
@@ -55,7 +53,7 @@ class UserManager(private val userService: UserService, private val userDataStor
         return userService.refreshToken(headers, params)
             .doOnSuccess {
                 setAccessToken(it.accessToken)
-                setRefreshToken(it.accessToken)
+                setRefreshToken(it.refreshToken)
             }
     }
 
