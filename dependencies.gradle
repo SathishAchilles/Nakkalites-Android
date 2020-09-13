@@ -13,7 +13,7 @@ ext.versions = [
         dotsIndicator       : '1.0.3',
         espressoCore        : '3.2.0',
         exoplayer           : '2.11.3',
-        fabricPlugin        : '2.2.0',
+        crashlyticsPlugin        : '2.2.0',
         firebase            : '17.4.2',
         googleDesign        : "28.0.0",
         googleServicesPlugin: '4.3.3',
