@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
@@ -26,7 +27,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
 import androidx.preference.PreferenceManager
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.LoadControl
 import com.google.android.exoplayer2.database.DatabaseProvider
@@ -41,6 +41,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.readystatesoftware.chuck.ChuckInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
@@ -60,12 +61,16 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 
+const val refreshTokenSubjectProperty = "RefreshTokenSubjectProperty"
+
 val applicationModule = module {
     single<SharedPreferences> {
         PreferenceManager.getDefaultSharedPreferences(androidContext())
     }
     single {
-        UserDataStore(get(), get())
+        UserDataStore(get(), get()).apply {
+            generateInstanceIdIfNotAvailable()
+        }
     }
     single {
         UserManager(get(), get())
@@ -111,15 +116,12 @@ fun netModule(serverUrl: String) = module {
         StethoInterceptorFactory.get(androidContext())
     }
     single {
-        HeadersInterceptor(get())
-    }
-    single {
-        getOkHttpBuilder(
-            androidContext(), listOf(get<HeadersInterceptor>(), get<StethoInterceptor>())
+        val headersInterceptor = HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
+        val chuckInterceptor = ChuckInterceptor(androidContext())
+        val okHttpClientBuilder = getOkHttpBuilder(
+            androidContext(), listOf(headersInterceptor, chuckInterceptor)
         )
-    }
-    single {
-        StethoHelper.injectStethoIfDebug(androidContext(), get())
+        StethoHelper.injectStethoIfDebug(androidContext(), okHttpClientBuilder)
             .connectTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(HttpConstants.TIMEOUT, TimeUnit.SECONDS)
@@ -156,8 +158,7 @@ fun netModule(serverUrl: String) = module {
         SimpleCache(cacheFolder, evictor, databaseProvider)
     }
     single {
-        DefaultBandwidthMeter.Builder(androidContext())
-            .build()
+        DefaultBandwidthMeter.Builder(androidContext()).build()
     }
     single<MappingTrackSelector> {
         DefaultTrackSelector(AdaptiveTrackSelection.Factory())
@@ -166,6 +167,9 @@ fun netModule(serverUrl: String) = module {
         DefaultLoadControl.Builder()
             .setBufferDurationsMs(6000, 18000, 500, 3000)
             .createDefaultLoadControl()
+    }
+    single {
+        RefreshTokenManager(getProperty(refreshTokenSubjectProperty), get(), get(), get())
     }
 }
 

@@ -8,16 +8,12 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-
     }
     dependencies {
         classpath deps.gradle.android
         classpath deps.gradle.googleServices
         classpath deps.gradle.kotlin
-        classpath deps.gradle.fabric
+        classpath deps.gradle.crashlytics
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

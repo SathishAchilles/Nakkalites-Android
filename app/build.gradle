@@ -75,6 +75,8 @@ dependencies {
     implementation deps.androidX.preferences
     implementation deps.androidX.recyclerView
     implementation deps.androidX.viewPager
+    debugImplementation deps.chuck.library
+    releaseImplementation deps.chuck.library_no_op
     implementation deps.dotsIndicator
     implementation deps.exoplayer.core
     implementation deps.exoplayer.hls
