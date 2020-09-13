@@ -12,7 +12,8 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
         android:id="@id/exo_content_frame"
@@ -28,17 +29,26 @@
             android:layout_height="match_parent"
             android:background="@android:color/black" />
 
-        <ImageView
-            android:id="@id/exo_artwork"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY" />
-
         <com.google.android.exoplayer2.ui.SubtitleView
             android:id="@id/exo_subtitles"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@id/exo_buffering"
+            style="@style/SpinKitView.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/progress_bar" />
+
+        <TextView android:id="@id/exo_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@color/exo_error_message_background_color"
+            android:padding="16dp"/>
     </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
     <View

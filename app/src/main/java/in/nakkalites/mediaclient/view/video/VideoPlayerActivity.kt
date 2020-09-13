@@ -28,6 +28,7 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import com.squareup.picasso.Picasso
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
@@ -43,6 +44,7 @@ class VideoPlayerActivity : BaseActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
     val vm by viewModel<VideoPlayerVm>()
     val analyticsManager by inject<AnalyticsManager>()
+    val picasso by inject<Picasso>()
     private val id by lazy {
         intent.getStringExtra(AppConstants.VIDEO_ID)
     }
@@ -113,21 +115,6 @@ class VideoPlayerActivity : BaseActivity() {
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-//        window.decorView.setOnSystemUiVisibilityChangeListener {
-//            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-//            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-//            Timber.e("orientation system  ${it or View.SYSTEM_UI_FLAG_FULLSCREEN}")
-//            if ((it and View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-//                var newUiOptions: Int = window.decorView.systemUiVisibility
-//                newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//                newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-//                window.decorView.systemUiVisibility = newUiOptions
-//            } else {
-//                window.decorView.systemUiVisibility =
-//                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//            }
-//        }
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
         binding.vm = vm
@@ -137,8 +124,8 @@ class VideoPlayerActivity : BaseActivity() {
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         videoObserver = VideoObserver(
             this, binding.videoPlayerWrapper, id, url, duration ?: 0L, lastPlayedTime ?: 0L,
-            vm.name, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
-            okClient, loadControl
+            vm.name, thumbnail, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
+            okClient, loadControl, picasso
         )
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {
@@ -181,7 +168,7 @@ class VideoPlayerActivity : BaseActivity() {
         super.onDestroy()
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         return super.dispatchKeyEvent(event) || videoObserver.playerView.dispatchKeyEvent(event)
     }
 

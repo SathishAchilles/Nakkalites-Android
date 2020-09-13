@@ -73,5 +73,7 @@ class UserManager(private val userService: UserService, private val userDataStor
 
     fun generateInstanceIdIfNotAvailable() = userDataStore.generateInstanceIdIfNotAvailable()
 
+    fun getInstanceId() = userDataStore.getInstanceIdOrEmpty()
+
     fun clearAppData() = userDataStore.clearAppData()
 }

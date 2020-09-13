@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.app
 
-import `in`.nakkalites.logging.initDebugLogs
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.di.applicationModule
@@ -13,6 +12,7 @@ import `in`.nakkalites.mediaclient.domain.login.RefreshTokenCallback
 import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
+import `in`.nakkalites.mediaclient.view.NonFatalReportingTree
 import android.app.Application
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.plugins.RxJavaPlugins
@@ -22,6 +22,8 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 
 class NakkalitesApp : Application() {
     private val debug = BuildConfig.DEBUG
@@ -46,7 +48,13 @@ class NakkalitesApp : Application() {
             }
         }
         RxJavaPlugins.setErrorHandler(RxErrorHandler.create()) // only for UndeliverableExceptions
-        initDebugLogs()
+        Timber.plant(
+            if (BuildConfig.DEBUG) {
+                DebugTree()
+            } else {
+                NonFatalReportingTree(crashlytics)
+            }
+        )
         val refreshTokenManager: RefreshTokenManager = get()
     }
 
