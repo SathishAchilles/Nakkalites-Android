@@ -68,9 +68,7 @@ val applicationModule = module {
         PreferenceManager.getDefaultSharedPreferences(androidContext())
     }
     single {
-        UserDataStore(get(), get()).apply {
-            generateInstanceIdIfNotAvailable()
-        }
+        UserDataStore(get(), get())
     }
     single {
         UserManager(get(), get())

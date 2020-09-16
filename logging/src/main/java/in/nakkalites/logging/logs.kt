@@ -1,8 +1,7 @@
 package `in`.nakkalites.logging
 
-import android.app.Application
-import android.util.Log
 import `in`.nakkalites.logging.BuildConfig.DEBUG
+import android.util.Log
 import timber.log.Timber
 
 /**
@@ -77,13 +76,3 @@ inline fun loge(
  * Logs the given [throwable] with no message attached.
  */
 inline fun logThrowable(throwable: Throwable) = loge(message = "", throwable = throwable)
-
-/**
- * Initializes underlying logging framework. Typically this extension method should be called in [Application.onCreate]
- */
-inline fun Application.initDebugLogs() {
-    @Suppress("ConstantConditionIf")
-    if (DEBUG) {
-        Timber.plant(Timber.DebugTree())
-    }
-}

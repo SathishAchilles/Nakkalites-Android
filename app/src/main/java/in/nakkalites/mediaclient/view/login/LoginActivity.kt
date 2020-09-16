@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.view.login
 
 import `in`.nakkalites.logging.logThrowable
+import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
@@ -67,10 +68,12 @@ class LoginActivity : BaseActivity() {
                     goToHome()
                 }
                 is Result.Error -> {
+                    trackLoginFailed()
                     hideLoading()
                     errorHandler(it.throwable) {
+                        loge("Login Failure", throwable = it.throwable)
                         if (it.throwable is NoUserFoundException) {
-                            showError(getString(R.string.error_no_user))
+                            showError(getString(R.string.generic_error_message))
                             false
                         } else {
                             true
@@ -182,5 +185,9 @@ class LoginActivity : BaseActivity() {
             )
         }
         analyticsManager.logEvent(eventName, bundle)
+    }
+
+    private fun trackLoginFailed() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED)
     }
 }

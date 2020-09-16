@@ -17,7 +17,8 @@ class AnalyticsManager(
         Property.MANUFACTURER to Build.MANUFACTURER,
         Property.MODEL to Build.MODEL,
         Property.OS to "Android",
-        Property.OS_VERSION to Build.VERSION.RELEASE
+        Property.OS_VERSION to Build.VERSION.RELEASE,
+        Property.INSTANCE_ID to userManager.getInstanceId()
     )
     private val defaultPropertiesBundle = Bundle().also { bundle ->
         defaultProperties.map {

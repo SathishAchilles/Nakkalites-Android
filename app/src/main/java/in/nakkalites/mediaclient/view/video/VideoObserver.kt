@@ -22,7 +22,6 @@ import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.github.ybq.android.spinkit.SpinKitView
 import com.google.ads.interactivemedia.v3.api.AdEvent.AdEventType
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -39,6 +38,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
+import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -49,10 +49,12 @@ import java.util.concurrent.TimeUnit
 
 class VideoObserver(
     private val activity: Activity, private val videoWrapper: FrameLayout, private val id: String,
-    url: String, duration: Long, private var lastPlayedTime: Long,
-    private val name: String?, val playerView: PlayerView, private val playerTracker: PlayerTracker,
+    private val url: String, duration: Long, private var lastPlayedTime: Long,
+    private val name: String?, val thumbnail: String?, val playerView: PlayerView,
+    private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
-    simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl
+    simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl,
+    private val picasso: Picasso
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
@@ -73,7 +75,6 @@ class VideoObserver(
     )
     private val playPauseButton = activity.findViewById<View>(R.id.play_pause)
     private val volumeButton = activity.findViewById<ImageView>(R.id.volume_button)
-    private val progressBar = activity.findViewById<SpinKitView>(R.id.progress_bar)
     private val backButton = activity.findViewById<ImageView>(R.id.back)
     private val shareButton = activity.findViewById<ImageView>(R.id.share)
     private val fullscreen = activity.findViewById<ImageView>(R.id.fullscreen_button)
@@ -182,28 +183,43 @@ class VideoObserver(
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 when (playbackState) {
                     Player.STATE_READY -> {
-                        progressBar.visibility = View.GONE
                         playPauseButton.visibility = View.VISIBLE
                         videoDuration = player.duration
                         remainingTime = player.duration - player.currentPosition
                         playerTracker.duration = videoDuration!!
                     }
                     Player.STATE_BUFFERING -> {
-                        progressBar.visibility = View.VISIBLE
                         playPauseButton.visibility = View.GONE
                     }
-                    else -> {
-                        progressBar.visibility = View.GONE
+                    Player.STATE_ENDED -> {
+                    }
+                    Player.STATE_IDLE -> {
                     }
                 }
             }
 
             override fun onPlayerError(error: ExoPlaybackException) {
-                super.onPlayerError(error)
-                loge("Listener-onPlayerError...")
                 player.stop()
                 player.prepare(adsMediaSource)
                 player.playWhenReady = true
+                when (error.type) {
+                    ExoPlaybackException.TYPE_SOURCE -> loge(
+                        "Video Playback error TYPE_SOURCE $url", throwable = error.sourceException
+                    )
+                    ExoPlaybackException.TYPE_RENDERER -> loge(
+                        "Video Playback error TYPE_RENDERER $url",
+                        throwable = error.rendererException
+                    )
+                    ExoPlaybackException.TYPE_UNEXPECTED -> loge(
+                        "Video Playback error TYPE_UNEXPECTED $url",
+                        throwable = error.unexpectedException
+                    )
+                    ExoPlaybackException.TYPE_OUT_OF_MEMORY -> loge(
+                        "Video Playback error TYPE_OUT_OF_MEMORY $url",
+                        throwable = error.outOfMemoryError
+                    )
+                    else -> loge("Video Playback error $url")
+                }
             }
         })
         playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)

@@ -12,6 +12,10 @@ import timber.log.Timber
 
 class UserDataStore(private val prefs: SharedPreferences, private val moshi: Moshi) {
 
+    init {
+        generateInstanceIdIfNotAvailable()
+    }
+
     fun setUser(user: User) {
         val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
         prefs.edit().putString(PrefsConstants.USER, jsonAdapter.toJson(user)).apply()
