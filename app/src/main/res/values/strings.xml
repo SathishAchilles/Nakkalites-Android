@@ -40,7 +40,7 @@ Download their new app and watch exclusively.\n\n
     <string name="sign_up_intro">Watch our exclusive videos first</string>
     <string name="contact_us">Contact Us</string>
     <string name="ad_tag_url">
-    <![CDATA[https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpost&cmsid=496&vid=short_onecue&correlator=]]>
+        <![CDATA[https://googleads.g.doubleclick.net/pagead/ads?ad_type=video_image_text&client=ca-pub-9954055340426176&videoad_start_delay=15000&description_url=https%3A%2F%2Fwww.nakkalites.in&max_ad_duration=30000&adtest=off]]>
     </string>
     <string name="oops_something_went_wrong">Oops! Something went wrong.\nPlease Try Again Later</string>
 </resources>

@@ -70,7 +70,7 @@ ext.deps = [
                 analytics   : "com.google.firebase:firebase-analytics-ktx:${versions.firebase}",
                 crashlytics : "com.google.firebase:firebase-crashlytics:${versions.crashlytics}",
                 remoteConfig: "com.google.firebase:firebase-config:${versions.remoteConfig}",
-                "messaging" : "com.google.firebase:firebase-messaging:${versions.messaging}"
+                messaging : "com.google.firebase:firebase-messaging:${versions.messaging}"
         ],
         google         : [
                 design: "com.android.support:design:${versions.googleDesign}"
