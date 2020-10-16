@@ -57,6 +57,9 @@ class VideoPlayerActivity : BaseActivity() {
     private val url by lazy {
         intent.getStringExtra(AppConstants.VIDEO_URL)
     }
+    private val adUrl by lazy {
+        intent.getStringExtra(AppConstants.VIDEO_AD_URL)
+    }
     private val lastPlayedTime: Long? by lazy {
         intent.getLongExtra(AppConstants.LAST_PLAYED_TIME, 0L)
     }
@@ -76,7 +79,7 @@ class VideoPlayerActivity : BaseActivity() {
         @JvmStatic
         fun createIntent(
             ctx: Context, id: String, name: String, thumbnail: String, url: String,
-            duration: Long?, lastPayedTime: Long?
+            duration: Long?, lastPayedTime: Long?, adUrl: String?
         ): Intent = Intent(ctx, VideoPlayerActivity::class.java)
             .putExtra(AppConstants.VIDEO_ID, id)
             .putExtra(AppConstants.VIDEO_NAME, name)
@@ -84,6 +87,7 @@ class VideoPlayerActivity : BaseActivity() {
             .putExtra(AppConstants.VIDEO_URL, url)
             .putExtra(AppConstants.LAST_PLAYED_TIME, lastPayedTime)
             .putExtra(AppConstants.DURATION, duration)
+            .putExtra(AppConstants.VIDEO_AD_URL, adUrl)
     }
 
     private var cookieStore = HashMap<HttpUrl, List<Cookie>>()
@@ -125,7 +129,7 @@ class VideoPlayerActivity : BaseActivity() {
         videoObserver = VideoObserver(
             this, binding.videoPlayerWrapper, id, url, duration ?: 0L, lastPlayedTime ?: 0L,
             vm.name, thumbnail, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
-            okClient, loadControl, picasso
+            okClient, loadControl, picasso, adUrl
         )
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {

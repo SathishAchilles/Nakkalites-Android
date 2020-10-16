@@ -12,6 +12,7 @@ class SeasonEpisodeItemVm(
     val showDuration = episode.duration != null
     val durationInMs = episode.duration
     val lastPlayedTime = episode.lastPlayedTime
+    val adUrl = episode.adUrl
     val duration = episode.duration?.toTimeString(withLiteral = false, includeZeros = true) ?: ""
     val imageUrl = episode.thumbnailImage
     val url = episode.url

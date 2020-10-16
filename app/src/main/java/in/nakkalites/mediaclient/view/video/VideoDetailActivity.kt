@@ -45,18 +45,22 @@ class VideoDetailActivity : BaseActivity() {
     private val url by lazy {
         intent.getStringExtra(AppConstants.VIDEO_URL)
     }
+    private val adUrl by lazy {
+        intent.getStringExtra(AppConstants.VIDEO_AD_URL)
+    }
     private var menu: Menu? = null
     private val spanCount = 2
 
     companion object {
         @JvmStatic
         fun createIntent(
-            ctx: Context, id: String, name: String, thumbnail: String, url: String
+            ctx: Context, id: String, name: String, thumbnail: String, url: String, adUrl: String?
         ): Intent = Intent(ctx, VideoDetailActivity::class.java)
             .putExtra(AppConstants.VIDEO_ID, id)
             .putExtra(AppConstants.VIDEO_NAME, name)
             .putExtra(AppConstants.VIDEO_THUMBNAIL, thumbnail)
             .putExtra(AppConstants.VIDEO_URL, url)
+            .putExtra(AppConstants.VIDEO_AD_URL, adUrl)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +69,7 @@ class VideoDetailActivity : BaseActivity() {
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         binding.vm = vm
         binding.onPlayClick = onPlayClick
-        vm.setArgs(id, name, thumbnail, url)
+        vm.setArgs(id, name, thumbnail, url, adUrl)
         trackVideoDetailPageOpened()
         init()
         vm.viewStates().observe(this, EventObserver {
@@ -149,7 +153,7 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         openVideoPlayerPage(
-            this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime
+            this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime, vm.adUrl
         )
         trackVideoClicked(vm.id, vm.name)
     }
@@ -185,7 +189,8 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onPlayClick = { vm: VideoDetailVm ->
         openVideoPlayerPage(
-            this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration, vm.lastPlayedTime
+            this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration, vm.lastPlayedTime,
+            vm.adUrl
         )
         trackVideoPlayCTAClicked(vm.id!!, vm.name!!)
     }

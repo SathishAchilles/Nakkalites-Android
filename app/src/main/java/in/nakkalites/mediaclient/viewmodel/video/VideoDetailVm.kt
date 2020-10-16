@@ -30,6 +30,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var name: String? = null
     var thumbnail: String? = null
     var url: String? = null
+    var adUrl: String? = null
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     private val isPageLoaded = AtomicBoolean(false)
@@ -37,11 +38,12 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
-    fun setArgs(id: String, name: String, thumbnail: String, url: String) {
+    fun setArgs(id: String, name: String, thumbnail: String, url: String, adUrl: String?) {
         this.id = id
         this.name = name
         this.thumbnail = thumbnail
         this.url = url
+        this.adUrl = adUrl
     }
 
     fun loading(): Boolean {

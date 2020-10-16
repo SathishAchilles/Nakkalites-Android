@@ -5,16 +5,20 @@ import `in`.nakkalites.mediaclient.view.video.VideoPlayerActivity
 import android.content.Context
 
 fun openVideoDetailPage(
-    context: Context, id: String, name: String, thumbnail: String, url: String
+    context: Context, id: String, name: String, thumbnail: String, url: String, adUrl: String?
 ) {
-    context.startActivity(VideoDetailActivity.createIntent(context, id, name, thumbnail, url))
+    context.startActivity(
+        VideoDetailActivity.createIntent(context, id, name, thumbnail, url, adUrl)
+    )
 }
 
 fun openVideoPlayerPage(
     context: Context, id: String, name: String, thumbnail: String, url: String,
-    duration: Long? = 0L, lastPayedTime: Long? = 0L
+    duration: Long? = 0L, lastPayedTime: Long? = 0L, adUrl: String?
 ) {
     context.startActivity(
-        VideoPlayerActivity.createIntent(context, id, name, thumbnail, url, duration, lastPayedTime)
+        VideoPlayerActivity.createIntent(
+            context, id, name, thumbnail, url, duration, lastPayedTime, adUrl
+        )
     )
 }

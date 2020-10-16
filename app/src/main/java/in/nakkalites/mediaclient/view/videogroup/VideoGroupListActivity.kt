@@ -84,7 +84,7 @@ class VideoGroupListActivity : BaseActivity() {
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url, vm.adUrl)
         trackVideoGroupListVideoClicked(vm.id, vm.name)
     }
 

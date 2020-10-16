@@ -44,7 +44,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import okhttp3.OkHttpClient
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
@@ -54,7 +53,7 @@ class VideoObserver(
     private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl,
-    private val picasso: Picasso
+    private val picasso: Picasso, private val adUrl: String?
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
@@ -68,8 +67,7 @@ class VideoObserver(
     private val mediaSource = HlsMediaSource.Factory(mediaDataSourceFactory)
         .setAllowChunklessPreparation(true)
         .createMediaSource(Uri.parse(url))
-    private val imaAdsLoader =
-        ImaAdsLoader(activity, Uri.parse(activity.getString(R.string.ad_tag_url)))
+    private val imaAdsLoader = ImaAdsLoader(activity, Uri.parse(adUrl ?: ""))
     private val adsMediaSource: AdsMediaSource = AdsMediaSource(
         mediaSource, mediaDataSourceFactory, imaAdsLoader, playerView
     )
@@ -156,15 +154,18 @@ class VideoObserver(
             player.volume = if (player.volume == 0f) 1f else 0f
             changeVolumeIcon(player, volumeButton)
         }
-//        with(player) {
-//            prepare(mediaSource)
-//            if (lastPlayedTime != 0L) {
-//                seekTo(player.currentWindowIndex, lastPlayedTime)
-//            }
-//            playWhenReady = !playerTracker.shouldPauseCurrentVideo
-//        }
+        if (adUrl == null) {
+            with(player) {
+                prepare(mediaSource)
+                if (lastPlayedTime != 0L) {
+                    seekTo(player.currentWindowIndex, lastPlayedTime)
+                }
+                playWhenReady = !playerTracker.shouldPauseCurrentVideo
+            }
+        } else {
+            imaAdsLoader.setPlayer(player)
+        }
         playerView.setShutterBackgroundColor(Color.TRANSPARENT)
-        imaAdsLoader.setPlayer(player)
         playerView.player = player
         playerView.requestFocus()
         disposables += Observable.interval(1, TimeUnit.SECONDS)
@@ -226,40 +227,40 @@ class VideoObserver(
         playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
 
 
-        //IMA event listeners
-        imaAdsLoader.adsLoader.addAdsLoadedListener { adsManagerLoadedEvent ->
-            val imaAdsManager = adsManagerLoadedEvent.adsManager
-            imaAdsManager.addAdEventListener { adEvent ->
-                logv("AdEvent: " + adEvent.type.toString())
-                when (adEvent.type) {
-                    AdEventType.LOADED -> {
-                    }
-                    AdEventType.PAUSED -> {
-                    }
-                    AdEventType.STARTED -> {
-                    }
-                    AdEventType.COMPLETED -> {
-                    }
-                    AdEventType.ALL_ADS_COMPLETED -> {
-                    }
-                    AdEventType.CONTENT_RESUME_REQUESTED -> {
+        if (adUrl != null) {
+            //IMA event listeners
+            imaAdsLoader.adsLoader.addAdsLoadedListener { adsManagerLoadedEvent ->
+                val imaAdsManager = adsManagerLoadedEvent.adsManager
+                imaAdsManager.addAdEventListener { adEvent ->
+                    logv("AdEvent: " + adEvent.type.toString())
+                    when (adEvent.type) {
+                        AdEventType.LOADED -> {
+                        }
+                        AdEventType.PAUSED -> {
+                        }
+                        AdEventType.STARTED -> {
+                        }
+                        AdEventType.COMPLETED -> {
+                        }
+                        AdEventType.ALL_ADS_COMPLETED -> {
+                        }
+                        AdEventType.CONTENT_RESUME_REQUESTED -> {
 //                        player.stop()
 //                        player.prepare(adsMediaSource)
 //                        player.playWhenReady = true
-                    }
-                    else -> {
+                        }
+                        else -> {
+                        }
                     }
                 }
             }
-        }
-        with(player) {
-            prepare(adsMediaSource)
-            Timber.e("previous ${player.currentWindowIndex} $lastPlayedTime")
-            if (lastPlayedTime != 0L) {
-                seekTo(player.currentWindowIndex, lastPlayedTime)
-                Timber.e("seekTo ${player.currentWindowIndex} $lastPlayedTime")
+            with(player) {
+                prepare(adsMediaSource)
+                if (lastPlayedTime != 0L) {
+                    seekTo(player.currentWindowIndex, lastPlayedTime)
+                }
+                playWhenReady = !playerTracker.shouldPauseCurrentVideo
             }
-            playWhenReady = !playerTracker.shouldPauseCurrentVideo
         }
     }
 

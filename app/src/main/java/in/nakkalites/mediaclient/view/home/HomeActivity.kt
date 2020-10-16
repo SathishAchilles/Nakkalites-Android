@@ -214,7 +214,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private val onVideoClick = { vm: VideoVm ->
-        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url)
+        openVideoDetailPage(this, vm.id, vm.name, vm.thumbnail, vm.url, vm.adUrl)
         trackVideoClicked(vm.id, vm.name)
     }
 
@@ -237,7 +237,8 @@ class HomeActivity : BaseActivity() {
                 BannerType.VIDEO -> {
                     vm.videoVm?.let { videoVm ->
                         openVideoDetailPage(
-                            this, videoVm.id, videoVm.name, videoVm.thumbnail, videoVm.url
+                            this, videoVm.id, videoVm.name, videoVm.thumbnail, videoVm.url,
+                            videoVm.adUrl
                         )
                     }
                     Unit
