@@ -34,7 +34,10 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdCallback
@@ -142,9 +145,6 @@ class VideoObserver(
         MobileAds.initialize(activity) {
             Timber.d("Mobile ads initialized")
         }
-        val testDeviceIds = listOf("DBFADA8F159368CCEC8AA569FEA1C980")
-        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
-        MobileAds.setRequestConfiguration(configuration)
         for (time in adEventTimes) {
             adLoadedEvents.add(
                 AdLoadedEvent(rewardedAd = createAndLoadRewardedAd(), loadedTime = time)
