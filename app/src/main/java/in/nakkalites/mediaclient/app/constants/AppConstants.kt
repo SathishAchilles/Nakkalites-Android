@@ -18,6 +18,7 @@ object AppConstants {
     const val VIDEO_NAME = "VIDEO_NAME"
     const val VIDEO_THUMBNAIL = "VIDEO_THUMBNAIL"
     const val DURATION = "DURATION"
+    const val AD_TIMES = "AD_TIMES"
     const val LAST_PLAYED_TIME = "LAST_PLAYED_TIME"
     const val VIDEO_URL = "VIDEO_URL"
     const val WEB_VIEW_URL = "WEB_VIEW_URL"

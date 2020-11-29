@@ -50,7 +50,8 @@ data class VideoEntity(
     @field:Json(name = "description") val description: String?,
     @field:Json(name = "starring") val starring: String?,
     @field:Json(name = "share_text") val shareText: String?,
-    @field:Json(name = "videos") val videos: List<VideoEntity> = listOf()
+    @field:Json(name = "videos") val videos: List<VideoEntity> = listOf(),
+    @field:Json(name = "ad_timings") val adTimes: List<Long> = listOf()
 )
 
 @JsonClass(generateAdapter = true)

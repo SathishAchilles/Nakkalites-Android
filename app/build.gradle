@@ -86,6 +86,7 @@ dependencies {
     implementation deps.firebase.crashlytics
     implementation deps.firebase.messaging
     implementation deps.firebase.remoteConfig
+    implementation deps.google.admob
     implementation deps.google.design
     implementation deps.materialDialogs.core
     implementation deps.moshi.core

@@ -32,6 +32,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var url: String? = null
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
+    var adTimes: List<Long> = listOf()
     private val isPageLoaded = AtomicBoolean(false)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
@@ -87,6 +88,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                 .map { video ->
                     duration = video.duration
                     lastPlayedTime = video.lastPlayedTime
+                    adTimes = video.adTimes
                     video
                 }
                 .map { video ->

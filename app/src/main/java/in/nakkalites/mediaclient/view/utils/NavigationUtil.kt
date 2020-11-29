@@ -12,9 +12,11 @@ fun openVideoDetailPage(
 
 fun openVideoPlayerPage(
     context: Context, id: String, name: String, thumbnail: String, url: String,
-    duration: Long? = 0L, lastPayedTime: Long? = 0L
+    duration: Long? = 0L, lastPayedTime: Long? = 0L, adTimes: List<Long> = listOf()
 ) {
     context.startActivity(
-        VideoPlayerActivity.createIntent(context, id, name, thumbnail, url, duration, lastPayedTime)
+        VideoPlayerActivity.createIntent(
+            context, id, name, thumbnail, url, duration, lastPayedTime, adTimes
+        )
     )
 }

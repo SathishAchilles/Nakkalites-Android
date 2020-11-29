@@ -22,13 +22,13 @@ data class User(
 data class Video(
     val id: String, val titleName: String, val videoName: String, val url: String,
     val thumbnailImage: String, val description: String?, val duration: Long?,
-    val lastPlayedTime: Long?, val starring: String?
+    val lastPlayedTime: Long?, val starring: String?, val adTimes: List<Long>
 ) {
     companion object {
         fun map(videoEntity: VideoEntity): Video = Video(
             videoEntity.id, videoEntity.titleName, videoEntity.videoName,
-            videoEntity.url, videoEntity.thumbnail, videoEntity.description,
-            videoEntity.duration, videoEntity.lastPlayedTime, videoEntity.starring
+            videoEntity.url, videoEntity.thumbnail, videoEntity.description, videoEntity.duration,
+            videoEntity.lastPlayedTime, videoEntity.starring, videoEntity.adTimes
         )
     }
 }

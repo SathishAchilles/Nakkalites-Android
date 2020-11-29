@@ -23,6 +23,7 @@ class VideoVm(
     val showProgress = progressPercent != 0
     val duration = video.duration
     val lastPlayedTime = video.lastPlayedTime
+    val adTimes = video.adTimes
 
     @DimenRes
     val marginStart =

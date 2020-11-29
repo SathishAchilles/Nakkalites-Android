@@ -63,7 +63,9 @@ class VideoPlayerActivity : BaseActivity() {
     private val duration: Long? by lazy {
         intent.getLongExtra(AppConstants.DURATION, 0L)
     }
-
+    private val adTimes: List<Long> by lazy {
+        intent.getLongArrayExtra(AppConstants.AD_TIMES)?.asList() ?: listOf()
+    }
     private val stethoInterceptor by inject<StethoInterceptor>()
     private val bandwidthMeter by inject<DefaultBandwidthMeter>()
     private val trackSelector by inject<MappingTrackSelector>()
@@ -76,7 +78,7 @@ class VideoPlayerActivity : BaseActivity() {
         @JvmStatic
         fun createIntent(
             ctx: Context, id: String, name: String, thumbnail: String, url: String,
-            duration: Long?, lastPayedTime: Long?
+            duration: Long?, lastPayedTime: Long?, adTimes: List<Long>
         ): Intent = Intent(ctx, VideoPlayerActivity::class.java)
             .putExtra(AppConstants.VIDEO_ID, id)
             .putExtra(AppConstants.VIDEO_NAME, name)
@@ -84,6 +86,7 @@ class VideoPlayerActivity : BaseActivity() {
             .putExtra(AppConstants.VIDEO_URL, url)
             .putExtra(AppConstants.LAST_PLAYED_TIME, lastPayedTime)
             .putExtra(AppConstants.DURATION, duration)
+            .putExtra(AppConstants.AD_TIMES, adTimes.toLongArray())
     }
 
     private var cookieStore = HashMap<HttpUrl, List<Cookie>>()
@@ -125,7 +128,7 @@ class VideoPlayerActivity : BaseActivity() {
         videoObserver = VideoObserver(
             this, binding.videoPlayerWrapper, id, url, duration ?: 0L, lastPlayedTime ?: 0L,
             vm.name, thumbnail, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
-            okClient, loadControl, picasso
+            okClient, loadControl, picasso, adTimes
         )
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {

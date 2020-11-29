@@ -34,12 +34,19 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdCallback
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.squareup.picasso.Picasso
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class VideoObserver(
@@ -49,7 +56,7 @@ class VideoObserver(
     private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl,
-    private val picasso: Picasso
+    private val picasso: Picasso, private val adEventTimes: List<Long>
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
@@ -69,6 +76,7 @@ class VideoObserver(
     private val shareButton = activity.findViewById<ImageView>(R.id.share)
     private val fullscreen = activity.findViewById<ImageView>(R.id.fullscreen_button)
     private val remainingTimeView = activity.findViewById<TextView>(R.id.remaining_duration)
+    private val adLoadedEvents = mutableListOf<AdLoadedEvent>()
     private var currentSecond: Long = 0
         set(value) {
             field = value
@@ -131,6 +139,17 @@ class VideoObserver(
             activity.startActivity(intent)
         }
         changeVolumeIcon(player, volumeButton)
+        MobileAds.initialize(activity) {
+            Timber.d("Mobile ads initialized")
+        }
+        val testDeviceIds = listOf("DBFADA8F159368CCEC8AA569FEA1C980")
+        val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+        MobileAds.setRequestConfiguration(configuration)
+        for (time in adEventTimes) {
+            adLoadedEvents.add(
+                AdLoadedEvent(rewardedAd = createAndLoadRewardedAd(), loadedTime = time)
+            )
+        }
         val parent = playerView.parent as FrameLayout
         if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             fullscreen.setImageResource(R.drawable.ic_enter_fullscreen)
@@ -163,10 +182,42 @@ class VideoObserver(
                         || player.playbackState == Player.STATE_ENDED
             }
             .map { player.currentPosition }
-            .subscribe {
-                currentSecond = it / 1000
+            .subscribeBy(onNext = { second ->
+                currentSecond = second / 1000
+                val adLoadedEvent =
+                    adLoadedEvents.lastOrNull { it.loadedTime == currentSecond && it.rewardedAd.isLoaded && !it.isPlayed }
+                adLoadedEvent?.rewardedAd?.let { rewardedAd ->
+                    if (rewardedAd.isLoaded) {
+                        val adCallback = object : RewardedAdCallback() {
+                            override fun onUserEarnedReward(p0: RewardItem) {
+                                playPauseButton.performClick()
+                                adLoadedEvent.isPlayed = true
+                            }
+
+                            override fun onRewardedAdOpened() {
+                                super.onRewardedAdOpened()
+                                adLoadedEvent.isPlayed = true
+                            }
+
+                            override fun onRewardedAdClosed() {
+                                super.onRewardedAdClosed()
+                                adLoadedEvent.isPlayed = true
+                            }
+
+                            override fun onRewardedAdFailedToShow(p0: AdError?) {
+                                super.onRewardedAdFailedToShow(p0)
+                                adLoadedEvent.isPlayed = true
+                                Timber.e(p0?.message, "onRewardedAdFailedToShow")
+                            }
+                        }
+                        playPauseButton.performClick()
+                        rewardedAd.show(activity, adCallback)
+                    } else {
+                        Timber.d("The rewarded ad wasn't loaded yet.")
+                    }
+                }
                 remainingTime = player.duration - player.currentPosition
-            }
+            }, onError = { throwable -> Timber.e(throwable) })
 
         player.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -210,6 +261,21 @@ class VideoObserver(
         })
         playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
         playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
+    }
+
+    private fun createAndLoadRewardedAd(): RewardedAd {
+        val rewardedAd = RewardedAd(activity, activity.getString(R.string.abmob_unit_key))
+        val adLoadCallback: RewardedAdLoadCallback = object : RewardedAdLoadCallback() {
+            override fun onRewardedAdLoaded() {
+                Timber.d("Ad successfully loaded.")
+            }
+
+            override fun onRewardedAdFailedToLoad(adError: LoadAdError?) {
+                Timber.e(adError?.message, "Ad successfully failed.")
+            }
+        }
+        rewardedAd.loadAd(AdRequest.Builder().build(), adLoadCallback)
+        return rewardedAd
     }
 
     private fun hideSystemUi() {
@@ -270,3 +336,9 @@ class VideoObserver(
         return CacheDataSourceFactory(simpleCache, dataSourceFactory)
     }
 }
+
+data class AdLoadedEvent(
+    val rewardedAd: RewardedAd,
+    val loadedTime: Long,
+    var isPlayed: Boolean = false
+)

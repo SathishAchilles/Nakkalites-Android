@@ -21,4 +21,5 @@ class SeasonEpisodeItemVm(
         0
     }
     val showProgress = progressPercent != 0
+    val adTimes = episode.adTimes
 }
