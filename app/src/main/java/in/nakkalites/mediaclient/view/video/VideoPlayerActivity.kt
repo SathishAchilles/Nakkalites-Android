@@ -128,7 +128,7 @@ class VideoPlayerActivity : BaseActivity() {
         videoObserver = VideoObserver(
             this, binding.videoPlayerWrapper, id, url, duration ?: 0L, lastPlayedTime ?: 0L,
             vm.name, thumbnail, binding.playerView, vm, bandwidthMeter, trackSelector, simpleCache,
-            okClient, loadControl, picasso, adTimes
+            okClient, loadControl, picasso, adTimes, analyticsManager
         )
         lifecycle.addObserver(videoObserver)
         vm.viewStates().observe(this, EventObserver {

@@ -27,6 +27,9 @@ object AnalyticsConstants {
         const val BANNER_CLICKED = "banner_clicked"
         const val EMAIL_CLICKED = "email_clicked"
         const val WEBSERIES_CLICKED = "webseries_clicked"
+        const val AD_OPENED = "ad_opened"
+        const val AD_CLOSED = "ad_closed"
+        const val AD_FAILED_TO_LOAD = "ad_failed_to_load"
     }
 
     object Property {

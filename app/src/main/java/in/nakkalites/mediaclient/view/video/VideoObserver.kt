@@ -3,6 +3,8 @@ package `in`.nakkalites.mediaclient.view.video
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
 import `in`.nakkalites.mediaclient.view.utils.setLandScapeOrientation
 import `in`.nakkalites.mediaclient.view.utils.setPortraitOrientation
@@ -13,6 +15,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
+import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -59,7 +62,8 @@ class VideoObserver(
     private val playerTracker: PlayerTracker,
     bandwidthMeter: DefaultBandwidthMeter, private val trackSelector: MappingTrackSelector,
     simpleCache: SimpleCache, private val okHttpClient: OkHttpClient, loadControl: LoadControl,
-    private val picasso: Picasso, private val adEventTimes: List<Long>
+    private val picasso: Picasso, private val adEventTimes: List<Long>,
+    private val analyticsManager: AnalyticsManager
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
@@ -184,38 +188,7 @@ class VideoObserver(
             .map { player.currentPosition }
             .subscribeBy(onNext = { second ->
                 currentSecond = second / 1000
-                val adLoadedEvent =
-                    adLoadedEvents.lastOrNull { it.loadedTime == currentSecond && it.rewardedAd.isLoaded && !it.isPlayed }
-                adLoadedEvent?.rewardedAd?.let { rewardedAd ->
-                    if (rewardedAd.isLoaded) {
-                        val adCallback = object : RewardedAdCallback() {
-                            override fun onUserEarnedReward(p0: RewardItem) {
-                                playPauseButton.performClick()
-                                adLoadedEvent.isPlayed = true
-                            }
-
-                            override fun onRewardedAdOpened() {
-                                super.onRewardedAdOpened()
-                                adLoadedEvent.isPlayed = true
-                            }
-
-                            override fun onRewardedAdClosed() {
-                                super.onRewardedAdClosed()
-                                adLoadedEvent.isPlayed = true
-                            }
-
-                            override fun onRewardedAdFailedToShow(p0: AdError?) {
-                                super.onRewardedAdFailedToShow(p0)
-                                adLoadedEvent.isPlayed = true
-                                Timber.e(p0?.message, "onRewardedAdFailedToShow")
-                            }
-                        }
-                        playPauseButton.performClick()
-                        rewardedAd.show(activity, adCallback)
-                    } else {
-                        Timber.d("The rewarded ad wasn't loaded yet.")
-                    }
-                }
+                showAd()
                 remainingTime = player.duration - player.currentPosition
             }, onError = { throwable -> Timber.e(throwable) })
 
@@ -261,6 +234,44 @@ class VideoObserver(
         })
         playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
         playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
+    }
+
+    private fun showAd() {
+        val adLoadedEvent =
+            adLoadedEvents.lastOrNull { it.loadedTime == currentSecond && it.rewardedAd.isLoaded && !it.isPlayed }
+        adLoadedEvent?.rewardedAd?.let { rewardedAd ->
+            if (rewardedAd.isLoaded) {
+                val adCallback = object : RewardedAdCallback() {
+                    override fun onUserEarnedReward(p0: RewardItem) {
+                        playPauseButton.performClick()
+                        adLoadedEvent.isPlayed = true
+                    }
+
+                    override fun onRewardedAdOpened() {
+                        super.onRewardedAdOpened()
+                        adLoadedEvent.isPlayed = true
+                        trackAdPlayed()
+                    }
+
+                    override fun onRewardedAdClosed() {
+                        super.onRewardedAdClosed()
+                        adLoadedEvent.isPlayed = true
+                        trackAdClosed()
+                    }
+
+                    override fun onRewardedAdFailedToShow(p0: AdError?) {
+                        super.onRewardedAdFailedToShow(p0)
+                        adLoadedEvent.isPlayed = true
+                        Timber.e(p0?.message, "onRewardedAdFailedToShow")
+                        trackAdFailedToLoad()
+                    }
+                }
+                playPauseButton.performClick()
+                rewardedAd.show(activity, adCallback)
+            } else {
+                Timber.d("The rewarded ad wasn't loaded yet.")
+            }
+        }
     }
 
     private fun createAndLoadRewardedAd(): RewardedAd {
@@ -335,6 +346,31 @@ class VideoObserver(
         )
         return CacheDataSourceFactory(simpleCache, dataSourceFactory)
     }
+
+    private fun trackAdPlayed() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.AD_OPENED, bundle)
+    }
+
+    private fun trackAdFailedToLoad() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.AD_FAILED_TO_LOAD, bundle)
+    }
+
+    private fun trackAdClosed() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.VIDEO_ID, id)
+            putString(AnalyticsConstants.Property.VIDEO_NAME, name)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.AD_CLOSED, bundle)
+    }
+
 }
 
 data class AdLoadedEvent(
