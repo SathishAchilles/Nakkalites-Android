@@ -14,8 +14,7 @@ buildscript {
         classpath deps.gradle.googleServices
         classpath deps.gradle.kotlin
         classpath deps.gradle.crashlytics
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath deps.gradle.koin
     }
 }
 
@@ -30,3 +29,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+apply plugin: 'koin'

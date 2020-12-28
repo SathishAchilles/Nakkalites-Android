@@ -46,16 +46,16 @@ class VideoPlayerActivity : BaseActivity() {
     val analyticsManager by inject<AnalyticsManager>()
     val picasso by inject<Picasso>()
     private val id by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_ID)
+        intent.getStringExtra(AppConstants.VIDEO_ID)!!
     }
     private val name by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_NAME)
+        intent.getStringExtra(AppConstants.VIDEO_NAME)!!
     }
     private val thumbnail by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_THUMBNAIL)
+        intent.getStringExtra(AppConstants.VIDEO_THUMBNAIL)!!
     }
     private val url by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_URL)
+        intent.getStringExtra(AppConstants.VIDEO_URL)!!
     }
     private val lastPlayedTime: Long? by lazy {
         intent.getLongExtra(AppConstants.LAST_PLAYED_TIME, 0L)

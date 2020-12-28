@@ -15,10 +15,10 @@ class WebViewActivity : BaseActivity() {
     private lateinit var binding: ActivityWebViewBinding
     val vm by viewModel<WebViewVm>()
     private val title by lazy {
-        intent.getStringExtra(AppConstants.WEB_VIEW_TITLE)
+        intent.getStringExtra(AppConstants.WEB_VIEW_TITLE)!!
     }
     private val url by lazy {
-        intent.getStringExtra(AppConstants.WEB_VIEW_URL)
+        intent.getStringExtra(AppConstants.WEB_VIEW_URL)!!
     }
 
     companion object {

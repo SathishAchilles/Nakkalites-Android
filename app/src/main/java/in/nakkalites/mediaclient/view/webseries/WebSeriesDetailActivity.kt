@@ -36,13 +36,13 @@ class WebSeriesDetailActivity : BaseActivity() {
     val vm by viewModel<WebSeriesDetailVm>()
     val analyticsManager by inject<AnalyticsManager>()
     private val id by lazy {
-        intent.getStringExtra(AppConstants.WEBSERIES_ID)
+        intent.getStringExtra(AppConstants.WEBSERIES_ID)!!
     }
     private val name by lazy {
-        intent.getStringExtra(AppConstants.WEBSERIES_NAME)
+        intent.getStringExtra(AppConstants.WEBSERIES_NAME)!!
     }
     private val thumbnail by lazy {
-        intent.getStringExtra(AppConstants.WEBSERIES_THUMBNAIL)
+        intent.getStringExtra(AppConstants.WEBSERIES_THUMBNAIL)!!
     }
 
     companion object {

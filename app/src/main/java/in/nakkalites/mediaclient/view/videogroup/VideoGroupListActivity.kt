@@ -27,13 +27,13 @@ class VideoGroupListActivity : BaseActivity() {
     val vm by viewModel<VideoGroupListVm>()
     val analyticsManager by inject<AnalyticsManager>()
     private val videoGroupId by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_GROUP_ID)
+        intent.getStringExtra(AppConstants.VIDEO_GROUP_ID)!!
     }
     private val videoGroupName by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_GROUP_NAME)
+        intent.getStringExtra(AppConstants.VIDEO_GROUP_NAME)!!
     }
     private val videoGroupCategory by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_GROUP_CATEGORY)
+        intent.getStringExtra(AppConstants.VIDEO_GROUP_CATEGORY)!!
     }
 
     companion object {

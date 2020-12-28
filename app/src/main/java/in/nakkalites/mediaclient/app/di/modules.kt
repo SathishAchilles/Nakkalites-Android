@@ -6,10 +6,7 @@ import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
-import `in`.nakkalites.mediaclient.domain.login.LoginDomain
-import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
-import `in`.nakkalites.mediaclient.domain.login.UserDataStore
-import `in`.nakkalites.mediaclient.domain.login.UserManager
+import `in`.nakkalites.mediaclient.domain.login.*
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
@@ -47,6 +44,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -113,8 +111,11 @@ fun netModule(serverUrl: String) = module {
     single {
         StethoInterceptorFactory.get(androidContext())
     }
+    single<PublishSubject<RefreshTokenCallback>> {
+        PublishSubject.create<RefreshTokenCallback>()
+    }
     single {
-        val headersInterceptor = HeadersInterceptor(get(), getProperty(refreshTokenSubjectProperty))
+        val headersInterceptor = HeadersInterceptor(get(), get())
         val chuckInterceptor = ChuckInterceptor(androidContext())
         val okHttpClientBuilder = getOkHttpBuilder(
             androidContext(), listOf(headersInterceptor, chuckInterceptor)
@@ -167,7 +168,7 @@ fun netModule(serverUrl: String) = module {
             .createDefaultLoadControl()
     }
     single {
-        RefreshTokenManager(getProperty(refreshTokenSubjectProperty), get(), get(), get())
+        RefreshTokenManager(get(), get(), get(), get())
     }
 }
 

@@ -33,17 +33,17 @@ class VideoDetailActivity : BaseActivity() {
     private lateinit var binding: ActivityVideoDetailBinding
     val vm by viewModel<VideoDetailVm>()
     val analyticsManager by inject<AnalyticsManager>()
-    private val id by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_ID)
+    private val id : String by lazy {
+        intent.getStringExtra(AppConstants.VIDEO_ID)!!
     }
     private val name by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_NAME)
+        intent.getStringExtra(AppConstants.VIDEO_NAME)!!
     }
     private val thumbnail by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_THUMBNAIL)
+        intent.getStringExtra(AppConstants.VIDEO_THUMBNAIL)!!
     }
     private val url by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_URL)
+        intent.getStringExtra(AppConstants.VIDEO_URL)!!
     }
     private var menu: Menu? = null
     private val spanCount = 2

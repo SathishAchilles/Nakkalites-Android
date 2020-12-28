@@ -22,6 +22,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -36,9 +37,6 @@ class NakkalitesApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@NakkalitesApp)
-            properties(
-                mapOf(refreshTokenSubjectProperty to PublishSubject.create<RefreshTokenCallback>())
-            )
             modules(listOf(applicationModule, viewModelModule, netModule(serverUrl)))
         }
         userManager.getUser()?.let {
