@@ -22,7 +22,6 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
     }
 
     fun getUser(): User? {
-//        return User("123", "Pavan", "thynameisp1@gmail.com")
         return try {
             val userJson = prefs.getString(PrefsConstants.USER, null) ?: return null
             val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)

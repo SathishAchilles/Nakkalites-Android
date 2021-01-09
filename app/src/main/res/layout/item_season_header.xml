@@ -34,6 +34,7 @@
             android:popupElevation="3dp"
             android:textColor="@color/white"
             android:textSize="18sp"
+            app:enabled="@{vm.spinnerEnabled}"
             app:entries="@{vm.seasonsEntries}"
             app:onItemClick="@{onItemClick}"
             tools:text="Season 1" />

@@ -243,18 +243,19 @@ class VideoObserver(
             if (rewardedAd.isLoaded) {
                 val adCallback = object : RewardedAdCallback() {
                     override fun onUserEarnedReward(p0: RewardItem) {
-                        playPauseButton.performClick()
                         adLoadedEvent.isPlayed = true
                     }
 
                     override fun onRewardedAdOpened() {
                         super.onRewardedAdOpened()
+                        playPauseButton.performClick()
                         adLoadedEvent.isPlayed = true
                         trackAdPlayed()
                     }
 
                     override fun onRewardedAdClosed() {
                         super.onRewardedAdClosed()
+                        playPauseButton.performClick()
                         adLoadedEvent.isPlayed = true
                         trackAdClosed()
                     }
@@ -266,7 +267,6 @@ class VideoObserver(
                         trackAdFailedToLoad()
                     }
                 }
-                playPauseButton.performClick()
                 rewardedAd.show(activity, adCallback)
             } else {
                 Timber.d("The rewarded ad wasn't loaded yet.")

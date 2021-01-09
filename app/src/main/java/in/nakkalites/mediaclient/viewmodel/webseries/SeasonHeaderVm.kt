@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 
 class SeasonHeaderVm(private val seasons: List<Season>) : BaseModel {
     val seasonsEntries: List<Pair<String, String>> = seasons.map { it.id to it.name }
+    val spinnerEnabled = seasonsEntries.size > 1
     val seasonIdItemPosition = MutableLiveData<Int>()
     var seasonIdValue
         get() =

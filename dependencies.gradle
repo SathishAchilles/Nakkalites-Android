@@ -1,5 +1,5 @@
 ext.versions = [
-        buildTools          : '29.0.3',
+        buildTools          : '30.0.3',
         compileSdk          : 30,
         minSdk              : 21,
         targetSdk           : 30,
@@ -72,7 +72,7 @@ ext.deps = [
                 analytics   : "com.google.firebase:firebase-analytics-ktx:${versions.firebase}",
                 crashlytics : "com.google.firebase:firebase-crashlytics:${versions.crashlytics}",
                 remoteConfig: "com.google.firebase:firebase-config:${versions.remoteConfig}",
-                "messaging" : "com.google.firebase:firebase-messaging:${versions.messaging}"
+                messaging : "com.google.firebase:firebase-messaging:${versions.messaging}"
         ],
         google         : [
                 design: "com.android.support:design:${versions.googleDesign}",

@@ -228,14 +228,16 @@ object Bindings {
     class ToolbarV7BindingAdapter
 
     @JvmStatic
-    @BindingAdapter(value = ["entries", "onItemClick"], requireAll = false)
+    @BindingAdapter(value = ["entries", "enabled", "onItemClick"], requireAll = false)
     fun AppCompatSpinner.bindAdapter(
-        items: List<Pair<String, String>>, onItemClick: (@NotNull Pair<String, String>) -> Unit
+        items: List<Pair<String, String>>, enabled: Boolean,
+        onItemClick: (@NotNull Pair<String, String>) -> Unit
     ) {
         val adapter = ArrayAdapter<String>(
             this.context, R.layout.spinner_item_selected, items.map { it.second })
         adapter.setDropDownViewResource(R.layout.spinner_drop_down_item)
-
+        isEnabled = enabled
+        isClickable = enabled
         setAdapter(adapter)
         onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {

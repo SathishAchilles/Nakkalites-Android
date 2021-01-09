@@ -34,7 +34,6 @@ class UserManager(private val userService: UserService, private val userDataStor
             email?.let { put("email", email) }
             photoUrl?.let { put("photo_url", it.toString()) }
         }
-//        return Single.just(LoginResponse(UserEntity("123", "Pavan", "thynameisp1@gmail.com", null, ""))
         return userService.login(params)
             .doOnSuccess {
                 setUser(it.user)
