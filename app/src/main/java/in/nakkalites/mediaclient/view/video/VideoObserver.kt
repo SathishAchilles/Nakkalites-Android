@@ -67,7 +67,6 @@ class VideoObserver(
 ) : LifecycleObserver {
 
     private val disposables = CompositeDisposable()
-    private val MAX_FORWARD_BACKWARD_IN_MS = 10 * 1000 // 10 seconds
     private var videoDuration: Long? = duration
     private val player = ExoPlayerFactory.newSimpleInstance(
         activity, DefaultRenderersFactory(activity), trackSelector, loadControl
@@ -232,8 +231,6 @@ class VideoObserver(
                 }
             }
         })
-        playerView.setRewindIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
-        playerView.setFastForwardIncrementMs(MAX_FORWARD_BACKWARD_IN_MS)
     }
 
     private fun showAd() {

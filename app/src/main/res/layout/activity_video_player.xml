@@ -24,6 +24,8 @@
             android:layout_height="match_parent"
             android:focusable="true"
             app:show_buffering="always"
+            app:fastforward_increment="10000"
+            app:rewind_increment="10000"
             app:show_shuffle_button="true"/>
     </FrameLayout>
 </layout>
