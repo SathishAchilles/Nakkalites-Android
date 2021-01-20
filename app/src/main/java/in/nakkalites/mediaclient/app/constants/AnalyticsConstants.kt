@@ -3,8 +3,6 @@ package `in`.nakkalites.mediaclient.app.constants
 object AnalyticsConstants {
     object Event {
         const val APP_OPENED = "app_opened"
-        const val LOGIN = "login"
-        const val SIGN_UP = "sign_up"
         const val LOGIN_FAILED = "login_failed"
         const val SIGN_UP_CTA_CLICKED = "sign_up_cta_clicked"
         const val WEBSERIES_PAGE_OPENED = "webseries_page_opened"

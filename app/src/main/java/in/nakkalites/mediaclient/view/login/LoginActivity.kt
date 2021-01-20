@@ -175,9 +175,9 @@ class LoginActivity : BaseActivity() {
             putString(FirebaseAnalytics.Param.METHOD, "google_sso")
         }
         val eventName = if (user.isFirstLogin) {
-            AnalyticsConstants.Event.SIGN_UP
+            FirebaseAnalytics.Event.SIGN_UP
         } else {
-            AnalyticsConstants.Event.LOGIN
+            FirebaseAnalytics.Event.LOGIN
         }
         if (user.isFirstLogin) {
             analyticsManager.logUserProperty(
