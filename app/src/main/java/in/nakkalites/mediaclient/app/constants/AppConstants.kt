@@ -23,6 +23,8 @@ object AppConstants {
     const val VIDEO_URL = "VIDEO_URL"
     const val WEB_VIEW_URL = "WEB_VIEW_URL"
     const val WEB_VIEW_TITLE = "WEB_VIEW_TITLE"
+    const val BOTTOM_NAV_TAB = "BOTTOM_NAV_TAB"
+    const val PHONE_NUMBER = "PHONE_NUMBER"
 
     const val PLAY_STORE_URL = "market://details?id="
     const val CONTACT_EMAIL = "contact@nakkalites.in"

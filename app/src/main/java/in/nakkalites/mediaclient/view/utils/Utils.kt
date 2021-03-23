@@ -93,3 +93,5 @@ fun getTimeStampForAnalytics(): String? {
     dateFormat.timeZone = TimeZone.getTimeZone("UTC")
     return dateFormat.format(Date())
 }
+
+fun String.formatEn(vararg args: Any?): String = format(Locale.US, *args)

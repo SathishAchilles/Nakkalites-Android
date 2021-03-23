@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -56,6 +57,61 @@
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/prime_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_prime"
+            android:padding="5dp"
+            app:elevation="5dp">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_star" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:paddingStart="5dp"
+                android:text="@string/prime"
+                android:textAllCaps="true"
+                android:textColor="@color/grey_900_2"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/super_prime_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_super_prime"
+            android:padding="5dp"
+            app:elevation="5dp">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_crown" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:paddingStart="5dp"
+                android:text="@string/super_prime"
+                android:textAllCaps="true"
+                android:textColor="@color/grey_900_2"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <TextView

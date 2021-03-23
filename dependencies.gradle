@@ -17,6 +17,7 @@ ext.versions = [
         exoplayer           : '2.10.4',
         crashlyticsPlugin   : '2.3.0',
         firebase            : '17.5.0',
+        flexboxLayout       : '2.0.1',
         googleDesign        : "28.0.0",
         googleServicesPlugin: '4.3.3',
         junit               : '4.12',
@@ -24,7 +25,6 @@ ext.versions = [
         kotlin              : '1.4.10',
         lifecycle           : '2.1.0',
         material            : '1.2.1',
-        materialDialogs     : '3.1.1',
         messaging           : '20.2.0',
         moshi               : '1.9.2',
         okHttp              : '4.2.1',
@@ -46,7 +46,7 @@ ext.versions = [
 ]
 
 ext.deps = [
-        androidX       : [
+        androidX     : [
                 appCompat        : "androidx.appcompat:appcompat:${versions.appCompat}",
                 constraintLayout : "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
                 coordinatorlayout: "androidx.coordinatorlayout:coordinatorlayout:${versions.coordinatorlayout}",
@@ -58,76 +58,73 @@ ext.deps = [
                 liveData         : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
                 recyclerView     : "androidx.recyclerview:recyclerview:${versions.recyclerView}"
         ],
-        chuck          : [
+        chuck        : [
                 library      : "com.readystatesoftware.chuck:library:${versions.chuck}",
                 library_no_op: "com.readystatesoftware.chuck:library-no-op:${versions.chuck}",
         ],
-        exoplayer      : [
+        exoplayer    : [
                 core     : "com.google.android.exoplayer:exoplayer-core:${versions.exoplayer}",
                 hls      : "com.google.android.exoplayer:exoplayer-hls:${versions.exoplayer}",
                 okhttpExt: "com.google.android.exoplayer:extension-okhttp:${versions.exoplayer}",
                 ui       : "com.google.android.exoplayer:exoplayer-ui:${versions.exoplayer}"
         ],
-        firebase       : [
+        firebase     : [
                 analytics   : "com.google.firebase:firebase-analytics-ktx:${versions.firebase}",
                 crashlytics : "com.google.firebase:firebase-crashlytics:${versions.crashlytics}",
                 remoteConfig: "com.google.firebase:firebase-config:${versions.remoteConfig}",
-                messaging : "com.google.firebase:firebase-messaging:${versions.messaging}"
+                messaging   : "com.google.firebase:firebase-messaging:${versions.messaging}"
         ],
-        google         : [
-                design: "com.android.support:design:${versions.googleDesign}",
-                admob : "com.google.android.gms:play-services-ads:${versions.admob}"
-
+        google       : [
+                design       : "com.android.support:design:${versions.googleDesign}",
+                admob        : "com.google.android.gms:play-services-ads:${versions.admob}",
+                flexboxLayout: "com.google.android:flexbox:${versions.flexboxLayout}"
         ],
-        gradle         : [
+        gradle       : [
                 android       : "com.android.tools.build:gradle:${versions.agp}",
                 googleServices: "com.google.gms:google-services:${versions.googleServicesPlugin}",
                 crashlytics   : "com.google.firebase:firebase-crashlytics-gradle:${versions.crashlyticsPlugin}",
                 kotlin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
                 koin          : "org.koin:koin-gradle-plugin:${versions.koin}"
         ],
-        junit          : "junit:junit:${versions.junit}",
-        koin           : [
+        junit        : "junit:junit:${versions.junit}",
+        koin         : [
                 core     : "org.koin:koin-core:${versions.koin}",
                 android  : "org.koin:koin-android:${versions.koin}",
                 scope    : "org.koin:koin-androidx-scope:${versions.koin}",
                 viewModel: "org.koin:koin-androidx-viewmodel:${versions.koin}"
         ],
-        kotlin         : [
+        kotlin       : [
                 stdlib: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
         ],
-        material       : "com.google.android.material:material:${versions.material}",
-        materialDialogs: [
-                core: "com.afollestad.material-dialogs:core:${versions.materialDialogs}"
-        ],
-        picasso        : "com.squareup.picasso:picasso:${versions.picasso}",
-        playServices   : [
+        material     : "com.google.android.material:material:${versions.material}",
+        picasso      : "com.squareup.picasso:picasso:${versions.picasso}",
+        playServices : [
                 auth: "com.google.android.gms:play-services-auth:${versions.playServices}"
         ],
-        timber         : "com.jakewharton.timber:timber:${versions.timber}",
-        time           : "com.github.kizitonwose.time:time:${versions.time}",
-        retrofit       : [
+        timber       : "com.jakewharton.timber:timber:${versions.timber}",
+        time         : "com.github.kizitonwose.time:time:${versions.time}",
+        retrofit     : [
                 core          : "com.squareup.retrofit2:retrofit:${versions.retrofit}",
                 moshiConvertor: "com.squareup.retrofit2:converter-moshi:${versions.retrofit}",
                 rxJavaAdapter : "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
         ],
-        rx             : [
+        rx           : [
                 core               : "io.reactivex.rxjava2:rxjava:${versions.rxJava}",
                 android            : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}",
                 kotlin             : "io.reactivex.rxjava2:rxkotlin:${versions.rxKotlin}",
                 binding            : "com.jakewharton.rxbinding3:rxbinding:${versions.rxBinding}",
                 bindingRecyclerView: "com.jakewharton.rxbinding3:rxbinding-recyclerview:${versions.rxBinding}",
         ],
-        spinKit        : "com.github.ybq:Android-SpinKit:${versions.spinKit}",
-        stetho         : [
+        spinKit      : "com.github.ybq:Android-SpinKit:${versions.spinKit}",
+        stetho       : [
                 core  : "com.facebook.stetho:stetho:${versions.stetho}",
                 okHttp: "com.facebook.stetho:stetho-okhttp3:${versions.stetho}",
         ],
-        moshi          : [
+        moshi        : [
                 core   : "com.squareup.moshi:moshi:${versions.moshi}",
                 kotlin : "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
                 codeGen: "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}"
         ],
-        okHttp         : "com.squareup.okhttp3:okhttp:${versions.okHttp}",
-        dotsIndicator  : "com.romandanylyk:pageindicatorview:${versions.dotsIndicator}"
+        okHttp       : "com.squareup.okhttp3:okhttp:${versions.okHttp}",
+        dotsIndicator: "com.romandanylyk:pageindicatorview:${versions.dotsIndicator}"
 ]

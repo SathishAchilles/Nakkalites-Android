@@ -7,4 +7,7 @@
     <dimen name="viewpager_next_item_visible">26dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
     <dimen name="video_progress_padding">2dp</dimen>
+    <dimen name="rounded_layout_radius_corner">5dp</dimen>
+    <dimen name="rounded_layout_elevation">6dp</dimen>
+    <dimen name="button_corner_radius">6dp</dimen>
 </resources>

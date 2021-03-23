@@ -13,6 +13,9 @@ import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
+import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
+import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
+import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
@@ -105,6 +108,9 @@ val viewModelModule = module {
     viewModel { VideoDetailVm(get()) }
     viewModel { VideoPlayerVm(get()) }
     viewModel { WebViewVm() }
+    viewModel { OtpVerificationVm() }
+    viewModel { ProfileAddVm() }
+    viewModel { ProfileEditVm() }
 }
 
 fun netModule(serverUrl: String) = module {

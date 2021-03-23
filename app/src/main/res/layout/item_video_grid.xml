@@ -53,6 +53,40 @@
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
                 tools:progress="10" />
+
+
+            <FrameLayout
+                android:id="@+id/prime_layout"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="top|end|right"
+                android:background="@drawable/bg_prime"
+                app:elevation="5dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_star" />
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/super_prime_layout"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="top|end|right"
+                android:background="@drawable/bg_super_prime"
+                app:elevation="5dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_crown" />
+            </FrameLayout>
         </FrameLayout>
     </LinearLayout>
 </layout>

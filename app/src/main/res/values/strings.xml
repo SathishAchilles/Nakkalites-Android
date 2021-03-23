@@ -1,7 +1,8 @@
 <resources>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
-    <string name="all">All</string>
+    <string name="home">Home</string>
     <string name="web_series">Web series</string>
+    <string name="profile">Profile</string>
     <string name="x_episodes">%s - Episodes</string>
     <plurals name="x_season">
         <item quantity="one">%s season</item>
@@ -40,4 +41,47 @@ Download their new app and watch exclusively.\n\n
     <string name="sign_up_intro">Watch our exclusive videos first</string>
     <string name="contact_us">Contact Us</string>
     <string name="oops_something_went_wrong">Oops! Something went wrong.\nPlease Try Again Later</string>
+    <string name="edit">Edit</string>
+    <string name="manage_subscriptions">Manage Subscriptions</string>
+    <string name="faqs">FAQs</string>
+    <string name="invite_your_friends">Invite your friends</string>
+    <string name="view_plans">View Plans</string>
+    <string name="or">or</string>
+    <string name="log_in_or_sign_up">Log in or Sign up</string>
+    <string name="numerals">0123456789</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="we_ll_text_you_the_otp_to_verify">We’ll text you the OTP to verify</string>
+    <string name="continue_text">Continue</string>
+    <string name="verify_mobile_number">Verify mobile number</string>
+    <string name="enter_the_otp_sent_to_x">Enter the OTP Sent to +91 96889 76213</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="didn_t_receive_otp_resend">Didn’t receive OTP? Resend</string>
+    <string name="what_s_your_name">What’s your name?</string>
+    <string name="what_s_your_email">What’s your email?</string>
+    <string name="next">Next</string>
+    <string name="what_s_your_phone_number">What’s your phone number?</string>
+    <string name="what_s_your_gender">What’s your gender?</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="others">Others</string>
+    <string name="what_s_your_dob">What’s your DOB?</string>
+    <string name="what_s_your_country">What’s your Country?</string>
+    <string name="what_s_your_city">What’s your City?</string>
+    <string name="prime">Prime</string>
+    <string name="super_prime">Super Prime</string>
+    <string name="save">Save</string>
+    <string name="your_name">Your Name</string>
+    <string name="email_id">Email Id</string>
+    <string name="gender">Gender</string>
+    <string name="dob">DOB</string>
+    <string name="city">City</string>
+    <string name="country">Country</string>
+
+    <string name="star_superscript"> <sup><small>*</small></sup></string>
+    <string name="select_a_plan_that_s_right_for_you">Select a plan that\'s right for you</string>
+    <string name="current_plan">Current Plan</string>
+    <string name="rupee_placeholder">"₹ %s "</string>
+    <string name="continue_to_payment">Continue to Payment</string>
+    <string name="upgrade_to_super_prime">Upgrade to Super Prime</string>
+    <string name="chat_with_us">Chat With Us</string>
 </resources>

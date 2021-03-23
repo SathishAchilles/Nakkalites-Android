@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#181818</color>
     <color name="colorAccent">#0089FF</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
     <color name="grey_400">#C4C4C4</color>
     <color name="grey_900">#212121</color>
     <color name="grey_400_2">#CCCCCC</color>
@@ -26,11 +27,15 @@
     <color name="grey_900_5">#222222</color>
     <color name="light_blue_a700_2">#1383e2</color>
     <color name="light_blue_800_2">#00559e</color>
+    <color name="light_blue_800_3">#0578DB</color>
     <color name="blue_900">#004EC1</color>
     <color name="teal_900">#000623</color>
     <color name="blue_400">#36A2FF</color>
     <color name="blue_500">#008AFF</color>
     <color name="grey_800_2">#3E3E3E</color>
+    <color name="grey_800_3">#3D3D3D</color>
     <color name="grey_500_2">#9E9E9E</color>
+    <color name="grey_500_3">#2B2929</color>
     <color name="progress_bar">#36A2FF</color>
+    <color name="shadow_color">#FFFFFF</color>
 </resources>

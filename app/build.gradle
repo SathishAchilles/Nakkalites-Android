@@ -88,7 +88,8 @@ dependencies {
     implementation deps.firebase.remoteConfig
     implementation deps.google.admob
     implementation deps.google.design
-    implementation deps.materialDialogs.core
+    implementation deps.google.flexboxLayout
+    implementation deps.material
     implementation deps.moshi.core
     implementation deps.moshi.kotlin
     kapt deps.moshi.codeGen

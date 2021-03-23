@@ -1,25 +1,33 @@
 package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.view.binding.ViewModelBinder.Companion.defaultBinder
+import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.SuperscriptSpan
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.*
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.ImageViewCompat
-import androidx.databinding.BindingAdapter
-import androidx.databinding.BindingMethod
-import androidx.databinding.BindingMethods
+import androidx.databinding.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +35,8 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 import org.jetbrains.annotations.NotNull
+import timber.log.Timber
+
 
 object Bindings {
     @JvmStatic
@@ -259,5 +269,114 @@ object Bindings {
             return wrapped
         }
         return drawable
+    }
+
+    @Suppress("DEPRECATION")
+    @JvmStatic
+    @BindingAdapter(value = ["appendStarSuperScript"], requireAll = false)
+    fun TextView.bindStarSuperScriptText(
+        isAppend: Boolean?
+    ) {
+        val value = text?.toString()
+        Timber.e("value $text")
+        if (isAppend != null && isAppend && value != null) {
+            includeFontPadding = true
+            isAllCaps = false
+            val starSuperScript = context.getString(R.string.star_superscript)
+            val spannable = SpannableStringBuilder("$value $starSuperScript")
+            spannable.setSpan(
+                SuperscriptSpan(),
+                spannable.length - 1,
+                spannable.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            spannable.setSpan(
+                ForegroundColorSpan(Color.parseColor("#00559e")),
+                spannable.length - 1, spannable.length, 0
+            )
+            text = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                Html.fromHtml(value + starSuperScript, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                Html.fromHtml(value + starSuperScript)
+            }
+//            text = spannable
+        }
+    }
+
+    /** Data-binding's automatic setter doesn't work for &lt;T extends ListAdapter &amp; Filterable&gt;.  */
+    @JvmStatic
+    @BindingAdapter(value = ["adapter"])
+    fun <T> setAutoCompleteTextViewAdapter(
+        view: AppCompatAutoCompleteTextView, @Nullable adapter: ArrayAdapter<T>
+    ) {
+        view.setAdapter(adapter)
+    }
+
+    @JvmStatic
+    @BindingAdapter("suggestions")
+    fun setSuggestions(
+        view: AppCompatAutoCompleteTextView,
+        @Nullable suggestions: Collection<DisplayText?>?
+    ) {
+        @LayoutRes val layoutId: Int = R.layout.simple_spinner_dropdown
+        @IdRes val textViewId: Int = R.id.text
+        if (suggestions != null) {
+            val list = suggestions.map { res -> res?.getText(view.resources) }
+            val arrayAdapter: ArrayAdapter<String?> = ArrayAdapter<String?>(
+                view.context, layoutId, textViewId, ArrayList(list)
+            )
+            view.setAdapter(arrayAdapter)
+        } else {
+            val emptyAdapter: ArrayAdapter<String?> = ArrayAdapter<String?>(
+                view.context, layoutId, textViewId, ArrayList()
+            )
+            view.setAdapter(emptyAdapter)
+        }
+        view.threshold = 0
+    }
+
+    @JvmStatic
+    @BindingAdapter(
+        value = ["entries", "entryLayout", "entryViewProvider", "entryBinder", "shouldAppendEntries"],
+        requireAll = false
+    )
+    fun <T : BaseViewModel> bindViewGroupEntries(
+        viewGroup: ViewGroup, entries: List<T>?, entryLayout: Int,
+        entryProvider: ViewProvider?, entryBinder: ViewModelBinder?,
+        shouldAppendEntries: Boolean
+    ) {
+        require(!(entryLayout <= 0 && entryProvider == null))
+        if (entries == null) return
+        val inflater = LayoutInflater.from(viewGroup.context)
+        if (shouldAppendEntries) {
+            val entriesToAppend = entries.subList(viewGroup.childCount, entries.size)
+            bindEntries(
+                viewGroup,
+                entriesToAppend,
+                entryLayout,
+                entryProvider,
+                entryBinder,
+                inflater
+            )
+        } else {
+            viewGroup.removeAllViews()
+            bindEntries(viewGroup, entries, entryLayout, entryProvider, entryBinder, inflater)
+        }
+    }
+
+    private fun <T : BaseViewModel> bindEntries(
+        viewGroup: ViewGroup, entries: List<T>, entryLayout: Int,
+        entryProvider: ViewProvider?, entryBinder: ViewModelBinder?,
+        inflater: LayoutInflater
+    ) {
+        for (entry in entries) {
+            val layoutId = entryProvider?.getView(entry) ?: entryLayout
+            val binding = DataBindingUtil
+                .inflate<ViewDataBinding>(inflater, layoutId, viewGroup, false)
+            defaultBinder.bind(binding, entry)
+            entryBinder?.bind(binding, entry)
+            binding.executePendingBindings()
+            viewGroup.addView(binding.root)
+        }
     }
 }

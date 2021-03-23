@@ -15,6 +15,16 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:supportsRtl">
+        <activity android:name=".view.subscription.ManageSubscriptionActivity"></activity>
+        <activity android:name=".view.subscription.SubscriptionsActivity" />
+        <activity android:name=".view.profile.ProfileEditActivity" />
+        <activity
+            android:name=".view.profile.ProfileAddActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.login.OtpVerificationActivity"
+            android:parentActivityName=".view.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.webview.WebViewActivity" />
         <activity
             android:name=".view.video.VideoPlayerActivity"
@@ -35,6 +45,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <service
             android:name=".app.services.MyFirebaseMessagingService"
             android:exported="false">
@@ -46,7 +57,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default_channel_id" />
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/abmob_key" />
