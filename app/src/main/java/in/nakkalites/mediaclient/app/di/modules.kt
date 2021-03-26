@@ -12,6 +12,7 @@ import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
+import `in`.nakkalites.mediaclient.viewmodel.login.CountriesSheetVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
@@ -61,6 +62,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 const val refreshTokenSubjectProperty = "RefreshTokenSubjectProperty"
 
@@ -99,7 +101,7 @@ val applicationModule = module {
 
 val viewModelModule = module {
     viewModel { SplashVm(get()) }
-    viewModel { LoginVm(get()) }
+    viewModel { LoginVm(get(), get()) }
     viewModel { AllVideoGroupsVm(get()) }
     viewModel { WebSeriesListVm(get()) }
     viewModel { HomeVm(get(), get(), get()) }
@@ -108,9 +110,10 @@ val viewModelModule = module {
     viewModel { VideoDetailVm(get()) }
     viewModel { VideoPlayerVm(get()) }
     viewModel { WebViewVm() }
-    viewModel { OtpVerificationVm() }
+    viewModel { OtpVerificationVm(get()) }
     viewModel { ProfileAddVm() }
     viewModel { ProfileEditVm() }
+    viewModel { CountriesSheetVm() }
 }
 
 fun netModule(serverUrl: String) = module {
@@ -175,6 +178,9 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         RefreshTokenManager(get(), get(), get(), get())
+    }
+    single {
+        PhoneNumberUtil.createInstance(androidContext())
     }
 }
 

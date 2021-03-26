@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.binding
 
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.view.binding.ViewModelBinder.Companion.defaultBinder
+import `in`.nakkalites.mediaclient.view.utils.DebounceOnClickListener
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import android.content.Context
@@ -278,7 +279,6 @@ object Bindings {
         isAppend: Boolean?
     ) {
         val value = text?.toString()
-        Timber.e("value $text")
         if (isAppend != null && isAppend && value != null) {
             includeFontPadding = true
             isAllCaps = false
@@ -379,4 +379,16 @@ object Bindings {
             viewGroup.addView(binding.root)
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("debounceOnClick")
+    fun View.bindDebounceOnClick(debounceOnClickRunnable: Runnable?) {
+        if (debounceOnClickRunnable == null) return
+        setOnClickListener(object : DebounceOnClickListener() {
+            override fun debouncedOnClick(v: View) {
+                debounceOnClickRunnable.run()
+            }
+        })
+    }
+
 }

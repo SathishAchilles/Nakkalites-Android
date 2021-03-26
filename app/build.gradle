@@ -83,12 +83,15 @@ dependencies {
     implementation deps.exoplayer.okhttpExt
     implementation deps.exoplayer.ui
     implementation deps.firebase.analytics
+    implementation deps.firebase.auth
     implementation deps.firebase.crashlytics
     implementation deps.firebase.messaging
     implementation deps.firebase.remoteConfig
     implementation deps.google.admob
+    implementation deps.google.auth
+    implementation deps.google.authApiPhone
     implementation deps.google.design
-    implementation deps.google.flexboxLayout
+    implementation deps.libphonenumber
     implementation deps.material
     implementation deps.moshi.core
     implementation deps.moshi.kotlin

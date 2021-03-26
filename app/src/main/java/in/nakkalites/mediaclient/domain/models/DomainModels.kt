@@ -7,6 +7,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class User(
     val id: String, val name: String?, val email: String?, val imageUrl: String? = null,
+    val providerType: String? = null, val countryCode: String?, val phoneNumber: String?,
+    val gender: String?, val dob: String?, val city: String?, val country: String?,
     val isFirstLogin: Boolean = false
 ) {
 
@@ -14,6 +16,8 @@ data class User(
         fun map(userEntity: UserEntity): User =
             User(
                 userEntity.id, userEntity.name, userEntity.email, userEntity.imageUrl,
+                userEntity.providerType, userEntity.countryCode, userEntity.phoneNumber,
+                userEntity.gender, userEntity.dob, userEntity.city, userEntity.country,
                 userEntity.isFirstLogin
             )
     }

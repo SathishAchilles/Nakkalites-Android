@@ -1,7 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:ns1="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -15,6 +15,7 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
         <item name="chipCornerRadius">5dp</item>
         <item name="chipChoice">@style/ChipView.Choice</item>
+        <item name="materialButtonStyle">@style/Mesh.Components.Base.Button</item>
     </style>
 
     <style name="AppTheme.FullScreen">
@@ -152,5 +153,22 @@
         <item name="android:textColor">@color/white</item>
         <item name="rippleColor">@color/white</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Mesh.Components.Base.Button" parent="Widget.MaterialComponents.Button">
+        <item name="background">@drawable/blue_button</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="iconPadding">4dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:stateListAnimator" ns1:ignore="NewApi">@null</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:scrollbarSize">0dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="rippleColor">@color/white_alpha_20</item>
     </style>
 </resources>

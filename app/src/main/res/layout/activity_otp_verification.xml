@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm" />
+
+        <variable
+            name="callbacks"
+            type="in.nakkalites.mediaclient.view.login.OtpVerificationCallbacks" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -26,9 +31,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/grey_900_2"
             android:fitsSystemWindows="true"
             android:orientation="vertical"
-            android:background="@color/grey_900_2"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.core.widget.NestedScrollView
@@ -66,13 +71,14 @@
                         android:layout_marginTop="11dp"
                         android:fontFamily="@font/inter_regular"
                         android:lineSpacingExtra="10sp"
-                        android:text="@string/enter_the_otp_sent_to_x"
+                        android:text="@{@string/enter_the_otp_sent_to_x(vm.formattedPhoneNumber)}"
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         android:translationY="-5.21sp"
                         app:layout_constraintEnd_toEndOf="@id/verify_mobile"
                         app:layout_constraintStart_toStartOf="@id/verify_mobile"
-                        app:layout_constraintTop_toBottomOf="@id/verify_mobile" />
+                        app:layout_constraintTop_toBottomOf="@id/verify_mobile"
+                        tools:text="@string/enter_the_otp_sent_to_x" />
 
                     <EditText
                         android:id="@+id/otp_part_1"
@@ -81,7 +87,9 @@
                         android:layout_marginTop="16dp"
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/inter_regular"
+                        android:maxLength="1"
                         android:minWidth="40dp"
+                        android:text="@={vm.otpCodePart1}"
                         android:textColor="@color/grey_900_2"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@id/otp_part_2"
@@ -95,7 +103,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/inter_regular"
+                        android:maxLength="1"
                         android:minWidth="40dp"
+                        android:text="@={vm.otpCodePart2}"
                         android:textColor="@color/grey_900_2"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@id/otp_part_3"
@@ -109,7 +119,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/inter_regular"
+                        android:maxLength="1"
                         android:minWidth="40dp"
+                        android:text="@={vm.otpCodePart3}"
                         android:textColor="@color/grey_900_2"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@id/otp_part_4"
@@ -123,7 +135,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/inter_regular"
+                        android:maxLength="1"
                         android:minWidth="40dp"
+                        android:text="@={vm.otpCodePart4}"
                         android:textColor="@color/grey_900_2"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@id/otp_part_5"
@@ -137,7 +151,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/inter_regular"
+                        android:maxLength="1"
                         android:minWidth="40dp"
+                        android:text="@={vm.otpCodePart5}"
                         android:textColor="@color/grey_900_2"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@id/otp_part_6"
@@ -151,7 +167,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_edittext"
                         android:fontFamily="@font/inter_regular"
+                        android:maxLength="1"
                         android:minWidth="40dp"
+                        android:text="@={vm.otpCodePart6}"
                         android:textColor="@color/grey_900_2"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toEndOf="@id/verify_mobile"
@@ -167,6 +185,7 @@
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/inter_regular"
                         android:lineSpacingExtra="10sp"
+                        android:onClick="@{() -> callbacks.onResendClick()}"
                         android:text="@string/didn_t_receive_otp_resend"
                         android:textColor="@color/white"
                         android:textSize="14sp"
@@ -174,6 +193,21 @@
                         app:layout_constraintEnd_toEndOf="@id/verify_mobile"
                         app:layout_constraintStart_toStartOf="@id/verify_mobile"
                         app:layout_constraintTop_toBottomOf="@id/otp_part_1" />
+
+                    <com.github.ybq.android.spinkit.SpinKitView
+                        android:id="@+id/progress_bar"
+                        style="@style/SpinKitView.ThreeBounce"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        android:visibility="gone"
+                        android:padding="10dp"
+                        app:SpinKit_Color="@color/progress_bar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -186,8 +220,9 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="28dp"
                 android:background="@drawable/blue_button"
-                android:text="@string/verify_otp"
                 android:fontFamily="@font/inter_bold"
+                android:onClick="@{() -> callbacks.onVerifyClick()}"
+                android:text="@string/verify_otp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="19sp" />

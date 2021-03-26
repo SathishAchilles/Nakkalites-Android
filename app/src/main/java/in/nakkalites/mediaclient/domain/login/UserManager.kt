@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.domain.login
 
+import `in`.nakkalites.mediaclient.data.PrefsConstants
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
 import `in`.nakkalites.mediaclient.data.user.UserEntity
@@ -23,12 +24,12 @@ class UserManager(private val userService: UserService, private val userDataStor
         userDataStore.setRefreshToken(refreshToken)
     }
 
-    fun login(
-        type: String, id: String, displayName: String?, email: String?, photoUrl: Uri?
+    fun loginViaGoogle(
+        id: String, displayName: String?, email: String?, photoUrl: Uri?
     ): Single<LoginResponse> {
         val params = mutableMapOf<String, Any>(
             "provider_id" to id,
-            "provider_type" to type
+            "provider_type" to "google"
         ).apply {
             displayName?.let { put("name", displayName) }
             email?.let { put("email", email) }
@@ -36,9 +37,19 @@ class UserManager(private val userService: UserService, private val userDataStor
         }
         return userService.login(params)
             .doOnSuccess {
-                setUser(it.user)
-                setAccessToken(it.user.accessToken)
-                setRefreshToken(it.user.refreshToken)
+                storeUserAndTokens(it)
+            }
+    }
+
+    fun loginViaFirebase(countryCode: String, phoneNumber: String): Single<LoginResponse> {
+        val params = mutableMapOf<String, Any>(
+            "provider_type" to "firebase",
+            "country_code" to countryCode,
+            "phone_number" to phoneNumber,
+        )
+        return userService.login(params)
+            .doOnSuccess {
+                storeUserAndTokens(it)
             }
     }
 
@@ -75,4 +86,14 @@ class UserManager(private val userService: UserService, private val userDataStor
     fun getInstanceId() = userDataStore.getInstanceIdOrEmpty()
 
     fun clearAppData() = userDataStore.clearAppData()
+
+    fun isAddProfileShown(): Boolean = userDataStore.isAddProfileShown()
+
+    fun setAddProfileShown() = userDataStore.setAddProfileShown()
+
+    private fun storeUserAndTokens(loginResponse: LoginResponse) {
+        setUser(loginResponse.user)
+        setAccessToken(loginResponse.user.accessToken)
+        setRefreshToken(loginResponse.user.refreshToken)
+    }
 }

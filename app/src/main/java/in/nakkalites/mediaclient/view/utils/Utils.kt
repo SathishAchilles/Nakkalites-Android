@@ -13,9 +13,14 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.squareup.picasso.Transformation
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import io.michaelrocks.libphonenumber.android.Phonenumber
 import okhttp3.Request
 import retrofit2.Retrofit
 import java.text.DateFormat
@@ -84,7 +89,7 @@ fun shareTextIntent(shareTitle: String, shareText: String): Intent =
         .putExtra(Intent.EXTRA_TEXT, shareText)
         .let { Intent.createChooser(it, shareTitle) }
 
-fun ContentResolver.isRotationEnabled()=
+fun ContentResolver.isRotationEnabled() =
     Settings.System.getInt(this, Settings.System.ACCELEROMETER_ROTATION, 0) == 1
 
 fun getTimeStampForAnalytics(): String? {
@@ -95,3 +100,21 @@ fun getTimeStampForAnalytics(): String? {
 }
 
 fun String.formatEn(vararg args: Any?): String = format(Locale.US, *args)
+
+fun commitAllowingStateLoss(fragment: Fragment, fm: FragmentManager, tag: String) {
+    fm.beginTransaction()
+        .add(fragment, tag)
+        .commitAllowingStateLoss();
+}
+
+fun Phonenumber.PhoneNumber.getIsoCode(phoneNumberUtil: PhoneNumberUtil) =
+    phoneNumberUtil.getRegionCodeForCountryCode(this.countryCode)
+
+fun Phonenumber.PhoneNumber.getNumberWithCountryCode() = "+${this.countryCode}${this.nationalNumber}"
+
+
+fun showSoftKeyboard(view: View) {
+    val imm = view.context
+        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+}

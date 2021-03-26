@@ -60,6 +60,15 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/abmob_key" />
+
+        <receiver
+            android:name=".view.login.SmsBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

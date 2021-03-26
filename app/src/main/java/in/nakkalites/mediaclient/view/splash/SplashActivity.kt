@@ -136,7 +136,7 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun goToHome() {
-        ProfileEditActivity.createIntent(this)
+        HomeActivity.createIntent(this)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .let { startActivity(it) }

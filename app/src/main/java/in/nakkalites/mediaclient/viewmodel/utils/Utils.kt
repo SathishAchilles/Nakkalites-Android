@@ -1,5 +1,9 @@
 package `in`.nakkalites.mediaclient.viewmodel.utils
 
+import io.michaelrocks.libphonenumber.android.NumberParseException
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import io.michaelrocks.libphonenumber.android.Phonenumber
+import timber.log.Timber
 import java.util.*
 
 fun String.formatEn(vararg args: Any?): String = format(Locale.US, *args)
@@ -34,3 +38,17 @@ fun Long.toTimeString(withLiteral: Boolean = false, includeZeros: Boolean = fals
         }
         this
     }.toString()
+
+typealias ObservableString = NonNullObservableField<String>
+
+fun String.parsePhoneNumber(phoneNumberUtil: PhoneNumberUtil): Phonenumber.PhoneNumber? {
+    if (this.isBlank()) return null
+
+    val phoneWithPlus = if (!this.startsWith("+")) "+$this" else this
+    return try {
+        phoneNumberUtil.parse(phoneWithPlus, null)
+    } catch (e: NumberParseException) {
+        Timber.e(e)
+        null
+    }
+}

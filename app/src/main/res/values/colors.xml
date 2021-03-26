@@ -38,4 +38,5 @@
     <color name="grey_500_3">#2B2929</color>
     <color name="progress_bar">#36A2FF</color>
     <color name="shadow_color">#FFFFFF</color>
+    <color name="white_alpha_20">#33FFFFFF</color>
 </resources>
