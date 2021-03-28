@@ -1,11 +1,8 @@
 package `in`.nakkalites.mediaclient.app.constants
 
-import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.util.*
-
 object AppConstants {
     const val USER_EMAIL: String = "user_email"
+    const val USER_PHONE: String = "user_phone"
     const val VIDEO_CACHE_DIRECTORY: String = "media"
     const val PICASSO_CACHE = "picasso-cache"
     const val MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024L // 5MB

@@ -11,11 +11,13 @@ import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
+import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
 import `in`.nakkalites.mediaclient.view.profile.ProfileEditActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.view.utils.playStoreIntent
+import `in`.nakkalites.mediaclient.viewmodel.login.LoginUtils
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Intent
 import android.os.Bundle
@@ -44,7 +46,13 @@ class SplashActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
         vm.viewStates().observe(this, EventObserver {
             when (it) {
-                is Result.Success -> goToHome()
+                is Result.Success -> {
+                    if (LoginUtils.shouldShowProfileAddPage(userManager)) {
+                        goToProfileAdd()
+                    } else {
+                        goToHome()
+                    }
+                }
                 is Result.Error -> goToLogin()
                 else -> showLoading()
             }
@@ -137,6 +145,13 @@ class SplashActivity : BaseActivity() {
 
     private fun goToHome() {
         HomeActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
+    }
+
+    private fun goToProfileAdd() {
+        ProfileAddActivity.createIntent(this)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .let { startActivity(it) }

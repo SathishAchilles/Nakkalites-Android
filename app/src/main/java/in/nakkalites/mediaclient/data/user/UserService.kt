@@ -24,4 +24,7 @@ interface UserService {
 
     @POST(HttpConstants.FCM_REFRESH)
     fun updateFcmToken(@Body params: StringAnyMap): Completable
+
+    @POST(HttpConstants.USER_PROFILE)
+    fun updateUserProfile(@Body params: StringAnyMap): Completable
 }

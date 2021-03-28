@@ -84,10 +84,11 @@ Download their new app and watch exclusively.\n\n
     <string name="continue_to_payment">Continue to Payment</string>
     <string name="upgrade_to_super_prime">Upgrade to Super Prime</string>
     <string name="chat_with_us">Chat With Us</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="select_country">Select Country</string>
-    <string name="enter_phone_number_error">Please Enter Phone Number to Proceed</string>
+    <string name="enter_phone_number_error">Please Enter Valid Phone Number to Proceed</string>
     <string name="otp_read_timeout">OTP Read Timeout</string>
     <string name="otp_verification_failed">OTP Verification Failed</string>
+    <string name="select_date_of_birth">Select date of birth</string>
+    <string name="complete">Complete</string>
+    <string name="missing_fields">Please Fill the Field to Proceed</string>
 </resources>

@@ -4,7 +4,7 @@
      Columns: Country phone code, Country 2-digit ISO code, Country name
      This list is alphabetically sorted on country name.
      !-->
-    <string-array name="countries_data">
+    <string-array name="country_codes_data">
         <item>93:AF:Afghanistan</item>
         <item>355:AL:Albania</item>
         <item>213:DZ:Algeria</item>

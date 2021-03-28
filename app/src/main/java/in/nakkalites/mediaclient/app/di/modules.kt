@@ -111,7 +111,7 @@ val viewModelModule = module {
     viewModel { VideoPlayerVm(get()) }
     viewModel { WebViewVm() }
     viewModel { OtpVerificationVm(get()) }
-    viewModel { ProfileAddVm() }
+    viewModel { ProfileAddVm(get(), get()) }
     viewModel { ProfileEditVm() }
     viewModel { CountriesSheetVm() }
 }

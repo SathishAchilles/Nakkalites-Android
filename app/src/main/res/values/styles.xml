@@ -15,7 +15,7 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
         <item name="chipCornerRadius">5dp</item>
         <item name="chipChoice">@style/ChipView.Choice</item>
-        <item name="materialButtonStyle">@style/Mesh.Components.Base.Button</item>
+        <item name="materialButtonStyle">@style/PrimarySolid</item>
     </style>
 
     <style name="AppTheme.FullScreen">

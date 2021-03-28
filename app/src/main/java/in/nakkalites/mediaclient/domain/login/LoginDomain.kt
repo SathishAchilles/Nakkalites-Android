@@ -14,7 +14,10 @@ class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : Base
         return userManager.loginViaGoogle(id, displayName, email, photoUrl)
             .map { it.user }
             .map {
-                User(it.id, it.name, it.email, it.imageUrl)
+                User(
+                    it.id, it.name, it.email, it.imageUrl, it.providerType, it.countryCode,
+                    it.country, it.gender, it.dob, it.city, it.country
+                )
             }
     }
 
@@ -22,7 +25,8 @@ class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : Base
         return userManager.loginViaFirebase(countryCode, phoneNumber)
             .map { it.user }
             .map {
-                User(it.id, it.name, it.email, it.imageUrl)
+                User(it.id, it.name, it.email, it.imageUrl, it.providerType, it.countryCode,
+                    it.country, it.gender, it.dob, it.city, it.country)
             }
     }
 }

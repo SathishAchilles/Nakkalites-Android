@@ -8,14 +8,17 @@ import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
+import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.view.utils.showSoftKeyboard
+import `in`.nakkalites.mediaclient.viewmodel.login.LoginUtils
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.parsePhoneNumber
@@ -49,6 +52,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     private lateinit var googleSignInClient: GoogleSignInClient
     val vm: LoginVm by viewModel()
     val analyticsManager by inject<AnalyticsManager>()
+    val userManager by inject<UserManager>()
     val crashlytics by inject<FirebaseCrashlytics>()
     val phoneNumberUtil by inject<PhoneNumberUtil>()
 
@@ -89,7 +93,11 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     val user = it.data
                     setupCrashlyticsUserDetails(user)
                     trackUserLoggedIn(user)
-                    goToHome()
+                    if (LoginUtils.shouldShowProfileAddPage(userManager)) {
+                        goToProfileAdd()
+                    } else {
+                        goToHome()
+                    }
                 }
                 is Result.Error -> {
                     trackLoginFailed()
@@ -115,6 +123,9 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         crashlytics.setUserId(user.id)
         user.email?.let {
             crashlytics.setCustomKey(AppConstants.USER_EMAIL, it)
+        }
+        user.phoneNumber?.let {
+            crashlytics.setCustomKey(AppConstants.USER_PHONE, it)
         }
     }
 
@@ -220,10 +231,17 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
         override fun onFlagClick() {
             val countries = vm.countryCodeVm
-                .getCountriesList(resources.getStringArray(R.array.countries_data).asList())
+                .getCountriesList(resources.getStringArray(R.array.country_codes_data).asList())
             val sheet = CountriesBottomSheet.newInstance(countries)
             sheet.showAllowingStateLoss(supportFragmentManager)
         }
+    }
+
+    private fun goToProfileAdd() {
+        ProfileAddActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
     }
 
     private fun goToHome() {

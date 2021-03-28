@@ -131,7 +131,7 @@
             app:layout_constraintBottom_toTopOf="@id/login_cta"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/login_cta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

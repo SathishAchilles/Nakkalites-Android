@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.domain.login
 
-import `in`.nakkalites.mediaclient.data.PrefsConstants
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
 import `in`.nakkalites.mediaclient.data.user.UserEntity
@@ -45,7 +44,7 @@ class UserManager(private val userService: UserService, private val userDataStor
         val params = mutableMapOf<String, Any>(
             "provider_type" to "firebase",
             "country_code" to countryCode,
-            "phone_number" to phoneNumber,
+            "mobile" to phoneNumber,
         )
         return userService.login(params)
             .doOnSuccess {
@@ -91,9 +90,45 @@ class UserManager(private val userService: UserService, private val userDataStor
 
     fun setAddProfileShown() = userDataStore.setAddProfileShown()
 
+    fun isProfileFieldsFilled(): Boolean {
+        return getUser()?.let { user ->
+            if (user.email.isNullOrEmpty() || user.phoneNumber.isNullOrEmpty()
+                || user.countryCode.isNullOrEmpty() || user.name.isNullOrEmpty()
+                || user.gender.isNullOrEmpty() || user.dob.isNullOrEmpty()
+                || user.city.isNullOrEmpty() || user.country.isNullOrEmpty()
+            ) {
+                return false
+            }
+            return true
+        } ?: false
+    }
+
     private fun storeUserAndTokens(loginResponse: LoginResponse) {
         setUser(loginResponse.user)
         setAccessToken(loginResponse.user.accessToken)
         setRefreshToken(loginResponse.user.refreshToken)
+    }
+
+    fun updateUserProfile(
+        name: String?,
+        countryCode: String?,
+        phoneNumber: String?,
+        email: String?,
+        gender: String?,
+        dob: String?,
+        country: String?,
+        city: String?
+    ): Completable {
+        val params = mutableMapOf<String, Any>().apply {
+            name?.apply { put("name", this) }
+            email?.apply { put("email", this) }
+            countryCode?.apply { put("country_code", this) }
+            phoneNumber?.apply { put("mobile", this) }
+            gender?.apply { put("gender", this) }
+            dob?.apply { put("dob", this) }
+            country?.apply { put("country", this) }
+            city?.apply { put("city", this) }
+        }
+        return userService.updateUserProfile(params)
     }
 }
