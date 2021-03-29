@@ -140,7 +140,7 @@ class VideoObserver(
         shareButton.setOnClickListener {
             val intent = shareTextIntent(
                 activity.getString(R.string.share_sheet_title, name),
-                activity.getString(R.string.video_share_text, name, activity.playStoreUrl())
+                activity.getString(R.string.video_share_text, name, playStoreUrl())
             )
             activity.startActivity(intent)
         }

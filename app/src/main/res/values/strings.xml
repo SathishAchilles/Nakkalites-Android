@@ -10,6 +10,7 @@
     </plurals>
     <string name="play_episode_x">Play Episode %s</string>
     <string name="share_sheet_title">Share %s</string>
+    <string name="share_nakkalites">Share NAkkalites to</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="error_network">Some problem in server</string>
     <string name="app_update_dialog_title">Update App</string>
@@ -30,6 +31,9 @@ Download their new app and watch exclusively.\n\n
 %s</string>
     <string name="video_share_text">Hey… Did you watch Nakkalites oda new video \"%s\"\n\n
 Youtube LA illaye…\n\n
+Download their new app and watch exclusively.\n\n
+%s</string>
+    <string name="share_text">Hey… Did you install Nakkalites android app?\n\n
 Download their new app and watch exclusively.\n\n
 %s</string>
     <string name="starring">Starring</string>

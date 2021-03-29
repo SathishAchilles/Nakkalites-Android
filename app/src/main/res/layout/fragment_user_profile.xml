@@ -7,6 +7,10 @@
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.view.home.UserProfileVm" />
+
+        <variable
+            name="callbacks"
+            type="in.nakkalites.mediaclient.view.home.UserProfileCallbacks" />
     </data>
 
     <ScrollView
@@ -64,7 +68,7 @@
                 </FrameLayout>
             </FrameLayout>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -72,33 +76,10 @@
                 android:fontFamily="@font/inter_regular"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
+                android:text="@{vm.name}"
                 android:textColor="@color/white"
                 android:textSize="21sp"
                 tools:text="Pavan" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/inter_regular"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:textColor="@color/grey_400"
-                android:textSize="17sp"
-                tools:text="pavan@gmail.com" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/inter_regular"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:textColor="@color/grey_400"
-                android:textSize="17sp"
-                tools:text="+91-9790708464" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,6 +90,7 @@
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
                 android:text="@string/edit"
+                android:onClick="@{() -> callbacks.onEditClick()}"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp" />
 
@@ -202,6 +184,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
+                android:onClick="@{() -> callbacks.onContactUsClick()}"
                 android:paddingBottom="8dp"
                 android:text="@string/contact_us"
                 android:textColor="@color/white"
@@ -212,6 +195,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
                 android:paddingLeft="16dp"
+                android:onClick="@{() -> callbacks.onShareClick()}"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
@@ -224,6 +208,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_regular"
                 android:paddingLeft="16dp"
+                android:onClick="@{() -> callbacks.onTnCClick()}"
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
@@ -239,6 +224,7 @@
                 android:paddingTop="12dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
+                android:onClick="@{() -> callbacks.onPrivacyPolicyClick()}"
                 android:text="@string/privacy_policy"
                 android:textColor="@color/white"
                 android:textSize="16sp" />

@@ -1,6 +1,5 @@
 package `in`.nakkalites.mediaclient.viewmodel.profile
 
-import `in`.nakkalites.logging.logd
 import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
@@ -60,9 +59,9 @@ class ProfileAddVm(
         )
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onComplete = { Result.Success(Unit) },
+                onComplete = { viewState.value = Event(Result.Success(Unit)) },
                 onError = { throwable ->
-                    Result.Error(Unit, UserUpdateFailedException())
+                    viewState.value = Event(Result.Error(Unit, UserUpdateFailedException()))
                     loge(throwable = throwable, message = "Profile update failed")
                 })
     }

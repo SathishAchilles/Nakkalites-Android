@@ -1,6 +1,8 @@
 package `in`.nakkalites.mediaclient.domain.models
 
-import `in`.nakkalites.mediaclient.data.user.UserEntity
+import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
+import `in`.nakkalites.mediaclient.data.user.PlanEntity
+import `in`.nakkalites.mediaclient.data.user.UserResponse
 import `in`.nakkalites.mediaclient.data.videogroup.*
 import com.squareup.moshi.JsonClass
 
@@ -9,16 +11,38 @@ data class User(
     val id: String, val name: String?, val email: String?, val imageUrl: String? = null,
     val providerType: String? = null, val countryCode: String?, val phoneNumber: String?,
     val gender: String?, val dob: String?, val city: String?, val country: String?,
-    val isFirstLogin: Boolean = false
+    val plan: Plan? = null, val isFirstLogin: Boolean = false
 ) {
 
     companion object {
-        fun map(userEntity: UserEntity): User =
+        fun map(userEntity: LoginUserEntity): User =
             User(
                 userEntity.id, userEntity.name, userEntity.email, userEntity.imageUrl,
                 userEntity.providerType, userEntity.countryCode, userEntity.phoneNumber,
                 userEntity.gender, userEntity.dob, userEntity.city, userEntity.country,
-                userEntity.isFirstLogin
+                isFirstLogin = userEntity.isFirstLogin
+            )
+
+        fun map(userEntity: UserResponse): User =
+            User(
+                userEntity.user.id, userEntity.user.name, userEntity.user.email,
+                userEntity.user.imageUrl, userEntity.user.providerType, userEntity.user.countryCode,
+                userEntity.user.phoneNumber, userEntity.user.gender, userEntity.user.dob,
+                userEntity.user.city, userEntity.user.country,
+                plan = userEntity.plan?.let { Plan.map(it) }
+            )
+    }
+}
+
+data class Plan(
+    val id: String?, val name: String?, val price: String?, val frequency: String?,
+    val contentTags: List<String>?,
+) {
+    companion object {
+        fun map(planEntity: PlanEntity): Plan =
+            Plan(
+                planEntity.id, planEntity.name, planEntity.price, planEntity.frequency,
+                planEntity.contentTags
             )
     }
 }

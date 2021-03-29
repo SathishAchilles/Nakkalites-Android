@@ -9,6 +9,7 @@ import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.*
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.view.home.UserProfileVm
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
@@ -47,6 +48,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import okhttp3.Cache
@@ -62,7 +64,6 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 const val refreshTokenSubjectProperty = "RefreshTokenSubjectProperty"
 
@@ -112,8 +113,9 @@ val viewModelModule = module {
     viewModel { WebViewVm() }
     viewModel { OtpVerificationVm(get()) }
     viewModel { ProfileAddVm(get(), get()) }
-    viewModel { ProfileEditVm() }
+    viewModel { ProfileEditVm(get()) }
     viewModel { CountriesSheetVm() }
+    viewModel { UserProfileVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {

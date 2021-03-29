@@ -124,6 +124,13 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
     private val callbacks = object : ProfileAddCallbacks {
         override fun onDateClicked() {
+            val calendar = Calendar.getInstance()
+            profileAddVm.dob.get()?.let { dob ->
+                val time = dob.split("/").map { it.toInt() }
+                calendar.set(Calendar.YEAR, time[2])
+                calendar.set(Calendar.MONTH, time[1])
+                calendar.set(Calendar.DAY_OF_MONTH, time[0])
+            }
             val datePicker =
                 MaterialDatePicker.Builder.datePicker()
                     .setTitleText(getString(R.string.select_date_of_birth))

@@ -4,20 +4,15 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
-import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityHomeBinding
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.utils.formatEn
-import `in`.nakkalites.mediaclient.view.webview.WebViewActivity
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeTab
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -150,39 +145,6 @@ class HomeActivity : BaseActivity() {
             .filterNot { tab -> tab == newTab }
             .mapNotNull { tab -> supportFragmentManager.findFragmentByTag(tab.toString()) }
             .forEach { fragment: Fragment? -> fragmentTransaction.hide(fragment!!) }
-    }
-
-    private val toolbarMenuListener = { menuItem: MenuItem ->
-        fun createWebViewIntent(url: String, @StringRes toolbarTitleRes: Int) =
-            WebViewActivity.createIntent(this, name = getString(toolbarTitleRes), url = url)
-
-        val intent = when (menuItem.itemId) {
-            R.id.open_source_licenses ->
-                createWebViewIntent(
-                    getString(R.string.licenses_html_path), R.string.open_source_licenses
-                )
-            R.id.terms_conditions ->
-                Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.TERMS_CONDITIONS))
-            R.id.privacy_policy ->
-                Intent(Intent.ACTION_VIEW, Uri.parse(HttpConstants.PRIVACY_POLICY))
-            R.id.contact_us_mail -> {
-                trackEmailClicked()
-                val intent = Intent(Intent.ACTION_SENDTO)
-                intent.type = "text/plain"
-                intent.data = Uri.parse("mailto:${AppConstants.CONTACT_EMAIL}");
-                Intent.createChooser(intent, "Send Email to Nakkalites via")
-            }
-            else -> null
-        }
-        try {
-            intent?.let(::startActivity)?.let { true } ?: false
-        } catch (e: ActivityNotFoundException) {
-            false
-        }
-    }
-
-    private fun trackEmailClicked() {
-        analyticsManager.logEvent(AnalyticsConstants.Event.EMAIL_CLICKED)
     }
 
     private fun trackTabClicked(tab: HomeTab) {

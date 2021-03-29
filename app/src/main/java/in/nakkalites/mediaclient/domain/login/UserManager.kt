@@ -1,18 +1,23 @@
 package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
+import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
 import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
-import `in`.nakkalites.mediaclient.data.user.UserEntity
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Single
+import java.util.*
 
 class UserManager(private val userService: UserService, private val userDataStore: UserDataStore) {
 
-    private fun setUser(userEntity: UserEntity) {
+    private fun setUser(userEntity: LoginUserEntity) {
         userDataStore.setUser(User.map(userEntity))
+    }
+
+    private fun setUser(user: User) {
+        userDataStore.setUser(user)
     }
 
     fun setAccessToken(accessToken: String?) {
@@ -124,11 +129,16 @@ class UserManager(private val userService: UserService, private val userDataStor
             email?.apply { put("email", this) }
             countryCode?.apply { put("country_code", this) }
             phoneNumber?.apply { put("mobile", this) }
-            gender?.apply { put("gender", this) }
+            gender?.apply { put("gender", this.toLowerCase(Locale.US)) }
             dob?.apply { put("dob", this) }
             country?.apply { put("country", this) }
             city?.apply { put("city", this) }
         }
         return userService.updateUserProfile(params)
     }
+
+    fun getUserProfile() = userService.getUserProfile()
+        .map { User.map(it) }
+        .doOnSuccess { setUser(it) }
+
 }
