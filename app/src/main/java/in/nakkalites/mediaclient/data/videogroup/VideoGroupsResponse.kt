@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.data.videogroup
 
+import `in`.nakkalites.mediaclient.data.subscription.PlanEntity
 import `in`.nakkalites.mediaclient.data.utils.Page
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -40,10 +41,10 @@ data class VideoGroupEntity(
 data class VideoEntity(
     @field:Json(name = "id") val id: String,
     @field:Json(name = "title_name") val titleName: String,
-    @field:Json(name = "title_type") val titleType: String,
+    @field:Json(name = "title_type") val titleType: String?,
     @field:Json(name = "video_name") val videoName: String,
     @field:Json(name = "title_category_name") val category: String?,
-    @field:Json(name = "url") val url: String,
+    @field:Json(name = "url") val url: String?,
     @field:Json(name = "last_played_time") val lastPlayedTime: Long?,
     @field:Json(name = "duration") val duration: Long?,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
@@ -51,22 +52,27 @@ data class VideoEntity(
     @field:Json(name = "starring") val starring: String?,
     @field:Json(name = "share_text") val shareText: String?,
     @field:Json(name = "videos") val videos: List<VideoEntity> = listOf(),
-    @field:Json(name = "ad_timings") val adTimes: List<Long> = listOf()
+    @field:Json(name = "ad_timings") val adTimes: List<Long> = listOf(),
+    @field:Json(name = "plan") val plan: PlanEntity?,
+    @field:Json(name = "is_playable") val isPlayable: Boolean?,
+    @field:Json(name = "show_ads") val showAds: Boolean?,
 )
 
 @JsonClass(generateAdapter = true)
 data class WebSeriesEntity(
     @field:Json(name = "id") val id: String,
-    @field:Json(name = "title_name") val title: String,
     @field:Json(name = "name") val name: String,
-    @field:Json(name = "no_of_seasons") val seasonsCount: Int,
+    @field:Json(name = "no_of_seasons") val seasonsCount: Int? = 0,
     @field:Json(name = "thumbnail_image") val thumbnail: String,
     @field:Json(name = "next_webseries_number") val nextSeasonNumber: Int?,
     @field:Json(name = "next_episode_number") val nextEpisodeNumber: Int?,
     @field:Json(name = "next_video") val nextVideo: VideoEntity?,
-    @field:Json(name = "description") val description: String,
+    @field:Json(name = "description") val description: String?,
     @field:Json(name = "starring") val starring: String?,
-    @field:Json(name = "seasons") val seasons: List<SeasonEntity> = listOf()
+    @field:Json(name = "seasons") val seasons: List<SeasonEntity> = listOf(),
+    @field:Json(name = "plan") val plan: PlanEntity?,
+    @field:Json(name = "is_playable") val isPlayable: Boolean?,
+    @field:Json(name = "show_ads") val showAds: Boolean?,
 )
 
 @JsonClass(generateAdapter = true)

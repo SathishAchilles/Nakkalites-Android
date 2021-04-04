@@ -2,7 +2,10 @@ package `in`.nakkalites.mediaclient.viewmodel.webseries
 
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
+import `in`.nakkalites.mediaclient.viewmodel.subscription.PlanUtils
 import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 
 class SeasonEpisodeItemVm(
     val seasonId: String, val seasonName: String, episodeNumber: Int, episode: Video
@@ -22,4 +25,10 @@ class SeasonEpisodeItemVm(
     }
     val showProgress = progressPercent != 0
     val adTimes = episode.adTimes
+    val shouldPlay = episode.isPlayable
+    val showAds = episode.showAds
+    val hasPlan = episode.plan != null
+    val planName = episode.plan?.name
+    val planImg = ObservableField(PlanUtils.getPlanIcon(episode.plan))
+    val planColorInt = ObservableInt(PlanUtils.getPlanColorInt(episode.plan?.colorCode))
 }

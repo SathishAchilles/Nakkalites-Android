@@ -4,9 +4,12 @@ import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
+import `in`.nakkalites.mediaclient.data.subscription.SubscriptionService
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.*
+import `in`.nakkalites.mediaclient.domain.subscription.PlanDataStore
+import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.home.UserProfileVm
@@ -65,8 +68,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 
-const val refreshTokenSubjectProperty = "RefreshTokenSubjectProperty"
-
 val applicationModule = module {
     single<SharedPreferences> {
         PreferenceManager.getDefaultSharedPreferences(androidContext())
@@ -75,7 +76,13 @@ val applicationModule = module {
         UserDataStore(get(), get())
     }
     single {
+        PlanDataStore(get(), get())
+    }
+    single {
         UserManager(get(), get())
+    }
+    single {
+        PlanManager(get(), get())
     }
     single {
         LoginDomain(get(), get())
@@ -105,7 +112,7 @@ val viewModelModule = module {
     viewModel { LoginVm(get(), get()) }
     viewModel { AllVideoGroupsVm(get()) }
     viewModel { WebSeriesListVm(get()) }
-    viewModel { HomeVm(get(), get(), get()) }
+    viewModel { HomeVm(get(), get(), get(), get()) }
     viewModel { VideoGroupListVm(get()) }
     viewModel { WebSeriesDetailVm(get()) }
     viewModel { VideoDetailVm(get()) }
@@ -153,6 +160,9 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         get<Retrofit>().create(UserService::class.java)
+    }
+    single {
+        get<Retrofit>().create(SubscriptionService::class.java)
     }
     single {
         get<Retrofit>().create(VideoGroupService::class.java)

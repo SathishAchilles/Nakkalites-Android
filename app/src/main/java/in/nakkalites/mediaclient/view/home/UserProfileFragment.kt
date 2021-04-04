@@ -9,6 +9,8 @@ import `in`.nakkalites.mediaclient.databinding.FragmentUserProfileBinding
 import `in`.nakkalites.mediaclient.view.BaseFragment
 import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
 import `in`.nakkalites.mediaclient.view.profile.ProfileEditActivity
+import `in`.nakkalites.mediaclient.view.utils.EventObserver
+import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
 import `in`.nakkalites.mediaclient.view.utils.shareTextIntent
 import `in`.nakkalites.mediaclient.view.webview.WebViewActivity
@@ -19,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
 class UserProfileFragment : BaseFragment() {
@@ -34,7 +37,26 @@ class UserProfileFragment : BaseFragment() {
         binding.vm = vm
         binding.callbacks = callbacks
         vm.fetchProfile()
+        vm.viewStates().observe(requireActivity() , EventObserver {
+            when (it) {
+                is Result.Success -> {
+                    binding.mainLayout.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Result.Error -> {
+                    Snackbar.make(
+                        binding.root, getString(R.string.generic_error_message),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                else -> showLoading()
+            }
+        })
         return binding.root
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
     }
 
     private val callbacks = object : UserProfileCallbacks {
@@ -84,6 +106,10 @@ class UserProfileFragment : BaseFragment() {
             startActivity(ProfileEditActivity.createIntent(requireActivity()))
         }
 
+        override fun onPlanCTAClick() {
+
+        }
+
     }
 
     private fun createWebViewIntent(url: String, @StringRes toolbarTitleRes: Int) =
@@ -108,4 +134,5 @@ interface UserProfileCallbacks {
     fun onFaqClick()
     fun onManageSubscriptionClick()
     fun onEditClick()
+    fun onPlanCTAClick()
 }

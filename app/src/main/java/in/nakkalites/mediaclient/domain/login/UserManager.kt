@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.domain.login
 
+import `in`.nakkalites.mediaclient.app.constants.AppConstants.DEFAULT_TAG_BG_COLOR
 import `in`.nakkalites.mediaclient.data.user.LoginResponse
 import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
 import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
@@ -141,4 +142,5 @@ class UserManager(private val userService: UserService, private val userDataStor
         .map { User.map(it) }
         .doOnSuccess { setUser(it) }
 
+    fun getCurrentPlansColor(): String = getUser()?.plan?.colorCode ?: DEFAULT_TAG_BG_COLOR
 }

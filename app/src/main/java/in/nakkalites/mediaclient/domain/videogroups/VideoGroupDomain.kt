@@ -20,7 +20,7 @@ class VideoGroupDomain(
             .map { response ->
                 Triple(
                     response.banners.map { entity -> Banner.map(entity) },
-                    response.videoGroups.map { entity -> VideoGroup.map(entity) },
+                    response.videoGroups?.map { entity -> VideoGroup.map(entity) },
                     response.cursor
                 )
             }

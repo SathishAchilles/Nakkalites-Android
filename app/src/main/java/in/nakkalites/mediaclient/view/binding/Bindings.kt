@@ -5,10 +5,13 @@ import `in`.nakkalites.mediaclient.view.binding.ViewModelBinder.Companion.defaul
 import `in`.nakkalites.mediaclient.view.utils.DebounceOnClickListener
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
+import `in`.nakkalites.mediaclient.viewmodel.utils.StyleFormatText
+import `in`.nakkalites.mediaclient.viewmodel.utils.toSpannable
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.Html
@@ -27,6 +30,8 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.Toolbar
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.TintableBackgroundView
+import androidx.core.view.ViewCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.databinding.*
 import androidx.recyclerview.widget.GridLayoutManager
@@ -36,7 +41,6 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 import org.jetbrains.annotations.NotNull
-import timber.log.Timber
 
 
 object Bindings {
@@ -391,4 +395,19 @@ object Bindings {
         })
     }
 
+    @JvmStatic
+    @BindingAdapter("android:backgroundTint")
+    fun View.bindBackgroundTint(@ColorInt color: Int) {
+        if (this is TintableBackgroundView) {
+            ViewCompat.setBackgroundTintList(this, ColorStateList.valueOf(color))
+        } else {
+            background.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("android:text")
+    fun TextView.bindStyleFormatText( styleFormatText: StyleFormatText?) {
+        text = styleFormatText?.toSpannable(context)
+    }
 }

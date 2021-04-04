@@ -19,7 +19,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
@@ -30,19 +29,23 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var name: String? = null
     var thumbnail: String? = null
     var url: String? = null
+    var hasUrl = ObservableBoolean()
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     var adTimes: List<Long> = listOf()
+    var shouldPlay: Boolean? = false
+    var showAds: Boolean? = false
     private val isPageLoaded = AtomicBoolean(false)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
-    fun setArgs(id: String, name: String, thumbnail: String, url: String) {
+    fun setArgs(id: String, name: String, thumbnail: String, url: String?) {
         this.id = id
         this.name = name
         this.thumbnail = thumbnail
         this.url = url
+        hasUrl.set(url != null)
     }
 
     fun loading(): Boolean {
@@ -89,6 +92,10 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                     duration = video.duration
                     lastPlayedTime = video.lastPlayedTime
                     adTimes = video.adTimes
+                    shouldPlay = video.isPlayable
+                    showAds = video.showAds
+                    url = video.url
+                    hasUrl.set(video.url != null)
                     video
                 }
                 .map { video ->

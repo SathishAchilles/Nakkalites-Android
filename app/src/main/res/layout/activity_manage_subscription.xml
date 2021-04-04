@@ -28,137 +28,131 @@
                 app:title="@string/manage_subscriptions" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/grey_900_2"
             android:fitsSystemWindows="true"
-            android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.core.widget.NestedScrollView
+            <LinearLayout
+                android:id="@+id/main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp">
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-                    <LinearLayout
-                        android:id="@+id/plan_details_layout"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="45dp"
-                        android:background="@drawable/bg_rounded_rect_grey_6dp"
-                        android:orientation="vertical"
-                        android:paddingStart="27dp"
-                        android:paddingTop="38dp"
-                        android:paddingEnd="27dp"
-                        android:paddingBottom="32dp"
-                        app:entries="@{vm.benefits}"
-                        app:entryBinder="@{vmBinder}"
-                        app:entryLayout="@{@layout/item_plan_benefit}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_height="match_parent"
+                        android:paddingStart="30dp"
+                        android:paddingEnd="30dp">
 
-                    <LinearLayout
-                        android:id="@+id/prime_banner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="34dp"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="34dp"
-                        android:background="@drawable/bg_prime"
-                        android:padding="5dp"
-                        app:elevation="5dp"
-                        app:layout_constraintBottom_toTopOf="@id/plan_details_layout"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/plan_details_layout">
+                        <LinearLayout
+                            android:id="@+id/plan_details_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="45dp"
+                            android:background="@drawable/bg_rounded_rect_grey_6dp"
+                            android:orientation="vertical"
+                            android:paddingStart="27dp"
+                            android:paddingTop="38dp"
+                            android:paddingEnd="27dp"
+                            android:paddingBottom="32dp"
+                            app:entries="@{vm.benefits}"
+                            app:entryBinder="@{vmBinder}"
+                            app:entryLayout="@{@layout/item_plan_benefit}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center"
-                            app:srcCompat="@drawable/ic_star" />
-
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/plan_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/inter_bold"
-                            android:paddingStart="5dp"
-                            android:text="@string/prime"
-                            android:textAllCaps="true"
-                            android:textColor="@color/grey_900_2"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            android:layout_marginStart="34dp"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginEnd="34dp"
+                            android:background="@drawable/bg_prime"
+                            android:backgroundTint="@{vm.planColorInt}"
+                            android:orientation="horizontal"
+                            android:padding="5dp"
+                            android:visibility="@{vm.planImg != null}"
+                            app:elevation="5dp"
+                            app:layout_constraintBottom_toTopOf="@id/plan_details_layout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/plan_details_layout">
 
-                    <LinearLayout
-                        android:id="@+id/super_prime_banner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top|end|right"
-                        android:layout_marginStart="34dp"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="34dp"
-                        android:background="@drawable/bg_super_prime"
-                        android:padding="5dp"
-                        app:elevation="5dp"
-                        app:layout_constraintBottom_toTopOf="@id/plan_details_layout"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/plan_details_layout">
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12sp"
+                                android:layout_gravity="center"
+                                android:src="@{vm.planImg}"
+                                tools:src="@drawable/ic_star" />
 
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center"
-                            app:srcCompat="@drawable/ic_crown" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/inter_bold"
+                                android:paddingStart="5dp"
+                                android:text="@{vm.planName}"
+                                android:textAllCaps="true"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="12sp" />
+                        </LinearLayout>
 
-                        <TextView
+                        <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/inter_bold"
-                            android:paddingStart="5dp"
-                            android:text="@string/super_prime"
-                            android:textAllCaps="true"
-                            android:textColor="@color/grey_900_2"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                            android:layout_marginTop="16dp"
+                            android:text="@{vm.validTillDate}"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/plan_details_layout"
+                            tools:text="Valid till: 12 Feb 2021" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.core.widget.NestedScrollView>
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@{vm.validTillDate}"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/plan_details_layout"
-                        tools:text="Valid till: 12 Feb 2021" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_cta"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login_cta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="28dp"
+                    android:background="@drawable/blue_button"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="@string/chat_with_us"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="28dp"
-                android:fontFamily="@font/inter_bold"
-                android:background="@drawable/blue_button"
-                android:text="@string/chat_with_us"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="19sp" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:visibility="visible"
+                tools:visibility="gone">
+
+                <com.github.ybq.android.spinkit.SpinKitView
+                    style="@style/SpinKitView.ThreeBounce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:SpinKit_Color="@color/progress_bar" />
+            </FrameLayout>
+        </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

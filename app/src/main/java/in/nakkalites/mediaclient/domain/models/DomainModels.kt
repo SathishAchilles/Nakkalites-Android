@@ -1,7 +1,7 @@
 package `in`.nakkalites.mediaclient.domain.models
 
+import `in`.nakkalites.mediaclient.data.subscription.PlanEntity
 import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
-import `in`.nakkalites.mediaclient.data.user.PlanEntity
 import `in`.nakkalites.mediaclient.data.user.UserResponse
 import `in`.nakkalites.mediaclient.data.videogroup.*
 import com.squareup.moshi.JsonClass
@@ -11,7 +11,7 @@ data class User(
     val id: String, val name: String?, val email: String?, val imageUrl: String? = null,
     val providerType: String? = null, val countryCode: String?, val phoneNumber: String?,
     val gender: String?, val dob: String?, val city: String?, val country: String?,
-    val plan: Plan? = null, val isFirstLogin: Boolean = false
+    val plan: Plan? = null, val upgradablePlan: Plan? = null, val isFirstLogin: Boolean = false
 ) {
 
     companion object {
@@ -29,50 +29,59 @@ data class User(
                 userEntity.user.imageUrl, userEntity.user.providerType, userEntity.user.countryCode,
                 userEntity.user.phoneNumber, userEntity.user.gender, userEntity.user.dob,
                 userEntity.user.city, userEntity.user.country,
-                plan = userEntity.plan?.let { Plan.map(it) }
+                plan = userEntity.activePlan?.let { Plan.map(it) },
+                upgradablePlan = userEntity.upgradablePlan?.let { Plan.map(it) },
             )
     }
 }
 
+@JsonClass(generateAdapter = true)
 data class Plan(
     val id: String?, val name: String?, val price: String?, val frequency: String?,
-    val contentTags: List<String>?,
+    val contentTags: List<String>?, val planType: String?, val colorCode: String?,
+    val description: String?, val availablePlansCount: Int?, val promotionText: String?
 ) {
     companion object {
         fun map(planEntity: PlanEntity): Plan =
             Plan(
                 planEntity.id, planEntity.name, planEntity.price, planEntity.frequency,
-                planEntity.contentTags
+                planEntity.contentTags, planEntity.planType, planEntity.colorCode,
+                planEntity.description, planEntity.availablePlansCount, planEntity.promotionText
             )
     }
 }
 
 data class Video(
-    val id: String, val titleName: String, val videoName: String, val url: String,
+    val id: String, val titleName: String, val videoName: String, val url: String?,
     val thumbnailImage: String, val description: String?, val duration: Long?,
-    val lastPlayedTime: Long?, val starring: String?, val adTimes: List<Long>
+    val lastPlayedTime: Long?, val starring: String?, val adTimes: List<Long>,
+    val plan: Plan?, val isPlayable: Boolean?, val showAds: Boolean?,
 ) {
     companion object {
         fun map(videoEntity: VideoEntity): Video = Video(
             videoEntity.id, videoEntity.titleName, videoEntity.videoName,
             videoEntity.url, videoEntity.thumbnail, videoEntity.description, videoEntity.duration,
-            videoEntity.lastPlayedTime, videoEntity.starring, videoEntity.adTimes
+            videoEntity.lastPlayedTime, videoEntity.starring, videoEntity.adTimes,
+            videoEntity.plan?.let { Plan.map(it) }, videoEntity.isPlayable, videoEntity.showAds
         )
     }
 }
 
 data class WebSeries(
     val id: String, val name: String, val thumbnailImage: String, val webSeriesCount: Int,
-    val nextSeasonNumber: Int, val nextEpisodeNumber: Int, val description: String,
-    val nextVideo: Video?, val starring: String?, val seasons: List<Season>
+    val nextSeasonNumber: Int, val nextEpisodeNumber: Int, val description: String?,
+    val nextVideo: Video?, val starring: String?, val seasons: List<Season>,
+    val plan: Plan?, val isPlayable: Boolean?, val showAds: Boolean?,
 ) {
     companion object {
         fun map(webSeriesEntity: WebSeriesEntity): WebSeries = WebSeries(
             webSeriesEntity.id, webSeriesEntity.name,
-            webSeriesEntity.thumbnail, webSeriesEntity.seasonsCount,
+            webSeriesEntity.thumbnail, webSeriesEntity.seasonsCount ?: 1,
             webSeriesEntity.nextSeasonNumber ?: 1, webSeriesEntity.nextEpisodeNumber ?: 1,
             webSeriesEntity.description, webSeriesEntity.nextVideo?.let { Video.map(it) },
-            webSeriesEntity.starring, webSeriesEntity.seasons.map { Season.map(it) }
+            webSeriesEntity.starring, webSeriesEntity.seasons.map { Season.map(it) },
+            webSeriesEntity.plan?.let { Plan.map(it) }, webSeriesEntity.isPlayable,
+            webSeriesEntity.showAds
         )
     }
 }

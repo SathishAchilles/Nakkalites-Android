@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.data.user
 
+import `in`.nakkalites.mediaclient.data.subscription.PlanEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -59,7 +60,8 @@ data class RefreshTokenResponse(
 @JsonClass(generateAdapter = true)
 data class UserResponse(
     @field:Json(name = "user") val user: UserEntity,
-    @field:Json(name = "plan") val plan: PlanEntity?
+    @field:Json(name = "active_plan") val activePlan: PlanEntity?,
+    @field:Json(name = "upgradeable_plan") val upgradablePlan: PlanEntity?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -78,11 +80,3 @@ data class UserEntity(
     @field:Json(name = "plan_uid") val planUid: String?,
 )
 
-@JsonClass(generateAdapter = true)
-data class PlanEntity(
-    @field:Json(name = "uid") val id: String?,
-    @field:Json(name = "name") val name: String?,
-    @field:Json(name = "price") val price: String?,
-    @field:Json(name = "frequency") val frequency: String?,
-    @field:Json(name = "content_tags") val contentTags: List<String>?,
-)

@@ -43,7 +43,7 @@ class VideoDetailActivity : BaseActivity() {
         intent.getStringExtra(AppConstants.VIDEO_THUMBNAIL)!!
     }
     private val url by lazy {
-        intent.getStringExtra(AppConstants.VIDEO_URL)!!
+        intent.getStringExtra(AppConstants.VIDEO_URL)
     }
     private var menu: Menu? = null
     private val spanCount = 2
@@ -51,7 +51,7 @@ class VideoDetailActivity : BaseActivity() {
     companion object {
         @JvmStatic
         fun createIntent(
-            ctx: Context, id: String, name: String, thumbnail: String, url: String
+            ctx: Context, id: String, name: String, thumbnail: String, url: String?
         ): Intent = Intent(ctx, VideoDetailActivity::class.java)
             .putExtra(AppConstants.VIDEO_ID, id)
             .putExtra(AppConstants.VIDEO_NAME, name)
@@ -149,7 +149,8 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         openVideoPlayerPage(
-            this, vm.id, vm.name, vm.thumbnail, vm.url, vm.duration, vm.lastPlayedTime, vm.adTimes
+            this, vm.id, vm.name, vm.thumbnail, vm.url!!, vm.duration, vm.lastPlayedTime,
+            vm.adTimes, vm.showAds!!, vm.shouldPlay!!
         )
         trackVideoClicked(vm.id, vm.name)
     }
@@ -186,7 +187,7 @@ class VideoDetailActivity : BaseActivity() {
     private val onPlayClick = { vm: VideoDetailVm ->
         openVideoPlayerPage(
             this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration, vm.lastPlayedTime,
-            vm.adTimes
+            vm.adTimes, vm.showAds!!, vm.shouldPlay!!
         )
         trackVideoPlayCTAClicked(vm.id!!, vm.name!!)
     }

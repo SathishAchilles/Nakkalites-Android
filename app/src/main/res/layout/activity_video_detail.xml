@@ -54,9 +54,9 @@
                     <ImageView
                         android:id="@+id/expandedImage"
                         android:layout_width="match_parent"
-                        app:fit="@{true}"
                         android:layout_height="300dp"
                         app:centerCrop="@{true}"
+                        app:fit="@{true}"
                         app:imageUrl="@{vm.thumbnail}"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7" />
@@ -64,14 +64,15 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:src="@drawable/video_overlay_gradient"/>
+                        android:src="@drawable/video_overlay_gradient" />
 
                     <ImageView
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
                         android:onClick="@{() -> onPlayClick.invoke(vm)}"
-                        android:src="@drawable/ic_play_arrow_black_24dp" />
+                        android:src="@drawable/ic_play_arrow_black_24dp"
+                        android:visibility="@{vm.hasUrl}" />
 
                 </FrameLayout>
 

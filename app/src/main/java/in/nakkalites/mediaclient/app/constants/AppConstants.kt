@@ -15,6 +15,7 @@ object AppConstants {
     const val WEBSERIES_ID = "WEBSERIES_ID"
     const val WEBSERIES_NAME = "WEBSERIES_NAME"
     const val WEBSERIES_THUMBNAIL = "WEBSERIES_THUMBNAIL"
+    const val PLAN_ID = "PLAN_ID"
     const val VIDEO_ID = "VIDEO_ID"
     const val VIDEO_NAME = "VIDEO_NAME"
     const val VIDEO_THUMBNAIL = "VIDEO_THUMBNAIL"
@@ -27,6 +28,7 @@ object AppConstants {
     const val BOTTOM_NAV_TAB = "BOTTOM_NAV_TAB"
     const val COUNTRY_CODE = "COUNTRY_CODE"
     const val PHONE_NUMBER = "PHONE_NUMBER"
+    const val DEFAULT_TAG_BG_COLOR = "#58D3DB"
 
     const val PLAY_STORE_URL = "market://details?id="
     const val CONTACT_EMAIL = "contact@nakkalites.in"

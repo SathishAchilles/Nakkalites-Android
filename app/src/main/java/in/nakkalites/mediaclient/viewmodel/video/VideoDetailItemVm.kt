@@ -2,7 +2,10 @@ package `in`.nakkalites.mediaclient.viewmodel.video
 
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
+import `in`.nakkalites.mediaclient.viewmodel.subscription.PlanUtils
 import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 
 class VideoDetailItemVm(video: Video) : BaseModel {
     val title = video.videoName
@@ -19,5 +22,10 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     }
     val showProgress = progress != 0
     val starring = video.starring
-
+    val shouldPlay = video.isPlayable
+    val showAds = video.showAds
+    val hasPlan = video.plan != null
+    val planName = video.plan?.name
+    val planImg = ObservableField(PlanUtils.getPlanIcon(video.plan))
+    val planColorInt = ObservableInt(PlanUtils.getPlanColorInt(video.plan?.colorCode))
 }

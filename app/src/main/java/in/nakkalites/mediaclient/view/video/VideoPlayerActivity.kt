@@ -78,7 +78,7 @@ class VideoPlayerActivity : BaseActivity() {
         @JvmStatic
         fun createIntent(
             ctx: Context, id: String, name: String, thumbnail: String, url: String,
-            duration: Long?, lastPayedTime: Long?, adTimes: List<Long>
+            duration: Long?, lastPayedTime: Long?, adTimes: List<Long>, showAds: Boolean
         ): Intent = Intent(ctx, VideoPlayerActivity::class.java)
             .putExtra(AppConstants.VIDEO_ID, id)
             .putExtra(AppConstants.VIDEO_NAME, name)
@@ -86,7 +86,7 @@ class VideoPlayerActivity : BaseActivity() {
             .putExtra(AppConstants.VIDEO_URL, url)
             .putExtra(AppConstants.LAST_PLAYED_TIME, lastPayedTime)
             .putExtra(AppConstants.DURATION, duration)
-            .putExtra(AppConstants.AD_TIMES, adTimes.toLongArray())
+            .putExtra(AppConstants.AD_TIMES, if(showAds) adTimes.toLongArray() else emptyArray<Long>())
     }
 
     private var cookieStore = HashMap<HttpUrl, List<Cookie>>()

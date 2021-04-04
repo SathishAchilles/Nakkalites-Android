@@ -10,7 +10,7 @@
     </plurals>
     <string name="play_episode_x">Play Episode %s</string>
     <string name="share_sheet_title">Share %s</string>
-    <string name="share_nakkalites">Share NAkkalites to</string>
+    <string name="share_nakkalites">Share Nakkalites to</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="error_network">Some problem in server</string>
     <string name="app_update_dialog_title">Update App</string>
@@ -86,7 +86,7 @@ Download their new app and watch exclusively.\n\n
     <string name="current_plan">Current Plan</string>
     <string name="rupee_placeholder">"₹ %s "</string>
     <string name="continue_to_payment">Continue to Payment</string>
-    <string name="upgrade_to_super_prime">Upgrade to Super Prime</string>
+    <string name="upgrade_to_x">Upgrade to %s</string>
     <string name="chat_with_us">Chat With Us</string>
     <string name="select_country">Select Country</string>
     <string name="enter_phone_number_error">Please Enter Valid Phone Number to Proceed</string>
@@ -95,4 +95,6 @@ Download their new app and watch exclusively.\n\n
     <string name="select_date_of_birth">Select date of birth</string>
     <string name="complete">Complete</string>
     <string name="missing_fields">Please Fill the Field to Proceed</string>
+    <string name="rupee_x">₹%s</string>
+    <string name="slash_x">" /%s"</string>
 </resources>
