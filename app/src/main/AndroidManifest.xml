@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:supportsRtl">
-        <activity android:name=".view.subscription.ManageSubscriptionActivity"></activity>
+        <activity android:name=".view.subscription.FaqActivity"/>
+        <activity android:name=".view.subscription.ManageSubscriptionActivity" />
         <activity android:name=".view.subscription.SubscriptionsActivity" />
         <activity android:name=".view.profile.ProfileEditActivity" />
         <activity
@@ -68,6 +69,17 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVE" />
             </intent-filter>
         </receiver>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="in.nakkalites.mediaclient.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/freshchat_file_provider_paths" />
+        </provider>
 
     </application>
 

@@ -6,14 +6,19 @@ import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.FragmentUserProfileBinding
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseFragment
 import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
 import `in`.nakkalites.mediaclient.view.profile.ProfileEditActivity
+import `in`.nakkalites.mediaclient.view.subscription.FaqActivity
+import `in`.nakkalites.mediaclient.view.subscription.ManageSubscriptionActivity
+import `in`.nakkalites.mediaclient.view.subscription.SubscriptionsActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
 import `in`.nakkalites.mediaclient.view.utils.shareTextIntent
 import `in`.nakkalites.mediaclient.view.webview.WebViewActivity
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -44,10 +49,7 @@ class UserProfileFragment : BaseFragment() {
                     binding.progressBar.visibility = View.GONE
                 }
                 is Result.Error -> {
-                    Snackbar.make(
-                        binding.root, getString(R.string.generic_error_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    requireActivity().errorHandler(it.throwable)
                 }
                 else -> showLoading()
             }
@@ -95,11 +97,11 @@ class UserProfileFragment : BaseFragment() {
         }
 
         override fun onFaqClick() {
-
+            startActivity(FaqActivity.createIntent(requireActivity()))
         }
 
         override fun onManageSubscriptionClick() {
-
+            startActivity(ManageSubscriptionActivity.createIntent(requireActivity()))
         }
 
         override fun onEditClick() {
@@ -107,7 +109,7 @@ class UserProfileFragment : BaseFragment() {
         }
 
         override fun onPlanCTAClick() {
-
+            startActivity(SubscriptionsActivity.createIntent(requireActivity()))
         }
 
     }

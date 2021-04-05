@@ -12,6 +12,10 @@
         <variable
             name="vmBinder"
             type="in.nakkalites.mediaclient.view.binding.ViewModelBinder" />
+
+        <variable
+            name="onCTAClick"
+            type="kotlin.jvm.functions.Function0&lt;kotlin.Unit&gt;" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -107,17 +111,6 @@
                                 android:textSize="12sp" />
                         </LinearLayout>
 
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@{vm.validTillDate}"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/plan_details_layout"
-                            tools:text="Valid till: 12 Feb 2021" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.core.widget.NestedScrollView>
 
@@ -127,6 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginStart="30dp"
+                    android:onClick="@{() -> onCTAClick.invoke()}"
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="28dp"
                     android:background="@drawable/blue_button"

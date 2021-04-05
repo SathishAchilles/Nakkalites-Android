@@ -11,6 +11,8 @@ import `in`.nakkalites.mediaclient.viewmodel.login.CountryCodeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.glyphChecker
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import `in`.nakkalites.mediaclient.viewmodel.utils.UserUpdateFailedException
+import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +33,8 @@ class ProfileEditVm(val userManager: UserManager) : BaseViewModel() {
     val gender = ObservableField<String>()
     val country = ObservableField<String>(AppConstants.AppCountry.NAME)
     val city = ObservableField<String>()
+    val phoneNumberEnabled = ObservableBoolean()
+    val emailEnabled = ObservableBoolean()
     val countryCodeVm = CountryCodeVm(flagGlyphChecker = glyphChecker)
     var user = userManager.getUser()
 
@@ -59,7 +63,7 @@ class ProfileEditVm(val userManager: UserManager) : BaseViewModel() {
                     viewState.value = Event(
                         Result.Error(
                             ProfileEditViewEvent.UpdateFailure,
-                            UserUpdateFailedException()
+                            throwable
                         )
                     )
                     loge(throwable = throwable, message = "Profile update failed")
@@ -75,11 +79,13 @@ class ProfileEditVm(val userManager: UserManager) : BaseViewModel() {
                     user = it
                     name.set(it.name)
                     email.set(it.email)
-                    gender.set(it.gender)
+                    gender.set(it.gender?.toCamelCase())
                     dob.set(it.dob)
                     country.set(it.country)
                     city.set(it.city)
                     phoneNumber.set(it.phoneNumber)
+                    phoneNumberEnabled.set(it.phoneNumber != null)
+                    emailEnabled.set(it.email != null)
                     it.countryCode?.let { countryCode -> countryCodeVm.phoneCode = countryCode }
                     viewState.value = Event(Result.Success(ProfileEditViewEvent.PageLoaded))
                 },

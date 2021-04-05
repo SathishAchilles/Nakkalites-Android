@@ -4,21 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="vmBinder"
-            type="in.nakkalites.mediaclient.view.binding.ViewModelBinder"/>
+
+        <import type="in.nakkalites.mediaclient.viewmodel.subscription.SubscriptionVm" />
+
         <variable
             name="vm"
-            type="in.nakkalites.mediaclient.viewmodel.subscription.SubscriptionVm" />
+            type="SubscriptionVm" />
+
+        <variable
+            name="onSelected"
+            type="kotlin.jvm.functions.Function1&lt;SubscriptionVm,kotlin.Unit&gt;" />
+
+        <variable
+            name="vmBinder"
+            type="in.nakkalites.mediaclient.view.binding.ViewModelBinder" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@{!vm.isSelected ? @drawable/bg_rounded_grey_border: @drawable/bg_rounded_blue_border}"
+        android:onClick="@{() -> onSelected.invoke(vm)}"
         android:orientation="vertical"
         android:paddingStart="28dp"
         android:paddingEnd="28dp"
@@ -28,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@{!vm.isSelected ?@drawable/bg_bottom_rounded_blue: @drawable/bg_bottom_rounded_grey}"
+            android:background="@{vm.isSelected ? @drawable/bg_bottom_rounded_blue: @drawable/bg_bottom_rounded_grey}"
             android:fontFamily="@font/inter_regular"
             android:paddingStart="10dp"
             android:paddingTop="2dp"
@@ -40,61 +50,93 @@
             android:textSize="12sp"
             tools:text="@string/prime" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="9dp"
-                android:layout_height="9dp"
-                android:layout_marginEnd="6dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="@{vm.currentPlan}">
+
+                    <ImageView
+                        android:layout_width="9dp"
+                        android:layout_height="9dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_circle_solid_blue"
+                        android:padding="2dp"
+                        app:srcCompat="@drawable/ic_tick_filled" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/current_plan"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@{vm.upgradablePrice}"
+                        android:textColor="@color/white"
+                        android:textSize="34sp"
+                        tools:text="@string/rupee_x" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@{vm.upgradablePlanFrequency}"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        tools:text="/month" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_gravity="end"
                 android:background="@drawable/bg_circle_solid_blue"
-                android:padding="2dp"
-                app:srcCompat="@drawable/ic_tick_filled" />
+                android:visibility="@{vm.isSelected}">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:text="@string/current_plan"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_tick_filled" />
+            </FrameLayout>
+        </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:gravity="bottom"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold"
-                android:textColor="@color/white"
-                android:textSize="34sp"
-                tools:text="@string/rupee_placeholder" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                tools:text="/month" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
+            android:padding="5dp"
             app:entries="@{vm.benefits}"
             app:entryBinder="@{vmBinder}"
             app:entryLayout="@{@layout/item_plan_benefit}"

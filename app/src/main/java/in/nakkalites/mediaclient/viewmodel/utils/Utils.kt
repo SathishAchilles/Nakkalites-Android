@@ -52,3 +52,18 @@ fun String.parsePhoneNumber(phoneNumberUtil: PhoneNumberUtil): Phonenumber.Phone
         null
     }
 }
+
+ fun String.toCamelCase(): String {
+    var cnt = 0
+    val n = length
+    val ch = toCharArray()
+    var resInd = 0
+    for (i in 0 until n) {
+        if (ch[i] == ' ') {
+            cnt++
+            ch[i + 1] = Character.toUpperCase(ch[i + 1])
+            continue
+        } else ch[resInd++] = ch[i]
+    }
+    return String(ch, 0, n - cnt)
+}

@@ -22,7 +22,7 @@ import io.reactivex.rxkotlin.subscribeBy
 class UserProfileVm(val userManager: UserManager) : BaseViewModel() {
 
     private var user = userManager.getUser()
-    val profileUrl = ObservableField<String>()
+    val profileUrl = ObservableField<String>(user?.imageUrl)
     val name = ObservableString(user?.let {
         it.name ?: it.phoneNumber ?: it.email ?: ""
     } ?: "")

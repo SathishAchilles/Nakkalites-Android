@@ -30,7 +30,7 @@ class VideoVm(
     val adTimes = video.adTimes
     val shouldPlay = video.isPlayable
     val showAds = video.showAds
-    val hasPlan = video.plan != null
+    val planUid = video.plan?.id
     val planName = video.plan?.name
     val planImg = ObservableField(getPlanIcon(video.plan))
     val planColorInt = ObservableInt(getPlanColorInt(video.plan?.colorCode))

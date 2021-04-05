@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.5"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -87,6 +87,7 @@ dependencies {
     implementation deps.firebase.crashlytics
     implementation deps.firebase.messaging
     implementation deps.firebase.remoteConfig
+    implementation deps.freshchat
     implementation deps.google.admob
     implementation deps.google.auth
     implementation deps.google.authApiPhone
@@ -101,6 +102,7 @@ dependencies {
     implementation deps.picasso
     implementation deps.playServices.auth
     implementation deps.retrofit.core
+    implementation deps.razorpay
     implementation deps.retrofit.moshiConvertor
     implementation deps.retrofit.rxJavaAdapter
     implementation deps.rx.core

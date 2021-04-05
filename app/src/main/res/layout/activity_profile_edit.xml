@@ -40,8 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                tools:visibility="visible"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
@@ -106,6 +106,7 @@
                                 android:cursorVisible="false"
                                 android:drawableRight="@drawable/ic_chevron_down"
                                 android:drawablePadding="4dp"
+                                android:enabled="@{!vm.phoneNumberEnabled}"
                                 android:focusable="false"
                                 android:maxHeight="50dp"
                                 android:paddingEnd="16dp"
@@ -126,6 +127,7 @@
                                 android:layout_marginStart="16dp"
                                 android:background="@drawable/bg_edittext"
                                 android:digits="@string/numerals"
+                                android:enabled="@{!vm.phoneNumberEnabled}"
                                 android:hint="@string/phone_number"
                                 android:imeOptions="actionDone"
                                 android:importantForAutofill="no"
@@ -160,6 +162,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
                             android:background="@drawable/bg_edittext"
+                            android:enabled="@{!vm.emailEnabled}"
                             android:letterSpacing="0.06"
                             android:lineSpacingExtra="12sp"
                             android:text="@={vm.email}"
@@ -183,7 +186,6 @@
                             android:layout_marginBottom="20dp"
                             android:background="@drawable/bg_edittext"
                             android:drawableEnd="@drawable/ic_chevron_down"
-                            app:drawableTint="@color/grey_900_2"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:letterSpacing="0.06"
@@ -192,6 +194,7 @@
                             android:text="@={vm.gender}"
                             android:textColor="@color/grey_900_2"
                             android:textSize="16sp"
+                            app:drawableTint="@color/grey_900_2"
                             app:suggestions="@{vm.ageSuggestions}" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -210,16 +213,16 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
                             android:background="@drawable/bg_edittext"
-                            android:letterSpacing="0.06"
                             android:drawableEnd="@drawable/ic_chevron_down"
-                            app:drawableTint="@color/grey_900_2"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
+                            android:letterSpacing="0.06"
                             android:lineSpacingExtra="12sp"
                             android:onClick="@{() -> callbacks.onDateClicked()}"
                             android:text="@={vm.dob}"
                             android:textColor="@color/grey_900_2"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            app:drawableTint="@color/grey_900_2" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:layout_width="match_parent"
@@ -236,19 +239,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
-                            app:drawableTint="@color/grey_900_2"
                             android:background="@drawable/bg_edittext"
-                            android:letterSpacing="0.06"
-                            android:lineSpacingExtra="12sp"
                             android:clickable="false"
                             android:cursorVisible="false"
                             android:drawableRight="@drawable/ic_chevron_down"
                             android:drawablePadding="4dp"
                             android:focusable="false"
+                            android:letterSpacing="0.06"
+                            android:lineSpacingExtra="12sp"
                             android:onClick="@{() -> callbacks.onCountryClicked()}"
                             android:text="@={vm.country}"
                             android:textColor="@color/grey_900_2"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            app:drawableTint="@color/grey_900_2" />
 
                         <com.google.android.material.textview.MaterialTextView
                             android:layout_width="match_parent"
@@ -295,8 +298,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="false"
-                tools:visibility="gone"
-                android:visibility="visible">
+                android:visibility="visible"
+                tools:visibility="gone">
 
                 <com.github.ybq.android.spinkit.SpinKitView
                     style="@style/SpinKitView.ThreeBounce"

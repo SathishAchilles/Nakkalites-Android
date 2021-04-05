@@ -1,4 +1,5 @@
 <resources>
+    <string name="freshchat_file_provider_authority">in.nakkalites.mediaclient.provider</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
     <string name="home">Home</string>
     <string name="web_series">Web series</string>
@@ -97,4 +98,6 @@ Download their new app and watch exclusively.\n\n
     <string name="missing_fields">Please Fill the Field to Proceed</string>
     <string name="rupee_x">₹%s</string>
     <string name="slash_x">" /%s"</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="payment_success_message">Payment Status will be updated in sometime</string>
 </resources>

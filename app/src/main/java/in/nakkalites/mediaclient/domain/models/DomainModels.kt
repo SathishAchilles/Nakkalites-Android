@@ -1,5 +1,7 @@
 package `in`.nakkalites.mediaclient.domain.models
 
+import `in`.nakkalites.mediaclient.data.subscription.FaqEntity
+import `in`.nakkalites.mediaclient.data.subscription.PlanConfigEntity
 import `in`.nakkalites.mediaclient.data.subscription.PlanEntity
 import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
 import `in`.nakkalites.mediaclient.data.user.UserResponse
@@ -39,15 +41,31 @@ data class User(
 data class Plan(
     val id: String?, val name: String?, val price: String?, val frequency: String?,
     val contentTags: List<String>?, val planType: String?, val colorCode: String?,
-    val description: String?, val availablePlansCount: Int?, val promotionText: String?
+    val descriptions: List<String>, val availablePlansCount: Int?, val promotionText: String?,
+    val isSelected: Boolean
 ) {
     companion object {
         fun map(planEntity: PlanEntity): Plan =
             Plan(
                 planEntity.id, planEntity.name, planEntity.price, planEntity.frequency,
                 planEntity.contentTags, planEntity.planType, planEntity.colorCode,
-                planEntity.description, planEntity.availablePlansCount, planEntity.promotionText
+                planEntity.descriptions, planEntity.availablePlansCount, planEntity.promotionText,
+                planEntity.isSelected ?: false
             )
+    }
+}
+
+@JsonClass(generateAdapter = true)
+data class PlanConfig(val thumbnail: String?) {
+    companion object {
+        fun map(planEntity: PlanConfigEntity): PlanConfig = PlanConfig(planEntity.thumbnail)
+    }
+}
+
+@JsonClass(generateAdapter = true)
+data class Faq(val question: String, val answer: String) {
+    companion object {
+        fun map(faq: FaqEntity): Faq = Faq(faq.question, faq.answer)
     }
 }
 

@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.profile
 
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityProfileEditBinding
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.login.CountriesBottomSheet
 import `in`.nakkalites.mediaclient.view.login.CountriesBottomSheetCallbacks
@@ -9,6 +10,8 @@ import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditViewEvent
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
+import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -44,7 +47,7 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     when (it.data) {
                         is ProfileEditViewEvent.PageLoaded -> {
                             vm.user?.gender?.let { gender ->
-                                binding.etGender.setText(toCamelCase(gender), false)
+                                binding.etGender.setText(gender.toCamelCase(), false)
                             }
                             binding.progressBar.visibility = View.GONE
                             binding.profileLayout.visibility = View.VISIBLE
@@ -57,29 +60,11 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.profileLayout.visibility = View.VISIBLE
-                    Snackbar.make(
-                        binding.root, getString(R.string.generic_error_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    errorHandler(it.throwable)
                 }
                 else -> showLoading()
             }
         })
-    }
-
-    private fun toCamelCase(s: String): String {
-        var cnt = 0
-        val n = s.length
-        val ch = s.toCharArray()
-        var res_ind = 0
-        for (i in 0 until n) {
-            if (ch[i] == ' ') {
-                cnt++
-                ch[i + 1] = Character.toUpperCase(ch[i + 1])
-                continue
-            } else ch[res_ind++] = ch[i]
-        }
-        return String(ch, 0, n - cnt)
     }
 
     private fun showLoading() {

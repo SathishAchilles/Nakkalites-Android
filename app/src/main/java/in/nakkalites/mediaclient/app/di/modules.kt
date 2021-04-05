@@ -22,6 +22,9 @@ import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.FaqListVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.ManageSubscriptionVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.SubscriptionsVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
@@ -32,6 +35,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
 import androidx.preference.PreferenceManager
+import com.freshchat.consumer.sdk.Freshchat
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.LoadControl
 import com.google.android.exoplayer2.database.DatabaseProvider
@@ -105,6 +109,9 @@ val applicationModule = module {
     single {
         AnalyticsManager(get(), get())
     }
+    single {
+        Freshchat.getInstance(androidContext())
+    }
 }
 
 val viewModelModule = module {
@@ -123,6 +130,9 @@ val viewModelModule = module {
     viewModel { ProfileEditVm(get()) }
     viewModel { CountriesSheetVm() }
     viewModel { UserProfileVm(get()) }
+    viewModel { SubscriptionsVm(get()) }
+    viewModel { ManageSubscriptionVm(get()) }
+    viewModel { FaqListVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {

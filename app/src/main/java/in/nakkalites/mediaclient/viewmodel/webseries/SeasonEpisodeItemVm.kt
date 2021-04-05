@@ -27,7 +27,7 @@ class SeasonEpisodeItemVm(
     val adTimes = episode.adTimes
     val shouldPlay = episode.isPlayable
     val showAds = episode.showAds
-    val hasPlan = episode.plan != null
+    val planUid = episode.plan?.id
     val planName = episode.plan?.name
     val planImg = ObservableField(PlanUtils.getPlanIcon(episode.plan))
     val planColorInt = ObservableInt(PlanUtils.getPlanColorInt(episode.plan?.colorCode))

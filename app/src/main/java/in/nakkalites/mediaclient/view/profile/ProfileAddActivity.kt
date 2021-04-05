@@ -3,6 +3,7 @@ package `in`.nakkalites.mediaclient.view.profile
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityProfileAddBinding
 import `in`.nakkalites.mediaclient.domain.login.UserManager
+import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.login.CountriesBottomSheet
@@ -12,6 +13,7 @@ import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.showSoftKeyboard
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
+import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.parsePhoneNumber
 import android.content.Context
 import android.content.Intent
@@ -80,10 +82,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 }
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    Snackbar.make(
-                        binding.root, getString(R.string.generic_error_message),
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    errorHandler(it.throwable)
                 }
                 else -> showLoading()
             }

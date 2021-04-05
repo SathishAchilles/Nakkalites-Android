@@ -20,6 +20,7 @@ ext.versions = [
         crashlyticsPlugin   : '2.3.0',
         firebase            : '17.5.0',
         firebaseAuth        : '20.0.3',
+        freshchat           : '4.3.3',
         googleDesign        : "28.0.0",
         googleServicesPlugin: '4.3.3',
         junit               : '4.12',
@@ -34,6 +35,7 @@ ext.versions = [
         picasso             : '2.71828',
         playServices        : '17.0.0',
         preferences         : '1.1.0',
+        razorpay            : '1.6.7',
         recyclerView        : '1.1.0',
         retrofit            : '2.6.2',
         remoteConfig        : '19.1.0',
@@ -78,6 +80,7 @@ ext.deps = [
                 remoteConfig: "com.google.firebase:firebase-config:${versions.remoteConfig}",
                 messaging   : "com.google.firebase:firebase-messaging:${versions.messaging}"
         ],
+        freshchat     : "com.github.freshworks:freshchat-android:${versions.freshchat}",
         google        : [
                 design      : "com.android.support:design:${versions.googleDesign}",
                 admob       : "com.google.android.gms:play-services-ads:${versions.admob}",
@@ -107,6 +110,7 @@ ext.deps = [
         playServices  : [
                 auth: "com.google.android.gms:play-services-auth:${versions.playServices}"
         ],
+        razorpay      : "com.razorpay:checkout:${versions.razorpay}",
         timber        : "com.jakewharton.timber:timber:${versions.timber}",
         time          : "com.github.kizitonwose.time:time:${versions.time}",
         retrofit      : [

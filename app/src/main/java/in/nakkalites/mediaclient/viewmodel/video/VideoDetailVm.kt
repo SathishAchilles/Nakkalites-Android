@@ -33,6 +33,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     var adTimes: List<Long> = listOf()
+    var planUid :String? = null
     var shouldPlay: Boolean? = false
     var showAds: Boolean? = false
     private val isPageLoaded = AtomicBoolean(false)
@@ -96,6 +97,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                     showAds = video.showAds
                     url = video.url
                     hasUrl.set(video.url != null)
+                    planUid = video.plan?.id
                     video
                 }
                 .map { video ->

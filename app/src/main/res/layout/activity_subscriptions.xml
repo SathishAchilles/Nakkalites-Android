@@ -8,10 +8,10 @@
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.viewmodel.subscription.SubscriptionsVm" />
-
         <variable
-            name="vmBinder"
-            type="in.nakkalites.mediaclient.view.binding.ViewModelBinder" />
+            name="onCTAClicked"
+            type="kotlin.jvm.functions.Function0&lt;kotlin.Unit&gt;" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -58,7 +58,7 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/grey_900_2"
@@ -66,50 +66,81 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <com.google.android.material.textview.MaterialTextView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/inter_bold"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="8sp"
-                android:text="@string/select_a_plan_that_s_right_for_you"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:layout_height="match_parent">
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <LinearLayout
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="16dp"
-                    android:orientation="vertical"
-                    app:entries="@{vm.subscriptions}"
-                    app:entryBinder="@{vmBinder}"
-                    app:entryLayout="@{@layout/item_subscription}"
-                    tools:ignore="UselessLeaf" />
-            </androidx.core.widget.NestedScrollView>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:gravity="center_horizontal"
+                    android:lineSpacingExtra="8sp"
+                    android:text="@string/select_a_plan_that_s_right_for_you"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cta"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/grey_900_2"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:layout_constraintBottom_toTopOf="@id/cta"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    tools:listitem="@layout/item_subscription" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="28dp"
+                    android:background="@drawable/blue_button"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="@{vm.upgradablePlanCTA}"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:onClick="@{() -> onCTAClicked.invoke()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recycler_view"
+                    tools:text="@string/upgrade_to_x" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="30dp"
-                android:fontFamily="@font/inter_bold"
-                android:layout_marginBottom="28dp"
-                android:background="@drawable/blue_button"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="19sp"
-                tools:text="@string/upgrade_to_super_prime" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:visibility="visible"
+                tools:visibility="gone">
+
+                <com.github.ybq.android.spinkit.SpinKitView
+                    style="@style/SpinKitView.ThreeBounce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:SpinKit_Color="@color/progress_bar" />
+            </FrameLayout>
+        </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

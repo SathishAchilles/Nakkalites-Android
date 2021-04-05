@@ -150,7 +150,7 @@ class VideoDetailActivity : BaseActivity() {
     private val onVideoClick = { vm: VideoVm ->
         openVideoPlayerPage(
             this, vm.id, vm.name, vm.thumbnail, vm.url!!, vm.duration, vm.lastPlayedTime,
-            vm.adTimes, vm.showAds!!, vm.shouldPlay!!
+            vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid!!
         )
         trackVideoClicked(vm.id, vm.name)
     }
@@ -187,7 +187,7 @@ class VideoDetailActivity : BaseActivity() {
     private val onPlayClick = { vm: VideoDetailVm ->
         openVideoPlayerPage(
             this, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration, vm.lastPlayedTime,
-            vm.adTimes, vm.showAds!!, vm.shouldPlay!!
+            vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid!!
         )
         trackVideoPlayCTAClicked(vm.id!!, vm.name!!)
     }
