@@ -1,6 +1,7 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
@@ -22,6 +23,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.atomic.AtomicBoolean
 
 class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+    private var video: Video? = null
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     val items = ObservableArrayList<BaseModel>()
     private val isDataLoading = ObservableBoolean()
@@ -63,6 +65,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
             .compose(RxTransformers.dataLoading(isDataLoading, items))
             .subscribeBy(
                 onSuccess = {
+                    hasUrl.set(video?.url != null)
                     items.addAll(it)
                 },
                 onError = {
@@ -90,13 +93,13 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                     isPageLoaded.set(true)
                 }
                 .map { video ->
+                    this.video = video
                     duration = video.duration
                     lastPlayedTime = video.lastPlayedTime
                     adTimes = video.adTimes
                     shouldPlay = video.isPlayable
                     showAds = video.showAds
                     url = video.url
-                    hasUrl.set(video.url != null)
                     planUid = video.plan?.id
                     video
                 }

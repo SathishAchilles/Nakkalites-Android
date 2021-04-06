@@ -14,7 +14,7 @@ fun openVideoDetailPage(
 fun openVideoPlayerPage(
     context: Context, id: String, name: String, thumbnail: String, url: String,
     duration: Long? = 0L, lastPayedTime: Long? = 0L, adTimes: List<Long> = listOf(),
-    showAds: Boolean, shouldPlay: Boolean, planUid: String
+    showAds: Boolean, shouldPlay: Boolean, planUid: String?
 ) {
     if(shouldPlay) {
         context.startActivity(

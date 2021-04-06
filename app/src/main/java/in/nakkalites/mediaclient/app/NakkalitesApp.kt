@@ -66,9 +66,6 @@ class NakkalitesApp : Application() {
         config.isGallerySelectionEnabled = false
         config.isResponseExpectationEnabled = false
         freshchat.init(config)
-        val userMeta: MutableMap<String, String> = HashMap()
-        userMeta["user_id"] = userManager.getUser()?.id.toString()
-        freshchat.setUserProperties(userMeta)
         val notificationConfig = FreshchatNotificationConfig()
             .setNotificationSoundEnabled(true)
             .setImportance(NotificationManagerCompat.IMPORTANCE_MAX)

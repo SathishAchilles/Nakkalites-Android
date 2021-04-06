@@ -3,6 +3,7 @@ package `in`.nakkalites.mediaclient.view.subscription
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.databinding.ActivityManageSubscriptionBinding
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.binding.ViewModelBinder
@@ -16,11 +17,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.freshchat.consumer.sdk.Freshchat
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ManageSubscriptionActivity : BaseActivity() {
     private lateinit var binding: ActivityManageSubscriptionBinding
     private val vm: ManageSubscriptionVm by viewModel()
+    private val freshchat: Freshchat by inject()
+    private val userManager: UserManager by inject()
 
     companion object {
         @JvmStatic
@@ -47,6 +51,9 @@ class ManageSubscriptionActivity : BaseActivity() {
                 else -> showLoading()
             }
         })
+        val userMeta: MutableMap<String, String> = HashMap()
+        userMeta["user_id"] = userManager.getUser()?.id.toString()
+        freshchat.setUserProperties(userMeta)
     }
 
     private fun showLoading() {

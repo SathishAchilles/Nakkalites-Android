@@ -52,7 +52,7 @@
 
             <ImageView
                 android:layout_width="12dp"
-                android:layout_height="12sp"
+                android:layout_height="12dp"
                 android:layout_gravity="center"
                 android:src="@{vm.planImg}"
                 tools:src="@drawable/ic_star" />
