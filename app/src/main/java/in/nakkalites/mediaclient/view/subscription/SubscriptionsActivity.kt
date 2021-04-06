@@ -108,15 +108,15 @@ class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
         /*
           You need to pass current activity in order to let Razorpay create CheckoutActivity
          */
-        val co = Checkout()
-        co.setKeyID(apiKey)
+        val checkout = Checkout()
+        checkout.setKeyID(apiKey)
         try {
             val options = JSONObject(razorpayParams)
-            co.open(this, options)
+            checkout.open(this, options)
         } catch (e: Exception) {
             Toast.makeText(this, "Error in payment: " + e.message, Toast.LENGTH_SHORT)
                 .show()
-            e.printStackTrace()
+            Timber.e(e)
         }
     }
 
@@ -149,6 +149,7 @@ class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
     }
     private val onSelected = { subscriptionVm: SubscriptionVm ->
         vm.selectedSubscription = subscriptionVm.plan
+        vm.onPlanSelected(subscriptionVm)
         vm.items.filterIsInstance(SubscriptionVm::class.java)
             .forEach { it.isSelected.set(it.id == subscriptionVm.id) }
     }
@@ -169,7 +170,6 @@ class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
     override fun onPaymentSuccess(razorpayPaymentID: String) {
         try {
             vm.verifyPlan(razorpayPaymentID)
-            Timber.e("Payment success: $razorpayPaymentID")
         } catch (e: java.lang.Exception) {
             Timber.e(e, "Exception in onPaymentSuccess")
         }

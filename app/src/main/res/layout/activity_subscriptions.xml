@@ -145,6 +145,7 @@
                 android:onClick="@{() -> onCTAClicked.invoke()}"
                 android:text="@{vm.upgradablePlanCTA}"
                 android:textAllCaps="false"
+                android:enabled="@{vm.isCTAEnabled}"
                 android:textColor="@color/white"
                 android:textSize="19sp"
                 tools:text="@string/upgrade_to_x" />

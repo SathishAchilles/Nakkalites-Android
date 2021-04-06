@@ -11,6 +11,7 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,6 +29,8 @@ class SubscriptionsVm(
     var selectedSubscription: Plan? = null
     private val viewState = MutableLiveData<Event<Result<SubscriptionsEvent>>>()
     val upgradablePlanCTA = ObservableField<DisplayText>()
+    val isCTAEnabled = ObservableBoolean()
+    var currentPlan: Plan? = null
 
     fun viewStates(): LiveData<Event<Result<SubscriptionsEvent>>> = viewState
 
@@ -52,9 +55,9 @@ class SubscriptionsVm(
                         items.filterIsInstance(SubscriptionVm::class.java)
                             .forEach { it.isSelected.set(it.id == id) }
                     }
-                    val isPlanSelected = items.filterIsInstance(SubscriptionVm::class.java)
+                    val selected = items.filterIsInstance(SubscriptionVm::class.java)
                         .firstOrNull { it.isSelected.get() }
-                    if (isPlanSelected == null) {
+                    if (selected == null) {
                         pair.upgradeablePlan?.id?.let { id ->
                             items.filterIsInstance(SubscriptionVm::class.java)
                                 .forEach { it.isSelected.set(it.id == id) }
@@ -62,8 +65,6 @@ class SubscriptionsVm(
                     }
                     selectedSubscription = items.filterIsInstance(SubscriptionVm::class.java)
                         .firstOrNull { it.isSelected.get() }?.plan
-                    val upgradablePlanName =
-                        pair.plans.find { it.id == pair.upgradeablePlan?.id }?.name
                     upgradablePlanCTA.set(
                         if (pair.currentPlan?.id != null) {
                             DisplayText.Singular(R.string.upgrade)
@@ -71,6 +72,8 @@ class SubscriptionsVm(
                             DisplayText.Singular(R.string.continue_to_payment)
                         }
                     )
+                    currentPlan = pair.currentPlan
+                    isCTAEnabled.set(pair.currentPlan?.id == null || pair.currentPlan.id != selectedSubscription?.id)
                     viewState.value = Event(Result.Success(SubscriptionsEvent.PageLoaded))
                 },
                 onError = { throwable ->
@@ -126,6 +129,10 @@ class SubscriptionsVm(
                         Event(Result.Error(SubscriptionsEvent.UpdateFailure, throwable))
                 }
             )
+    }
+
+    fun onPlanSelected(subscriptionVm: SubscriptionVm) {
+        isCTAEnabled.set(currentPlan?.id == null || currentPlan?.id != subscriptionVm.id)
     }
 }
 
