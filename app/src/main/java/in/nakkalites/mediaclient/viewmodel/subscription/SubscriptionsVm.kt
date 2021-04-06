@@ -25,7 +25,7 @@ class SubscriptionsVm(
     val items = ObservableArrayList<BaseModel>()
     var planUid: String? = null
     var name: String? = null
-    var thumbnail: String? = null
+    var thumbnail = ObservableField<String?>()
     var selectedSubscription: Plan? = null
     private val viewState = MutableLiveData<Event<Result<SubscriptionsEvent>>>()
     val upgradablePlanCTA = ObservableField<DisplayText>()
@@ -37,8 +37,7 @@ class SubscriptionsVm(
     fun setArgs(name: String?, thumbnail: String?, planUid: String?) {
         this.planUid = planUid
         this.name = name
-        this.thumbnail = thumbnail
-            ?: "https://d3ne42l1zea0it.cloudfront.net/variants/hvyg29gp02ymh8heqc543n9m6z0s/bbb2200f8e3e886ec6529be6066fc9af77251d291157e2a3933f3e08aab54c02"
+        this.thumbnail.set(thumbnail)
     }
 
     fun getPlans() {
@@ -72,6 +71,9 @@ class SubscriptionsVm(
                             DisplayText.Singular(R.string.continue_to_payment)
                         }
                     )
+                    if (thumbnail.get() == null) {
+                        thumbnail.set(pair.planConfig?.thumbnail)
+                    }
                     currentPlan = pair.currentPlan
                     isCTAEnabled.set(pair.currentPlan?.id == null || pair.currentPlan.id != selectedSubscription?.id)
                     viewState.value = Event(Result.Success(SubscriptionsEvent.PageLoaded))

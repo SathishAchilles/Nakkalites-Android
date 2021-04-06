@@ -17,14 +17,17 @@
 
     <FrameLayout
         android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_height="match_parent">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
+            android:fitsSystemWindows="true"
             android:layout_height="match_parent">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
+                android:fitsSystemWindows="true"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -59,6 +62,8 @@
                     <androidx.appcompat.widget.Toolbar
                         android:id="@+id/toolbar"
                         style="@style/Toolbar"
+                        android:layout_height="?attr/actionBarSize"
+                        app:layout_collapseMode="pin"
                         app:title=" " />
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
             </com.google.android.material.appbar.AppBarLayout>
