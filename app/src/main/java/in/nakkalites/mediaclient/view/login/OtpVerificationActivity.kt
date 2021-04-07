@@ -197,10 +197,12 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     }
 
     override fun onVerifyClick() {
+        trackVerifyClicked()
         verifyPhoneNumberWithCode(otpVerificationVm.storedVerificationId, otpVerificationVm.otpCode)
     }
 
     override fun onResendClick() {
+        trackResendClicked()
         resendVerificationCode(phoneNumber, otpVerificationVm.resendToken)
     }
 
@@ -227,7 +229,6 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 
     private fun trackUserLoggedIn(user: User) {
         analyticsManager.setUserId(user.id)
@@ -259,7 +260,14 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     private fun trackLoginFailed() {
         analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED)
+    }
 
+    private fun trackVerifyClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.VERIFY_OTP_CLICKED)
+    }
+
+    private fun trackResendClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.RESEND_OTP_CLICKED)
     }
 
     private fun goToHome() {

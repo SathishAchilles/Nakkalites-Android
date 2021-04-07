@@ -2,6 +2,8 @@ package `in`.nakkalites.mediaclient.view.subscription
 
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityManageSubscriptionBinding
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
@@ -25,6 +27,7 @@ class ManageSubscriptionActivity : BaseActivity() {
     private val vm: ManageSubscriptionVm by viewModel()
     private val freshchat: Freshchat by inject()
     private val userManager: UserManager by inject()
+    private val analyticsManager: AnalyticsManager by inject()
 
     companion object {
         @JvmStatic
@@ -65,6 +68,11 @@ class ManageSubscriptionActivity : BaseActivity() {
     }
 
     private val onCTAClick = {
+        trackManageSubscriptionCTAClicked()
         Freshchat.showConversations(this)
+    }
+
+    private fun trackManageSubscriptionCTAClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.MANAGE_SUBSCRIPTION_CTA_CLICKED)
     }
 }

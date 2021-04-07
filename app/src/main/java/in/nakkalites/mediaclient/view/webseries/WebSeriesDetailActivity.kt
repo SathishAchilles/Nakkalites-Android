@@ -125,15 +125,15 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         openVideoPlayerPage(
-            this, vm.id, vm.name, vm.thumbnail, vm.url!!, vm.duration, vm.lastPlayedTime,
-            vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid
+            this, analyticsManager, vm.id, vm.name, vm.thumbnail, vm.url!!, vm.duration,
+            vm.lastPlayedTime, vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid, vm.planName
         )
     }
 
     private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
         openVideoPlayerPage(
-            this, vm.id, vm.title, vm.imageUrl, vm.url!!, vm.durationInMs, vm.lastPlayedTime,
-            vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid
+            this,analyticsManager,vm.id, vm.title, vm.imageUrl, vm.url!!, vm.durationInMs,
+            vm.lastPlayedTime, vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid, vm.planName
         )
         trackWebseriesEpisodeClicked(vm)
     }

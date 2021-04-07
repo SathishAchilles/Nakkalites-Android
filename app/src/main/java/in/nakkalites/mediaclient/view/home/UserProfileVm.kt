@@ -27,6 +27,7 @@ class UserProfileVm(val userManager: UserManager) : BaseViewModel() {
         it.name ?: it.phoneNumber ?: it.email ?: ""
     } ?: "")
     val planImg = ObservableField(PlanUtils.getPlanIcon(user?.plan))
+    var planName = user?.plan?.name
     val planColorInt = ObservableInt(PlanUtils.getPlanColorInt(userManager.getCurrentPlansColor()))
     val upgradableMessage = ObservableField<StyleFormatText>()
     val upgradableViewVisibility = ObservableBoolean()
@@ -46,6 +47,7 @@ class UserProfileVm(val userManager: UserManager) : BaseViewModel() {
                 onSuccess = {
                     user = it
                     profileUrl.set(it.imageUrl)
+                    planName = it.plan?.name
                     it.upgradablePlan?.let { plan ->
                         plan.promotionText?.let { upgradableMessage.set(StyleFormatText(plan.promotionText)) }
                         plan.price?.let {

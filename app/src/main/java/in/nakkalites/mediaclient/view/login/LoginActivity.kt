@@ -257,6 +257,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
     private fun trackUserLoggedIn(user: User) {
         analyticsManager.setUserId(user.id)
+        analyticsManager.logUserProperty(Property.USER_PHONE, user.phoneNumber)
         analyticsManager.logUserProperty(Property.USER_EMAIL, user.email)
         analyticsManager.logUserProperty(Property.USER_ID, user.id)
         analyticsManager.logUserProperty(Property.USER_IMAGE_URL, user.imageUrl)

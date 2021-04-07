@@ -1,6 +1,8 @@
 package `in`.nakkalites.mediaclient.view.profile
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityProfileEditBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
@@ -11,7 +13,6 @@ import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.validateEmail
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditViewEvent
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
-import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
 import android.content.Context
 import android.content.Intent
@@ -20,6 +21,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,6 +29,7 @@ import java.util.*
 class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     private lateinit var binding: ActivityProfileEditBinding
     val vm: ProfileEditVm by viewModel()
+    val analyticsManager by inject<AnalyticsManager>()
 
     companion object {
 
@@ -54,6 +57,7 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                             binding.profileLayout.visibility = View.VISIBLE
                         }
                         is ProfileEditViewEvent.UpdateSuccess -> {
+                            trackProfileEditSuccess()
                             finish()
                         }
                     }
@@ -61,6 +65,7 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE
                     binding.profileLayout.visibility = View.VISIBLE
+                    trackProfileEditFailure()
                     errorHandler(it.throwable)
                 }
                 else -> showLoading()
@@ -115,13 +120,15 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         override fun onSaveClicked() {
             if (binding.etName.text.toString().trim().isEmpty()
                 || binding.phoneEditText.text.toString().trim().isEmpty()
-                || (binding.etEmail.text.toString().trim().isEmpty() && validateEmail(binding.etEmail.text.toString()))
+                || (binding.etEmail.text.toString().trim()
+                    .isEmpty() && validateEmail(binding.etEmail.text.toString()))
             ) {
+                trackProfileEditSaveClicked()
                 val errorMessage = if (validateEmail(binding.etEmail.text.toString())) {
-                        R.string.email_field_error
-                    } else {
-                        R.string.missing_fields
-                    }
+                    R.string.email_field_error
+                } else {
+                    R.string.missing_fields
+                }
                 Snackbar
                     .make(binding.root, getString(errorMessage), Snackbar.LENGTH_SHORT)
                     .show()
@@ -133,6 +140,18 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
     override fun onCountrySelected(position: Int) {
         vm.countryCodeVm.selectCountry(position)
+    }
+
+    private fun trackProfileEditSaveClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_EDIT_SAVE_CLICKED)
+    }
+
+    private fun trackProfileEditSuccess() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_EDIT_SUCCESS)
+    }
+
+    private fun trackProfileEditFailure() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_EDIT_FAILURE)
     }
 }
 

@@ -8,7 +8,6 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.FragmentUserProfileBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseFragment
-import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
 import `in`.nakkalites.mediaclient.view.profile.ProfileEditActivity
 import `in`.nakkalites.mediaclient.view.subscription.FaqActivity
 import `in`.nakkalites.mediaclient.view.subscription.ManageSubscriptionActivity
@@ -18,7 +17,6 @@ import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.playStoreUrl
 import `in`.nakkalites.mediaclient.view.utils.shareTextIntent
 import `in`.nakkalites.mediaclient.view.webview.WebViewActivity
-import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -26,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
 class UserProfileFragment : BaseFragment() {
@@ -42,7 +39,7 @@ class UserProfileFragment : BaseFragment() {
         binding.vm = vm
         binding.callbacks = callbacks
         vm.fetchProfile()
-        vm.viewStates().observe(requireActivity() , EventObserver {
+        vm.viewStates().observe(requireActivity(), EventObserver {
             when (it) {
                 is Result.Success -> {
                     binding.mainLayout.visibility = View.VISIBLE
@@ -89,6 +86,7 @@ class UserProfileFragment : BaseFragment() {
         }
 
         override fun onShareClick() {
+            trackShareClicked()
             val intent = shareTextIntent(
                 getString(R.string.share_nakkalites),
                 getString(R.string.share_text, playStoreUrl())
@@ -97,18 +95,22 @@ class UserProfileFragment : BaseFragment() {
         }
 
         override fun onFaqClick() {
+            trackFaqClicked()
             startActivity(FaqActivity.createIntent(requireActivity()))
         }
 
         override fun onManageSubscriptionClick() {
+            trackManageSubscriptionClicked()
             startActivity(ManageSubscriptionActivity.createIntent(requireActivity()))
         }
 
         override fun onEditClick() {
+            trackEditClicked()
             startActivity(ProfileEditActivity.createIntent(requireActivity()))
         }
 
         override fun onPlanCTAClick() {
+            trackProfilePlanCTAClicked()
             startActivity(SubscriptionsActivity.createIntent(requireActivity()))
         }
 
@@ -119,6 +121,32 @@ class UserProfileFragment : BaseFragment() {
 
     private fun trackEmailClicked() {
         analyticsManager.logEvent(AnalyticsConstants.Event.EMAIL_CLICKED)
+    }
+
+    private fun trackShareClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.SHARE_CLICKED)
+    }
+
+    private fun trackFaqClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.FAQ_CLICKED)
+    }
+
+    private fun trackEditClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_EDIT_CLICKED)
+    }
+
+    private fun trackProfilePlanCTAClicked() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.CURRENT_PLAN, vm.planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_PLAN_CTA_CLICKED, bundle)
+    }
+
+    private fun trackManageSubscriptionClicked() {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.CURRENT_PLAN, vm.planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.MANAGE_SUBSCRIPTION_CLICKED, bundle)
     }
 
     companion object {

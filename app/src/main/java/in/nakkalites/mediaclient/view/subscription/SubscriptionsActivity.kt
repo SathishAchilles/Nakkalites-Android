@@ -2,7 +2,9 @@ package `in`.nakkalites.mediaclient.view.subscription
 
 import `in`.nakkalites.mediaclient.BR
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivitySubscriptionsBinding
 import `in`.nakkalites.mediaclient.databinding.ItemSubscriptionBinding
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
@@ -26,6 +28,7 @@ import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import org.json.JSONObject
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -33,6 +36,7 @@ import timber.log.Timber
 class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
     private lateinit var binding: ActivitySubscriptionsBinding
     private val vm: SubscriptionsVm by viewModel()
+    private val analyticsManager: AnalyticsManager by inject()
     private val planUid: String? by lazy {
         intent.getStringExtra(AppConstants.PLAN_ID)
     }
@@ -74,6 +78,10 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
                             binding.progressBar.visibility = View.GONE
                         }
                         is SubscriptionsEvent.UpdateSuccess -> {
+                            trackPlanOrderFetchSuccess(
+                                vm.selectedSubscription?.name,
+                                it.data.razorpayParams
+                            )
                             goToCheckout(it.data.razorpayParams, it.data.apiKey)
                         }
                         SubscriptionsEvent.TransactionFailureStatus -> {
@@ -83,9 +91,11 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
                         }
                         is SubscriptionsEvent.TransactionStatus -> {
                             if (!it.data.status) {
+                                trackPlanUpdateFailure(vm.selectedSubscription?.name, it.data.error)
                                 Toast.makeText(this, it.data.error, Toast.LENGTH_SHORT)
                                     .show()
                             } else {
+                                trackPlanUpdateSuccess(vm.selectedSubscription?.name)
                                 Toast.makeText(
                                     this,
                                     getString(R.string.payment_success_message),
@@ -97,6 +107,9 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
                     }
                 }
                 is Result.Error -> {
+                    if (it.initialValue == SubscriptionsEvent.UpdateFailure) {
+                        trackPlanOrderFetchFailure(vm.selectedSubscription?.name)
+                    }
                     errorHandler(it.throwable)
                     binding.recyclerView.visibility = View.VISIBLE
                     binding.cta.visibility = View.VISIBLE
@@ -179,12 +192,14 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
     }
 
     private val onCheckoutClick = {
+        trackPlanSelectedClicked(vm.selectedSubscription?.name)
         vm.getRazorPayParams()
     }
 
 
     override fun onPaymentSuccess(razorpayPaymentID: String, paymentData: PaymentData) {
         try {
+            trackRazorpaySuccess(vm.selectedSubscription?.name)
             vm.verifyPlan(razorpayPaymentID, paymentData.orderId, paymentData.signature)
         } catch (e: java.lang.Exception) {
             Timber.e(e, "Exception in onPaymentSuccess")
@@ -193,12 +208,66 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
 
     override fun onPaymentError(code: Int, response: String?, paymentData: PaymentData?) {
         try {
+            trackRazorpayFailure(vm.selectedSubscription?.name)
             vm.subscriptionFailure(code, response)
             Toast.makeText(this, "Payment failed: $code $response", Toast.LENGTH_SHORT).show()
             Timber.e("Payment failed: $code $response")
         } catch (e: java.lang.Exception) {
             Timber.e(e, "Exception in onPaymentError")
         }
+    }
+
+    private fun trackPlanSelectedClicked(planName: String?) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.PLAN_SELECTED, bundle)
+    }
+
+    private fun trackPlanUpdateSuccess(planName: String?) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.PLAN_UPDATE_SUCCESS, bundle)
+    }
+
+    private fun trackPlanUpdateFailure(planName: String?, error: String?) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+            putString(AnalyticsConstants.Property.ERROR_MESSAGE, error)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.PLAN_UPDATE_FAILURE, bundle)
+    }
+
+    private fun trackPlanOrderFetchSuccess(planName: String?, razorpayParams: Map<String, String>) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+            razorpayParams.map {
+                putString(it.key, it.value)
+            }
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.PLAN_ORDER_FETCH_SUCCESS, bundle)
+    }
+
+    private fun trackPlanOrderFetchFailure(planName: String?) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.PLAN_ORDER_FETCH_FAILURE, bundle)
+    }
+
+    private fun trackRazorpaySuccess(planName: String?) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.RAZORPAY_SUCCESS, bundle)
+    }
+
+    private fun trackRazorpayFailure(planName: String?) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.SELECTED_PLAN, planName)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.RAZORPAY_FAILURE, bundle)
     }
 
     override fun onDestroy() {

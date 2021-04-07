@@ -1,6 +1,8 @@
 package `in`.nakkalites.mediaclient.view.profile
 
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityProfileAddBinding
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
@@ -35,6 +37,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     val profileAddVm: ProfileAddVm by viewModel()
     val userManager by inject<UserManager>()
     val phoneNumberUtil by inject<PhoneNumberUtil>()
+    val analyticsManager by inject<AnalyticsManager>()
 
     companion object {
         private const val RESOLVE_HINT = 9002
@@ -78,10 +81,12 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             when (it) {
                 is Result.Success -> {
                     userManager.setAddProfileShown()
+                    trackProfileAddSuccess()
                     goToHome()
                 }
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE
+                    trackProfileAddFailure()
                     errorHandler(it.throwable)
                 }
                 else -> showLoading()
@@ -187,6 +192,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 return
             }
             if (child.id == binding.viewAnimator.child.id) {
+                trackProfileAddSaveClicked()
                 profileAddVm.saveProfile()
                 profileAddVm.skipVisibility.set(false)
                 return
@@ -202,6 +208,18 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         override fun onGenderClicked(type: GenderTypes) {
             profileAddVm.onGenderSelected(type)
         }
+    }
+
+    private fun trackProfileAddSaveClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_ADD_SAVE_CLICKED)
+    }
+
+    private fun trackProfileAddSuccess() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_ADD_SUCCESS)
+    }
+
+    private fun trackProfileAddFailure() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_ADD_FAILURE)
     }
 
     private fun setCurrentField() {

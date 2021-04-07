@@ -119,7 +119,7 @@ val viewModelModule = module {
     viewModel { LoginVm(get(), get()) }
     viewModel { AllVideoGroupsVm(get()) }
     viewModel { WebSeriesListVm(get()) }
-    viewModel { HomeVm(get(), get(), get(), get()) }
+    viewModel { HomeVm(get(), get(), get()) }
     viewModel { VideoGroupListVm(get()) }
     viewModel { WebSeriesDetailVm(get()) }
     viewModel { VideoDetailVm(get()) }
