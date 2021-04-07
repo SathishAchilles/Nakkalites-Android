@@ -112,9 +112,9 @@ class SubscriptionsVm(
         }
     }
 
-    fun verifyPlan(paymentId: String) {
+    fun verifyPlan(paymentId: String, orderId: String, signature: String) {
         viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
-        disposables += planManager.verifyPlan(paymentId)
+        disposables += planManager.verifyPlan(paymentId, orderId, signature)
             .observeOn(mainThread())
             .subscribeBy(
                 onSuccess = {
@@ -124,6 +124,23 @@ class SubscriptionsVm(
                                 SubscriptionsEvent.TransactionStatus(it.first, it.second)
                             )
                         )
+                },
+                onError = { throwable ->
+                    loge(throwable = throwable, message = "Plans failed")
+                    viewState.value =
+                        Event(Result.Error(SubscriptionsEvent.UpdateFailure, throwable))
+                }
+            )
+    }
+
+    fun subscriptionFailure(code: Int, message: String?) {
+        viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
+        disposables += planManager.subscriptionFailure(code, message)
+            .observeOn(mainThread())
+            .subscribeBy(
+                onComplete = {
+                    viewState.value =
+                        Event(Result.Success(SubscriptionsEvent.TransactionFailureStatus))
                 },
                 onError = { throwable ->
                     loge(throwable = throwable, message = "Plans failed")
@@ -148,6 +165,7 @@ sealed class SubscriptionsEvent {
         SubscriptionsEvent()
 
     data class TransactionStatus(val status: Boolean, val error: String?) : SubscriptionsEvent()
+    object TransactionFailureStatus : SubscriptionsEvent()
 
     object UpdateFailure : SubscriptionsEvent()
 }

@@ -23,13 +23,14 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.razorpay.Checkout
-import com.razorpay.PaymentResultListener
+import com.razorpay.PaymentData
+import com.razorpay.PaymentResultWithDataListener
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
+class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
     private lateinit var binding: ActivitySubscriptionsBinding
     private val vm: SubscriptionsVm by viewModel()
     private val planUid: String? by lazy {
@@ -75,12 +76,21 @@ class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
                         is SubscriptionsEvent.UpdateSuccess -> {
                             goToCheckout(it.data.razorpayParams, it.data.apiKey)
                         }
+                        SubscriptionsEvent.TransactionFailureStatus -> {
+                            binding.recyclerView.visibility = View.VISIBLE
+                            binding.cta.visibility = View.VISIBLE
+                            binding.progressBar.visibility = View.GONE
+                        }
                         is SubscriptionsEvent.TransactionStatus -> {
                             if (!it.data.status) {
                                 Toast.makeText(this, it.data.error, Toast.LENGTH_SHORT)
                                     .show()
                             } else {
-                                Toast.makeText(this, getString(R.string.payment_success_message), Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    this,
+                                    getString(R.string.payment_success_message),
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                             }
                         }
@@ -91,6 +101,16 @@ class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
                     binding.recyclerView.visibility = View.VISIBLE
                     binding.cta.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
+                }
+                is Result.Loading -> {
+                    when (it.initialValue) {
+                        SubscriptionsEvent.UpdateLoading -> {
+                            binding.recyclerView.visibility = View.VISIBLE
+                            binding.cta.visibility = View.GONE
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                        else -> showLoading()
+                    }
                 }
                 else -> showLoading()
             }
@@ -162,30 +182,19 @@ class SubscriptionsActivity : BaseActivity() , PaymentResultListener {
         vm.getRazorPayParams()
     }
 
-    /**
-     * The name of the function has to be
-     * onPaymentSuccess
-     * Wrap your code in try catch, as shown, to ensure that this method runs correctly
-     */
-    override fun onPaymentSuccess(razorpayPaymentID: String) {
+
+    override fun onPaymentSuccess(razorpayPaymentID: String, paymentData: PaymentData) {
         try {
-            vm.verifyPlan(razorpayPaymentID)
+            vm.verifyPlan(razorpayPaymentID, paymentData.orderId, paymentData.signature)
         } catch (e: java.lang.Exception) {
             Timber.e(e, "Exception in onPaymentSuccess")
         }
     }
 
-    /**
-     * The name of the function has to be
-     * onPaymentError
-     * Wrap your code in try catch, as shown, to ensure that this method runs correctly
-     */
-    override fun onPaymentError(code: Int, response: String) {
+    override fun onPaymentError(code: Int, response: String?, paymentData: PaymentData?) {
         try {
+            vm.subscriptionFailure(code, response)
             Toast.makeText(this, "Payment failed: $code $response", Toast.LENGTH_SHORT).show()
-            binding.recyclerView.visibility = View.VISIBLE
-            binding.cta.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
             Timber.e("Payment failed: $code $response")
         } catch (e: java.lang.Exception) {
             Timber.e(e, "Exception in onPaymentError")

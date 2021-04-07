@@ -11,9 +11,9 @@ import `in`.nakkalites.mediaclient.view.login.CountriesBottomSheetCallbacks
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.showSoftKeyboard
+import `in`.nakkalites.mediaclient.view.utils.validateEmail
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
-import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.parsePhoneNumber
 import android.content.Context
 import android.content.Intent
@@ -167,15 +167,22 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
         override fun onNextClicked() {
             val child = binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1)
+            val emailText = binding.tvEmail.text.toString()
             if ((profileAddVm.currentField == ProfileFields.NAME && binding.tvName.text.toString()
                     .trim().isEmpty())
                 || (profileAddVm.currentField == ProfileFields.PHONE && binding.phoneEditText.text.toString()
                     .trim().isEmpty())
-                || (profileAddVm.currentField == ProfileFields.EMAIL && binding.tvEmail.text.toString()
-                    .trim().isEmpty())
+                || (profileAddVm.currentField == ProfileFields.EMAIL && emailText.trim().isEmpty()
+                        && validateEmail(emailText))
             ) {
+                val errorMessage =
+                    if ((profileAddVm.currentField == ProfileFields.EMAIL && validateEmail(emailText))) {
+                        R.string.email_field_error
+                    } else {
+                        R.string.missing_fields
+                    }
                 Snackbar
-                    .make(binding.root, getString(R.string.missing_fields), Snackbar.LENGTH_SHORT)
+                    .make(binding.root, getString(errorMessage), Snackbar.LENGTH_SHORT)
                     .show()
                 return
             }

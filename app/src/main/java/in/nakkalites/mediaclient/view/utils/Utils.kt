@@ -26,6 +26,8 @@ import retrofit2.Retrofit
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 inline fun <reified T> Retrofit.create(): T {
     return create(T::class.java)
@@ -35,6 +37,14 @@ private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.herokuapp\\.com
 
 fun Request.isValidApiUrl(): Boolean {
     return apiRegex.matches(url.host)
+}
+
+val VALID_EMAIL_ADDRESS_REGEX: Pattern =
+    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE)
+
+fun validateEmail(emailStr: String): Boolean {
+    val matcher: Matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr)
+    return matcher.find()
 }
 
 @Suppress("NOTHING_TO_INLINE")

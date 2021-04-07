@@ -8,6 +8,7 @@ import `in`.nakkalites.mediaclient.view.login.CountriesBottomSheet
 import `in`.nakkalites.mediaclient.view.login.CountriesBottomSheetCallbacks
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
+import `in`.nakkalites.mediaclient.view.utils.validateEmail
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditViewEvent
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
@@ -114,10 +115,15 @@ class ProfileEditActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         override fun onSaveClicked() {
             if (binding.etName.text.toString().trim().isEmpty()
                 || binding.phoneEditText.text.toString().trim().isEmpty()
-                || binding.etEmail.text.toString().trim().isEmpty()
+                || (binding.etEmail.text.toString().trim().isEmpty() && validateEmail(binding.etEmail.text.toString()))
             ) {
+                val errorMessage = if (validateEmail(binding.etEmail.text.toString())) {
+                        R.string.email_field_error
+                    } else {
+                        R.string.missing_fields
+                    }
                 Snackbar
-                    .make(binding.root, getString(R.string.missing_fields), Snackbar.LENGTH_SHORT)
+                    .make(binding.root, getString(errorMessage), Snackbar.LENGTH_SHORT)
                     .show()
                 return
             }

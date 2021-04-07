@@ -12,7 +12,7 @@ interface SubscriptionService {
     @GET(HttpConstants.PLANS)
     fun getSubscriptionPlans(): Single<SubscriptionsResponse>
 
-@GET(HttpConstants.FAQS)
+    @GET(HttpConstants.FAQS)
     fun getFaqs(): Single<FaqResponse>
 
     @POST(HttpConstants.SUBSCRIPTIONS)
@@ -20,4 +20,7 @@ interface SubscriptionService {
 
     @POST(HttpConstants.PLAN_VERIFY)
     fun verifyPlan(@Body params: StringAnyMap): Single<PostSubscriptionResponse>
+
+    @POST(HttpConstants.PLAN_FAILURE)
+    fun subscriptionFailure(@Body params: StringAnyMap): Completable
 }

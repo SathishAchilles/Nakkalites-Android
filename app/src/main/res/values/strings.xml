@@ -96,6 +96,7 @@ Download their new app and watch exclusively.\n\n
     <string name="select_date_of_birth">Select date of birth</string>
     <string name="complete">Complete</string>
     <string name="missing_fields">Please Fill the Field to Proceed</string>
+    <string name="email_field_error">Please enter a valid email</string>
     <string name="rupee_x">₹%s</string>
     <string name="slash_x">" /%s"</string>
     <string name="upgrade">Upgrade</string>
