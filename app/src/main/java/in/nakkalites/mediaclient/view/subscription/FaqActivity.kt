@@ -19,6 +19,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -81,7 +82,17 @@ class FaqActivity : BaseActivity() {
             is FaqVm -> {
                 val binding = (itemBinding as ItemFaqBinding)
                 binding.vm = vm1
+                binding.onFaqExpanded = onFaqExpanded
             }
         }
+    }
+
+    private val onFaqExpanded = { imageView: View, _: View, vm: FaqVm ->
+        imageView.animate()
+            .rotation(if (vm.showAnswer.get()) 0F else 180F)
+            .setDuration(300)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .start()
+        vm.expand()
     }
 }

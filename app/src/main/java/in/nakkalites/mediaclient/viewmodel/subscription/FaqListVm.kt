@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.StyleFormatText
 import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,4 +40,10 @@ class FaqListVm(private val planManager: PlanManager) : BaseViewModel() {
 class FaqVm(question: String, answer: String) : BaseViewModel() {
     val question = StyleFormatText(question)
     val answer = StyleFormatText(answer)
+    val showAnswer = ObservableBoolean(false)
+
+    fun expand() {
+        val shouldRotate = !showAnswer.get()
+        showAnswer.set(shouldRotate)
+    }
 }
