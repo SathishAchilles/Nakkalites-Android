@@ -28,6 +28,7 @@ class FaqListVm(private val planManager: PlanManager) : BaseViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {
+                    viewState.value = Event(Result.Success(Unit))
                     items.addAll(it)
                 },
                 onError = {
