@@ -27,18 +27,20 @@ class PlanManager(
     fun verifyPlan(paymentId: String, orderId: String, signature: String) =
         subscriptionService.verifyPlan(
             mutableMapOf<String, Any>().apply {
-                "razorpay_payment_id" to paymentId
-                "razorpay_subscription_id" to orderId
-                "razorpay_signature" to signature
+                put("razorpay_payment_id", paymentId)
+                put("razorpay_subscription_id", orderId)
+                put("razorpay_signature", signature)
             }
         ).map { Pair(it.status == "success", it.error) }
 
-    fun subscriptionFailure(code: Int, message: String?) = subscriptionService.subscriptionFailure(
-        mutableMapOf<String, Any>().apply {
-            "code" to code
-            "message" to message
-        }
-    )
+    fun subscriptionFailure(orderId: String, code: Int, message: String?) =
+        subscriptionService.subscriptionFailure(
+            mutableMapOf<String, Any>().apply {
+                put("razorpay_subscription_id", orderId)
+                put("code", code)
+                message?.let { put("message", it) }
+            }
+        )
 
     fun getFaqs() = subscriptionService.getFaqs()
         .map { it.faqs.map { Faq.map(it) } }

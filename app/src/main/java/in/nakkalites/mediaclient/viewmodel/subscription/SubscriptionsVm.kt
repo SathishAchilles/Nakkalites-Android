@@ -133,9 +133,9 @@ class SubscriptionsVm(
             )
     }
 
-    fun subscriptionFailure(code: Int, message: String?) {
+    fun subscriptionFailure(code: Int, message: String?, orderId: String) {
         viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
-        disposables += planManager.subscriptionFailure(code, message)
+        disposables += planManager.subscriptionFailure(orderId, code, message)
             .observeOn(mainThread())
             .subscribeBy(
                 onComplete = {

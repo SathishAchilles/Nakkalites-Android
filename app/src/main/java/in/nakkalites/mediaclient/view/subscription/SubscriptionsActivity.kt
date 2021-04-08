@@ -206,10 +206,10 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
         }
     }
 
-    override fun onPaymentError(code: Int, response: String?, paymentData: PaymentData?) {
+    override fun onPaymentError(code: Int, response: String?, paymentData: PaymentData) {
         try {
             trackRazorpayFailure(vm.selectedSubscription?.name)
-            vm.subscriptionFailure(code, response)
+            vm.subscriptionFailure(code, response, paymentData.orderId)
             Toast.makeText(this, "Payment failed: $code $response", Toast.LENGTH_SHORT).show()
             Timber.e("Payment failed: $code $response")
         } catch (e: java.lang.Exception) {
