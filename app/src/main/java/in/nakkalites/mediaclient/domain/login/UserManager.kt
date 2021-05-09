@@ -128,8 +128,10 @@ class UserManager(private val userService: UserService, private val userDataStor
         val params = mutableMapOf<String, Any>().apply {
             name?.apply { put("name", this) }
             email?.apply { put("email", this) }
-            countryCode?.apply { put("country_code", this) }
-            phoneNumber?.apply { put("mobile", this) }
+            if (countryCode != null && phoneNumber != null) {
+                put("country_code", countryCode)
+                put("mobile", phoneNumber)
+            }
             gender?.apply { put("gender", this.toLowerCase(Locale.US)) }
             dob?.apply { put("dob", this) }
             country?.apply { put("country", this) }

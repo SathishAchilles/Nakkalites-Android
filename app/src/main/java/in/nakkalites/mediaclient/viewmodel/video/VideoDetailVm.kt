@@ -1,7 +1,9 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
+import `in`.nakkalites.logging.logd
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.models.Video
+import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
@@ -20,9 +22,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicBoolean
 
-class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain, planManager: PlanManager) :
+    BaseViewModel() {
     private var video: Video? = null
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     val items = ObservableArrayList<BaseModel>()
@@ -35,12 +39,23 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     var adTimes: List<Long> = listOf()
-    var planUid :String? = null
-    var planName :String? = null
+    var planUid: String? = null
+    var planName: String? = null
     var shouldPlay: Boolean? = false
     var showAds: Boolean? = false
     private val isPageLoaded = AtomicBoolean(false)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
+
+    init {
+        disposables += planManager.getPlanObserver()
+            .filter { it }
+            .observeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onNext = {
+                fetchVideoDetail(id!!)
+                logd("Refresh Page")
+            })
+    }
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 

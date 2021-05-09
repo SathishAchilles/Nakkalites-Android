@@ -51,7 +51,7 @@ class VideoGroupListActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_group_list)
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         binding.vm = vm
-        vm.setArgs(videoGroupId, videoGroupName)
+        vm.setArgs(videoGroupId, videoGroupName, videoGroupCategory)
         trackVideoGroupListPageOpened()
         init()
         vm.viewStates().observe(this, EventObserver {

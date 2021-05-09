@@ -16,6 +16,7 @@ object AppConstants {
     const val WEBSERIES_NAME = "WEBSERIES_NAME"
     const val WEBSERIES_THUMBNAIL = "WEBSERIES_THUMBNAIL"
     const val PLAN_ID = "PLAN_ID"
+    const val PLAN_NAME = "PLAN_NAME"
     const val VIDEO_ID = "VIDEO_ID"
     const val VIDEO_NAME = "VIDEO_NAME"
     const val VIDEO_THUMBNAIL = "VIDEO_THUMBNAIL"
@@ -29,6 +30,9 @@ object AppConstants {
     const val COUNTRY_CODE = "COUNTRY_CODE"
     const val PHONE_NUMBER = "PHONE_NUMBER"
     const val DEFAULT_TAG_BG_COLOR = "#58D3DB"
+    const val SIGNATURE = "SIGNATURE"
+    const val ORDER_ID = "ORDER_ID"
+    const val RAZORPAY_ID: String = "RAZORPAY_ID"
 
     const val PLAY_STORE_URL = "market://details?id="
     const val CONTACT_EMAIL = "contact@nakkalites.in"

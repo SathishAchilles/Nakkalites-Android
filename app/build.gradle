@@ -95,7 +95,6 @@ dependencies {
     implementation deps.libphonenumber
     implementation deps.material
     implementation deps.moshi.core
-    implementation deps.moshi.kotlin
     kapt deps.moshi.codeGen
 
     implementation deps.okHttp

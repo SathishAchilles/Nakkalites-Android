@@ -26,11 +26,12 @@ class SubscriptionsVm(
     var planUid: String? = null
     var name: String? = null
     var thumbnail = ObservableField<String?>()
-    var selectedSubscription: Plan? = null
+    var selectedSubscriptionPlan: Plan? = null
     private val viewState = MutableLiveData<Event<Result<SubscriptionsEvent>>>()
     val upgradablePlanCTA = ObservableField<DisplayText>()
     val isCTAEnabled = ObservableBoolean()
     var currentPlan: Plan? = null
+    var razorPayParams = mapOf<String, String>()
 
     fun viewStates(): LiveData<Event<Result<SubscriptionsEvent>>> = viewState
 
@@ -48,7 +49,7 @@ class SubscriptionsVm(
                 onSuccess = { pair ->
                     logd(message = "Plans loaded")
                     items.addAll(pair.plans.map { plan ->
-                        SubscriptionVm(plan, selectedSubscription?.id)
+                        SubscriptionVm(plan, pair.currentPlan?.id)
                     })
                     planUid?.let { id ->
                         items.filterIsInstance(SubscriptionVm::class.java)
@@ -62,20 +63,15 @@ class SubscriptionsVm(
                                 .forEach { it.isSelected.set(it.id == id) }
                         }
                     }
-                    selectedSubscription = items.filterIsInstance(SubscriptionVm::class.java)
-                        .firstOrNull { it.isSelected.get() }?.plan
-                    upgradablePlanCTA.set(
-                        if (pair.currentPlan?.id != null) {
-                            DisplayText.Singular(R.string.upgrade)
-                        } else {
-                            DisplayText.Singular(R.string.continue_to_payment)
-                        }
-                    )
+                    val selectedSubscription = items.filterIsInstance(SubscriptionVm::class.java)
+                        .firstOrNull { it.isSelected.get() }
+                    selectedSubscriptionPlan = selectedSubscription?.plan
+                    setCtaText(selectedSubscription)
                     if (thumbnail.get() == null) {
                         thumbnail.set(pair.planConfig?.thumbnail)
                     }
                     currentPlan = pair.currentPlan
-                    isCTAEnabled.set(pair.currentPlan?.id == null || pair.currentPlan.id != selectedSubscription?.id)
+                    isCTAEnabled.set(pair.currentPlan?.id == null || pair.currentPlan.id != selectedSubscriptionPlan?.id)
                     viewState.value = Event(Result.Success(SubscriptionsEvent.PageLoaded))
                 },
                 onError = { throwable ->
@@ -88,11 +84,12 @@ class SubscriptionsVm(
 
     fun getRazorPayParams() {
         viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
-        selectedSubscription?.id?.let { uid ->
+        selectedSubscriptionPlan?.id?.let { uid ->
             disposables += planManager.getRazorPayParams(uid)
                 .observeOn(mainThread())
                 .subscribeBy(
                     onSuccess = {
+                        razorPayParams = it.first
                         viewState.value =
                             Event(
                                 Result.Success(
@@ -112,28 +109,7 @@ class SubscriptionsVm(
         }
     }
 
-    fun verifyPlan(paymentId: String, orderId: String, signature: String) {
-        viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
-        disposables += planManager.verifyPlan(paymentId, orderId, signature)
-            .observeOn(mainThread())
-            .subscribeBy(
-                onSuccess = {
-                    viewState.value =
-                        Event(
-                            Result.Success(
-                                SubscriptionsEvent.TransactionStatus(it.first, it.second)
-                            )
-                        )
-                },
-                onError = { throwable ->
-                    loge(throwable = throwable, message = "Plans failed")
-                    viewState.value =
-                        Event(Result.Error(SubscriptionsEvent.UpdateFailure, throwable))
-                }
-            )
-    }
-
-    fun subscriptionFailure(code: Int, message: String?, orderId: String) {
+    fun subscriptionFailure(code: Int, message: String?, orderId: String?) {
         viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
         disposables += planManager.subscriptionFailure(orderId, code, message)
             .observeOn(mainThread())
@@ -152,9 +128,24 @@ class SubscriptionsVm(
 
     fun onPlanSelected(subscriptionVm: SubscriptionVm) {
         isCTAEnabled.set(currentPlan?.id == null || currentPlan?.id != subscriptionVm.id)
+        setCtaText(subscriptionVm)
+    }
+
+    private fun setCtaText(subscriptionVm: SubscriptionVm? = null) {
+        upgradablePlanCTA.set(
+            if (currentPlan?.id != null) {
+                if (subscriptionVm?.planName != null && currentPlan?.id != selectedSubscriptionPlan?.id) {
+                    DisplayText.Singular(R.string.upgrade_to_x, listOf(subscriptionVm.planName))
+                } else {
+                    DisplayText.Singular(R.string.upgrade)
+                }
+            } else {
+                DisplayText.Singular(R.string.continue_to_payment)
+            }
+        )
+        isCTAEnabled.set(currentPlan == null || currentPlan?.id == null || currentPlan!!.id != selectedSubscriptionPlan?.id)
     }
 }
-
 
 sealed class SubscriptionsEvent {
     object PageLoading : SubscriptionsEvent()
@@ -164,7 +155,6 @@ sealed class SubscriptionsEvent {
     data class UpdateSuccess(val apiKey: String?, val razorpayParams: Map<String, String>) :
         SubscriptionsEvent()
 
-    data class TransactionStatus(val status: Boolean, val error: String?) : SubscriptionsEvent()
     object TransactionFailureStatus : SubscriptionsEvent()
 
     object UpdateFailure : SubscriptionsEvent()

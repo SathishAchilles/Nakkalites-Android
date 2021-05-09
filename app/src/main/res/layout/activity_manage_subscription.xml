@@ -54,13 +54,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingStart="30dp"
-                        android:paddingEnd="30dp">
+                        android:paddingEnd="30dp"
+                        android:paddingBottom="32dp">
 
                         <LinearLayout
                             android:id="@+id/plan_details_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="45dp"
+                            android:layout_marginBottom="21dp"
                             android:background="@drawable/bg_rounded_rect_grey_6dp"
                             android:orientation="vertical"
                             android:paddingStart="27dp"
@@ -70,6 +72,7 @@
                             app:entries="@{vm.benefits}"
                             app:entryBinder="@{vmBinder}"
                             app:entryLayout="@{@layout/item_plan_benefit}"
+                            app:layout_constraintBottom_toTopOf="@+id/valid_till"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -111,6 +114,21 @@
                                 android:textSize="12sp" />
                         </LinearLayout>
 
+
+                        <TextView
+                            android:id="@+id/valid_till"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="21dp"
+                            android:text="@{vm.planValidTill}"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="@id/plan_details_layout"
+                            app:layout_constraintStart_toStartOf="@id/plan_details_layout"
+                            app:layout_constraintTop_toBottomOf="@id/plan_details_layout"
+                            app:layout_goneMarginTop="21dp"
+                            tools:text="Valid till: 12 Feb 2021" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.core.widget.NestedScrollView>
 
@@ -120,15 +138,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginStart="30dp"
-                    android:onClick="@{() -> onCTAClick.invoke()}"
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="28dp"
                     android:background="@drawable/blue_button"
-                    android:fontFamily="@font/inter_bold"
+                    android:fontFamily="@font/inter_regular"
+                    android:onClick="@{() -> onCTAClick.invoke()}"
                     android:text="@string/chat_with_us"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="19sp" />
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <FrameLayout

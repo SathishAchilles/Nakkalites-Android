@@ -16,6 +16,7 @@
         <item name="chipCornerRadius">5dp</item>
         <item name="chipChoice">@style/ChipView.Choice</item>
         <item name="materialButtonStyle">@style/PrimarySolid</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="AppTheme.FullScreen">
@@ -170,5 +171,15 @@
         <item name="iconTint">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="rippleColor">@color/white_alpha_20</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
     </style>
 </resources>

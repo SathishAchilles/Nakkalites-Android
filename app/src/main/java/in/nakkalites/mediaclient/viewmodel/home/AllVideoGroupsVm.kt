@@ -1,6 +1,8 @@
 package `in`.nakkalites.mediaclient.viewmodel.home
 
+import `in`.nakkalites.logging.logd
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
@@ -8,7 +10,6 @@ import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.utils.DummyVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.EmptyStateVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.RxTransformers
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupVm
@@ -19,13 +20,27 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 
-class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain, planManager: PlanManager) :
+    BaseViewModel() {
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     val isRefreshing = ObservableBoolean()
     val items = ObservableArrayList<BaseModel>()
     private val isLoading = ObservableBoolean()
     private val viewState = MutableLiveData<Event<Result<Unit?>>>()
+
+    init {
+        disposables += planManager.getPlanObserver()
+            .filter { it }
+            .observeOn(Schedulers.io())
+            .observeOn(mainThread())
+            .subscribeBy(onNext = {
+                pagingBody.reset()
+                fetchVideoGroups()
+                logd("Refresh Page")
+            })
+    }
 
     fun viewStates(): LiveData<Event<Result<Unit?>>> = viewState
 

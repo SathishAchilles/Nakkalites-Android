@@ -239,8 +239,9 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             binding.dobLayout.id -> {
                 profileAddVm.currentField = ProfileFields.DOB
             }
-            binding.countryCode.id -> {
+            binding.countryLayout.id -> {
                 profileAddVm.currentField = ProfileFields.COUNTRY
+                profileAddVm.setDefaultCountry()
             }
             binding.cityLayout.id -> {
                 profileAddVm.currentField = ProfileFields.CITY

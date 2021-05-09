@@ -137,14 +137,14 @@ class UserProfileFragment : BaseFragment() {
 
     private fun trackProfilePlanCTAClicked() {
         val bundle = Bundle().apply {
-            putString(AnalyticsConstants.Property.CURRENT_PLAN, vm.planName)
+            putString(AnalyticsConstants.Property.CURRENT_PLAN, vm.planName.get())
         }
         analyticsManager.logEvent(AnalyticsConstants.Event.PROFILE_PLAN_CTA_CLICKED, bundle)
     }
 
     private fun trackManageSubscriptionClicked() {
         val bundle = Bundle().apply {
-            putString(AnalyticsConstants.Property.CURRENT_PLAN, vm.planName)
+            putString(AnalyticsConstants.Property.CURRENT_PLAN, vm.planName.get())
         }
         analyticsManager.logEvent(AnalyticsConstants.Event.MANAGE_SUBSCRIPTION_CLICKED, bundle)
     }

@@ -25,6 +25,7 @@ data class PlanEntity(
     @field:Json(name = "is_selected") val isSelected: Boolean?,
     @field:Json(name = "available_plans_count") val availablePlansCount: Int?,
     @field:Json(name = "content_tags") val contentTags: List<String>?,
+    @field:Json(name = "valid_till") val validTill: String?
 )
 
 
@@ -37,7 +38,7 @@ data class PlanConfigEntity(
 data class PreSubscriptionResponse(
     @field:Json(name = "id") val id: String?,
     @field:Json(name = "key") val apiKey: String?,
-    @field:Json(name = "razorpay_params") val razorpayParams: Map<String, String>
+    @field:Json(name = "razorpay_params") val razorpayParams: Map<String, String> = emptyMap()
 )
 
 @JsonClass(generateAdapter = true)

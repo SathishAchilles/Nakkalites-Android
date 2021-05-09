@@ -6,7 +6,6 @@ import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
-import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -22,6 +21,7 @@ class ManageSubscriptionVm(private val planManager: PlanManager) : BaseViewModel
     val planName = ObservableField<String>()
     val planImg = ObservableField<Int>()
     val planColorInt = ObservableInt()
+    val planValidTill = ObservableField<String>()
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
@@ -33,14 +33,19 @@ class ManageSubscriptionVm(private val planManager: PlanManager) : BaseViewModel
             .subscribeBy(
                 onSuccess = { planWrapper ->
                     logd(message = "Plans loaded")
-                    planWrapper.currentPlan?.let { plan ->
-                        planName.set(plan.name)
-                        planImg.set(PlanUtils.getPlanIcon(plan))
-                        planColorInt.set(PlanUtils.getPlanColorInt(plan.colorCode))
-                        benefits.addAll(plan.descriptions.map {
-                            BenefitVm(ObservableBoolean(true), it)
-                        })
-                    }
+                    planWrapper.plans
+                        .firstOrNull { it.id != null && it.id == planWrapper.currentPlan?.id }
+                        .let { plan ->
+                            plan?.let {
+                                planName.set(plan.name)
+                                planImg.set(PlanUtils.getPlanIcon(plan))
+                                planColorInt.set(PlanUtils.getPlanColorInt(plan.colorCode))
+                                benefits.addAll(plan.descriptions.map {
+                                    BenefitVm(ObservableBoolean(true), it)
+                                })
+                            }
+                        }
+                    planValidTill.set(planWrapper.currentPlan?.validTill)
                     viewState.value = Event(Result.Success(Unit))
                 },
                 onError = { throwable ->

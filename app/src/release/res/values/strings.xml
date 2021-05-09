@@ -7,4 +7,5 @@
     <!-- Prod keys-->
     <string name="abmob_key">ca-app-pub-9954055340426176~1004589166</string>
     <string name="abmob_unit_key">ca-app-pub-9954055340426176/4870292929</string>
+    <string name="razorpay_api_key">rzp_live_w9r9KVAeL4l2Z6</string>
 </resources>

@@ -49,6 +49,8 @@ class ManageSubscriptionActivity : BaseActivity() {
                     binding.progressBar.visibility = View.GONE
                 }
                 is Result.Error -> {
+                    binding.mainLayout.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
                     errorHandler(it.throwable)
                 }
                 else -> showLoading()
@@ -69,6 +71,11 @@ class ManageSubscriptionActivity : BaseActivity() {
 
     private val onCTAClick = {
         trackManageSubscriptionCTAClicked()
+        val instance = Freshchat.getInstance(applicationContext)
+        val user = userManager.getUser()
+        instance.user = instance.user.setEmail(user?.email)
+            .setPhone(user?.countryCode, user?.phoneNumber)
+            .setFirstName(user?.name)
         Freshchat.showConversations(this)
     }
 

@@ -24,6 +24,7 @@ import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import `in`.nakkalites.mediaclient.viewmodel.subscription.FaqListVm
 import `in`.nakkalites.mediaclient.viewmodel.subscription.ManageSubscriptionVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.OrderPlacedVm
 import `in`.nakkalites.mediaclient.viewmodel.subscription.SubscriptionsVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
@@ -52,7 +53,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -117,22 +117,23 @@ val applicationModule = module {
 val viewModelModule = module {
     viewModel { SplashVm(get()) }
     viewModel { LoginVm(get(), get()) }
-    viewModel { AllVideoGroupsVm(get()) }
-    viewModel { WebSeriesListVm(get()) }
+    viewModel { AllVideoGroupsVm(get(), get()) }
+    viewModel { WebSeriesListVm(get(), get()) }
     viewModel { HomeVm(get(), get(), get()) }
-    viewModel { VideoGroupListVm(get()) }
-    viewModel { WebSeriesDetailVm(get()) }
-    viewModel { VideoDetailVm(get()) }
+    viewModel { VideoGroupListVm(get(), get()) }
+    viewModel { WebSeriesDetailVm(get(), get()) }
+    viewModel { VideoDetailVm(get(), get()) }
     viewModel { VideoPlayerVm(get()) }
     viewModel { WebViewVm() }
     viewModel { OtpVerificationVm(get()) }
     viewModel { ProfileAddVm(get(), get()) }
     viewModel { ProfileEditVm(get()) }
     viewModel { CountriesSheetVm() }
-    viewModel { UserProfileVm(get()) }
+    viewModel { UserProfileVm(get(), get()) }
     viewModel { SubscriptionsVm(get()) }
     viewModel { ManageSubscriptionVm(get()) }
     viewModel { FaqListVm(get()) }
+    viewModel { OrderPlacedVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {
@@ -156,7 +157,6 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
             .build()
     }
     single {

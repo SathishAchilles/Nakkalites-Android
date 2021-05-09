@@ -79,7 +79,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="80dp">
+                    android:paddingBottom="140dp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title"
@@ -146,13 +146,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/blue_button"
-                android:fontFamily="@font/inter_bold"
+                android:fontFamily="@font/inter_regular"
                 android:onClick="@{() -> onCTAClicked.invoke()}"
                 android:text="@{vm.upgradablePlanCTA}"
                 android:textAllCaps="false"
                 android:enabled="@{vm.isCTAEnabled}"
                 android:textColor="@color/white"
-                android:textSize="19sp"
+                android:textSize="17sp"
                 tools:text="@string/upgrade_to_x" />
         </FrameLayout>
     </FrameLayout>

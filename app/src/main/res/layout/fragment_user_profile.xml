@@ -87,18 +87,64 @@
                     android:textSize="21sp"
                     tools:text="Pavan" />
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:text="@string/free_user"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="@{vm.planImg == null}" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@drawable/bg_prime"
+                    android:backgroundTint="@{vm.planColorInt}"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:visibility="@{vm.planImg != null}"
+                    app:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
+                        android:src="@{vm.planImg}"
+                        tools:src="@drawable/ic_star" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/inter_bold"
+                        android:paddingStart="5dp"
+                        android:text="@{vm.planName}"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_900_2"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/inter_medium"
-                    android:onClick="@{() -> callbacks.onEditClick()}"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
                     android:text="@string/edit"
                     android:textColor="@color/colorAccent"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    app:debounceOnClick="@{() -> callbacks.onEditClick()}" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,7 +206,6 @@
                         android:background="@drawable/blue_button"
                         android:fontFamily="@font/inter_bold"
                         android:gravity="center"
-                        android:onClick="@{() -> callbacks.onPlanCTAClick()}"
                         android:paddingLeft="16dp"
                         android:paddingTop="12dp"
                         android:paddingRight="16dp"
@@ -168,6 +213,7 @@
                         android:text="@{vm.upgradablePlanCTA}"
                         android:textColor="@color/white"
                         android:textSize="17sp"
+                        app:debounceOnClick="@{() -> callbacks.onPlanCTAClick()}"
                         tools:text="@string/view_plans" />
                 </LinearLayout>
 
@@ -184,7 +230,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:onClick="@{() -> callbacks.onManageSubscriptionClick()}"
                     android:paddingLeft="16dp"
                     android:paddingTop="8dp"
                     android:paddingRight="16dp"
@@ -192,72 +237,73 @@
                     android:text="@string/manage_subscriptions"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:visibility="@{vm.manageSubscriptionsVisibility}" />
+                    android:visibility="@{vm.manageSubscriptionsVisibility}"
+                    app:debounceOnClick="@{() -> callbacks.onManageSubscriptionClick()}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:onClick="@{() -> callbacks.onFaqClick()}"
                     android:paddingLeft="16dp"
                     android:paddingTop="12dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:text="@string/faqs"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onFaqClick()}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:onClick="@{() -> callbacks.onContactUsClick()}"
                     android:paddingLeft="16dp"
                     android:paddingTop="12dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:text="@string/contact_us"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onContactUsClick()}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:onClick="@{() -> callbacks.onShareClick()}"
                     android:paddingLeft="16dp"
                     android:paddingTop="12dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:text="@string/invite_your_friends"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onShareClick()}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:onClick="@{() -> callbacks.onTnCClick()}"
                     android:paddingLeft="16dp"
                     android:paddingTop="12dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:text="@string/terms_and_conditions"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onTnCClick()}" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular"
-                    android:onClick="@{() -> callbacks.onPrivacyPolicyClick()}"
                     android:paddingLeft="16dp"
                     android:paddingTop="12dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:text="@string/privacy_policy"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onPrivacyPolicyClick()}" />
 
                 <ImageView
                     android:layout_width="60dp"
@@ -265,6 +311,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="8dp"
+                    android:alpha="0.8"
                     app:srcCompat="@drawable/ic_logo" />
 
                 <TextView

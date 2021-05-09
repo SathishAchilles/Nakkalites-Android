@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:supportsRtl">
-        <activity android:name=".view.subscription.FaqActivity"/>
+        <activity android:name=".view.subscription.OrderPlacedActivity"></activity>
+        <activity android:name=".view.subscription.FaqActivity" />
         <activity android:name=".view.subscription.ManageSubscriptionActivity" />
         <activity android:name=".view.subscription.SubscriptionsActivity" />
         <activity android:name=".view.profile.ProfileEditActivity" />
@@ -61,6 +62,12 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/abmob_key" />
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="@string/razorpay_api_key"/>
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
 
         <receiver
             android:name=".view.login.SmsBroadcastReceiver"
@@ -69,7 +76,6 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVE" />
             </intent-filter>
         </receiver>
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -80,7 +86,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/freshchat_file_provider_paths" />
         </provider>
-
     </application>
 
 </manifest>

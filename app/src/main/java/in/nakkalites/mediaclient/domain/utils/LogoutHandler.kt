@@ -16,7 +16,7 @@ class LogoutHandler(private val context: Context, private val userManager: UserM
     private val logoutSubject = PublishSubject.create<Unit>()
 
     @Suppress("unused") // App scope.
-    private val logoutDisposable = logoutSubject.debounce(2, TimeUnit.SECONDS)
+    private val logoutDisposable = logoutSubject.debounce(5, TimeUnit.SECONDS)
         .observeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeBy(onNext = {

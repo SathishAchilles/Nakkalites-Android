@@ -34,7 +34,7 @@ class ProfileAddVm(
     val phoneNumber = ObservableField<String>()
     val dob = ObservableField<String>()
     val gender = ObservableField<String>()
-    val country = ObservableField<String>(AppConstants.AppCountry.NAME)
+    val country = ObservableField<String>()
     val city = ObservableField<String>()
     var currentField = ProfileFields.NAME
     val skipVisibility = ObservableBoolean(false)
@@ -46,24 +46,40 @@ class ProfileAddVm(
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
     fun saveProfile() {
-        viewState.value = Event(Result.Loading())
-        disposables += userManager.updateUserProfile(
-            name.get(),
-            countryCodeVm.phoneCode,
-            phoneNumber.get(),
-            email.get(),
-            gender.get(),
-            dob.get(),
-            country.get(),
-            city.get()
-        )
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onComplete = { viewState.value = Event(Result.Success(Unit)) },
-                onError = { throwable ->
-                    viewState.value = Event(Result.Error(Unit, UserUpdateFailedException()))
-                    loge(throwable = throwable, message = "Profile update failed")
-                })
+        val user = userManager.getUser()
+        if ((name.get() != null || user?.name != null) &&
+            (phoneNumber.get() != null || user?.phoneNumber != null) &&
+            (email.get() != null || user?.email != null) &&
+            (gender.get() != null || user?.gender != null) &&
+            (dob.get() != null || user?.dob != null) &&
+            (country.get() != null || user?.country != null) &&
+            (city.get() != null || user?.city != null)
+        ) {
+            viewState.value = Event(Result.Loading())
+            disposables += userManager.updateUserProfile(
+                name.get(),
+                countryCodeVm.phoneCode,
+                phoneNumber.get(),
+                email.get(),
+                gender.get(),
+                dob.get(),
+                country.get(),
+                city.get()
+            )
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onComplete = {
+                        viewState.value = Event(Result.Success(Unit))
+                        userManager.setAddProfileShown()
+                    },
+                    onError = { throwable ->
+                        viewState.value = Event(Result.Error(Unit, UserUpdateFailedException()))
+                        loge(throwable = throwable, message = "Profile update failed")
+                    })
+        } else {
+            viewState.value = Event(Result.Success(Unit))
+            userManager.setAddProfileShown()
+        }
     }
 
     fun updateSkipVisibility() {
@@ -82,5 +98,9 @@ class ProfileAddVm(
 
     fun onGenderSelected(type: GenderTypes) {
         gender.set(type.name.toLowerCase(Locale.US))
+    }
+
+    fun setDefaultCountry() {
+        country.set(AppConstants.AppCountry.NAME)
     }
 }

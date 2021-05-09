@@ -1,7 +1,9 @@
 package `in`.nakkalites.mediaclient.viewmodel.webseries
 
+import `in`.nakkalites.logging.logd
 import `in`.nakkalites.mediaclient.domain.models.Season
 import `in`.nakkalites.mediaclient.domain.models.WebSeries
+import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
@@ -16,8 +18,10 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 
-class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain, planManager: PlanManager) :
+    BaseViewModel() {
     val items = ObservableArrayList<BaseModel>()
     val pageTitle = ObservableField<String>()
     private val isDataLoading = ObservableBoolean()
@@ -27,6 +31,17 @@ class WebSeriesDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseVi
     private val seasons = mutableListOf<Season>()
     private var selectedSeasonId: String? = null
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
+
+    init {
+        disposables += planManager.getPlanObserver()
+            .filter { it }
+            .observeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onNext = {
+                fetchWebSeriesDetail(id!!)
+                logd("Refresh Page")
+            })
+    }
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
