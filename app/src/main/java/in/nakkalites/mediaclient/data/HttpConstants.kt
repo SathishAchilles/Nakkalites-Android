@@ -19,7 +19,7 @@ object HttpConstants {
     const val FAQS = "v1/faqs"
     const val PLAN_VERIFY = "v1/users/payments/verify"
     const val PLAN_FAILURE = "v1/users/payments/failure"
-    const val SUBSCRIPTIONS = "v1/users/subscriptions"
+    const val SUBSCRIPTIONS = "v1/users/memberships"
     const val TERMS_CONDITIONS = "https://d2s2797e1jgkv9.cloudfront.net/html/NakkalitesTermsandconditions.html"
     const val PRIVACY_POLICY = "https://d2s2797e1jgkv9.cloudfront.net/html/NakkalitesPrivacypolicy.html"
 }

@@ -69,6 +69,7 @@
                             android:paddingTop="38dp"
                             android:paddingEnd="27dp"
                             android:paddingBottom="32dp"
+                            android:visibility="@{vm.planImg != null}"
                             app:entries="@{vm.benefits}"
                             app:entryBinder="@{vmBinder}"
                             app:entryLayout="@{@layout/item_plan_benefit}"

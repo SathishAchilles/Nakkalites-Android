@@ -33,6 +33,7 @@ object AppConstants {
     const val SIGNATURE = "SIGNATURE"
     const val ORDER_ID = "ORDER_ID"
     const val RAZORPAY_ID: String = "RAZORPAY_ID"
+    const val MEMBERSHIP_ID: String = "MEMBERSHIP_ID"
 
     const val PLAY_STORE_URL = "market://details?id="
     const val CONTACT_EMAIL = "contact@nakkalites.in"

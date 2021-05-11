@@ -38,6 +38,9 @@ class OrderPlacedActivity : BaseActivity() {
     private val signature by lazy {
         intent.getStringExtra(AppConstants.SIGNATURE) ?: ""
     }
+private val membershipId by lazy {
+        intent.getStringExtra(AppConstants.MEMBERSHIP_ID) ?: ""
+    }
 
     companion object {
         @JvmStatic
@@ -47,13 +50,15 @@ class OrderPlacedActivity : BaseActivity() {
             planName: String?,
             razorpayPaymentID: String,
             orderId: String?,
-            signature: String?
+            signature: String?,
+            membershipId:String?
         ): Intent = Intent(ctx, OrderPlacedActivity::class.java)
             .putExtra(AppConstants.PLAN_ID, planUid)
             .putExtra(AppConstants.PLAN_NAME, planName)
             .putExtra(AppConstants.RAZORPAY_ID, razorpayPaymentID)
             .putExtra(AppConstants.ORDER_ID, orderId)
             .putExtra(AppConstants.SIGNATURE, signature)
+            .putExtra(AppConstants.MEMBERSHIP_ID, membershipId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +66,7 @@ class OrderPlacedActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order_placed)
         binding.vm = vm
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
-        vm.verifyPlan(razorpayPaymentID, orderId, signature)
+        vm.verifyPlan(razorpayPaymentID, orderId, signature, membershipId)
         vm.viewStates().observe(this, EventObserver {
             when (it) {
                 is Result.Success -> {

@@ -25,6 +25,7 @@ class SubscriptionsVm(
     val items = ObservableArrayList<BaseModel>()
     var planUid: String? = null
     var name: String? = null
+    var membershipId: String? = null
     var thumbnail = ObservableField<String?>()
     var selectedSubscriptionPlan: Plan? = null
     private val viewState = MutableLiveData<Event<Result<SubscriptionsEvent>>>()
@@ -85,18 +86,16 @@ class SubscriptionsVm(
     fun getRazorPayParams() {
         viewState.value = Event(Result.Loading(SubscriptionsEvent.UpdateLoading))
         selectedSubscriptionPlan?.id?.let { uid ->
-            disposables += planManager.getRazorPayParams(uid)
+            disposables += planManager.getRazorPayParams(uid, currentPlan?.id)
                 .observeOn(mainThread())
                 .subscribeBy(
                     onSuccess = {
-                        razorPayParams = it.first
+                        membershipId = it.first
+                        razorPayParams = it.second
                         viewState.value =
                             Event(
                                 Result.Success(
-                                    SubscriptionsEvent.UpdateSuccess(
-                                        it.second,
-                                        it.first
-                                    )
+                                    SubscriptionsEvent.UpdateSuccess(it.first, it.third, it.second)
                                 )
                             )
                     },
@@ -152,8 +151,11 @@ sealed class SubscriptionsEvent {
     object PageLoaded : SubscriptionsEvent()
     object PageLoadError : SubscriptionsEvent()
     object UpdateLoading : SubscriptionsEvent()
-    data class UpdateSuccess(val apiKey: String?, val razorpayParams: Map<String, String>) :
-        SubscriptionsEvent()
+    data class UpdateSuccess(
+        val id: String?,
+        val apiKey: String?,
+        val razorpayParams: Map<String, String>
+    ) : SubscriptionsEvent()
 
     object TransactionFailureStatus : SubscriptionsEvent()
 

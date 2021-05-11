@@ -7,6 +7,7 @@ import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
+import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.databinding.ActivityLoginBinding
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.models.User
@@ -24,6 +25,7 @@ import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.parsePhoneNumber
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -234,6 +236,12 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 .getCountriesList(resources.getStringArray(R.array.country_codes_data).asList())
             val sheet = CountriesBottomSheet.newInstance(countries)
             sheet.showAllowingStateLoss(supportFragmentManager)
+        }
+
+        override fun onTnCClick() {
+            Intent(
+                Intent.ACTION_VIEW, Uri.parse(HttpConstants.TERMS_CONDITIONS)
+            ).let(::startActivity)
         }
     }
 

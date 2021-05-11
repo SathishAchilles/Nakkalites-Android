@@ -25,9 +25,9 @@ data class PlanEntity(
     @field:Json(name = "is_selected") val isSelected: Boolean?,
     @field:Json(name = "available_plans_count") val availablePlansCount: Int?,
     @field:Json(name = "content_tags") val contentTags: List<String>?,
-    @field:Json(name = "valid_till") val validTill: String?
+    @field:Json(name = "valid_till") val validTill: String?,
+    @field:Json(name = "recurring") val recurring: Boolean?
 )
-
 
 @JsonClass(generateAdapter = true)
 data class PlanConfigEntity(

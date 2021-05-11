@@ -7,6 +7,8 @@
 
         <import type="in.nakkalites.mediaclient.BuildConfig" />
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="in.nakkalites.mediaclient.view.home.UserProfileVm" />
@@ -45,6 +47,7 @@
                         android:layout_width="53dp"
                         android:layout_height="53dp"
                         android:layout_marginRight="5dp"
+                        android:visibility="@{vm.profileUrl == null ? View.VISIBLE : View.INVISIBLE}"
                         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Rounded"
                         app:srcCompat="@drawable/ic_user_profile" />
 
@@ -53,7 +56,8 @@
                         android:layout_height="53dp"
                         android:layout_marginRight="5dp"
                         app:imageUrl="@{vm.profileUrl}"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Rounded" />
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Rounded"
+                        tools:src="@drawable/ic_crown" />
 
                     <FrameLayout
                         android:id="@+id/plan_layout"

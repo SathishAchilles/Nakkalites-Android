@@ -7,4 +7,6 @@ interface LoginViewCallbacks {
     fun onSignInWithPhoneNumberClick()
 
     fun onFlagClick()
+
+    fun onTnCClick()
 }

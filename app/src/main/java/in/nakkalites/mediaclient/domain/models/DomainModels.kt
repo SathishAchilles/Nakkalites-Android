@@ -42,7 +42,7 @@ data class Plan(
     val id: String?, val name: String?, val price: String?, val frequency: String?,
     val contentTags: List<String>?, val planType: String?, val colorCode: String?,
     val descriptions: List<String>, val availablePlansCount: Int?, val promotionText: String?,
-    val isSelected: Boolean, val validTill: String?
+    val isSelected: Boolean, val validTill: String?, val recurring: Boolean?
 ) {
     companion object {
         fun map(planEntity: PlanEntity): Plan =
@@ -50,7 +50,7 @@ data class Plan(
                 planEntity.id, planEntity.name, planEntity.price, planEntity.frequency,
                 planEntity.contentTags, planEntity.planType, planEntity.colorCode,
                 planEntity.descriptions, planEntity.availablePlansCount, planEntity.promotionText,
-                planEntity.isSelected ?: false, planEntity.validTill
+                planEntity.isSelected ?: false, planEntity.validTill, planEntity.recurring
             )
     }
 }

@@ -62,6 +62,8 @@ class UserProfileVm(val userManager: UserManager, planManager: PlanManager) : Ba
                     user = it
                     profileUrl.set(it.imageUrl)
                     planName.set(it.plan?.name)
+                    planImg.set(PlanUtils.getPlanIcon(it?.plan))
+                    planColorInt.set(PlanUtils.getPlanColorInt(userManager.getCurrentPlansColor()))
                     it.upgradablePlan?.let { plan ->
                         plan.promotionText?.let { upgradableMessage.set(StyleFormatText(plan.promotionText)) }
                         plan.price?.let {

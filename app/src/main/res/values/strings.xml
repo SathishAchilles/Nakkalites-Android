@@ -105,4 +105,5 @@ Download their new app and watch exclusively.\n\n
     <string name="order_successful">Order Successful.\n\n\nThe Plan will be updated after sometime.</string>
     <string name="order_failed">Order Failed.\n\n\nIf payment was made the Plan will be updated after sometime.</string>
     <string name="free_user">Free User</string>
+    <string name="by_clicking_on_continue_or_sign_in_you_are_agreeing_to_nakkalites_s_terms_and_conditions">By Clicking on Continue or Sign in you are agreeing to Nakkalites\'s Terms and conditions</string>
 </resources>

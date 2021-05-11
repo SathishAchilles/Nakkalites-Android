@@ -212,7 +212,7 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
                 } else {
                     vm.razorPayParams["order_id"]
                 },
-                paymentData?.signature
+                paymentData?.signature, vm.membershipId
             ).let { startActivity(it) }
             finish()
         } catch (e: java.lang.Exception) {

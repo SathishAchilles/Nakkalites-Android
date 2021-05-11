@@ -20,9 +20,9 @@ class OrderPlacedVm(private val planManager: PlanManager) : BaseViewModel() {
 
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
-    fun verifyPlan(paymentId: String, orderId: String, signature: String) {
+    fun verifyPlan(paymentId: String, orderId: String, signature: String, membershipId: String) {
         viewState.value = Event(Result.Loading())
-        disposables += planManager.verifyPlan(paymentId, orderId, signature)
+        disposables += planManager.verifyPlan(paymentId, orderId, signature, membershipId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {

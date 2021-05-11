@@ -31,16 +31,21 @@ class PlanManager(
             currentPlanId = it.currentPlan?.id
         }
 
-    fun getRazorPayParams(planUid: String) = subscriptionService.getRazorPayParams(
-        mutableMapOf<String, Any>("plan_uid" to planUid)
-    ).map { Pair(it.razorpayParams, it.apiKey) }
+    fun getRazorPayParams(planUid: String, currentPlanId: String?) =
+        subscriptionService.getRazorPayParams(
+            mutableMapOf<String, Any>().apply {
+                put("plan_uid", planUid)
+                currentPlanId?.let { put("current_plan_uid", currentPlanId) }
+            }
+        ).map { Triple(it.id, it.razorpayParams, it.apiKey) }
 
-    fun verifyPlan(paymentId: String, orderId: String, signature: String) =
+    fun verifyPlan(paymentId: String, orderId: String, signature: String, membershipId: String) =
         subscriptionService.verifyPlan(
             mutableMapOf<String, Any>().apply {
                 put("razorpay_payment_id", paymentId)
                 put("razorpay_subscription_id", orderId)
                 put("razorpay_signature", signature)
+                put("membership_id", membershipId)
             }
         ).map { Pair(it.status == "success", it.error) }
             .doOnSuccess {
