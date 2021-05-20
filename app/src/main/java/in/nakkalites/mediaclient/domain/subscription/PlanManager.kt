@@ -43,7 +43,7 @@ class PlanManager(
         subscriptionService.verifyPlan(
             mutableMapOf<String, Any>().apply {
                 put("razorpay_payment_id", paymentId)
-                put("razorpay_subscription_id", orderId)
+                put("membership_id", orderId)
                 put("razorpay_signature", signature)
                 put("membership_id", membershipId)
             }
@@ -55,7 +55,7 @@ class PlanManager(
     fun subscriptionFailure(orderId: String?, code: Int, message: String?) =
         subscriptionService.subscriptionFailure(
             mutableMapOf<String, Any>().apply {
-                orderId?.let { put("razorpay_subscription_id", it) }
+                orderId?.let { put("membership_id", it) }
                 put("code", code)
                 message?.let { put("message", it) }
             }

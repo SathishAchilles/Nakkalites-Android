@@ -1,5 +1,7 @@
 package `in`.nakkalites.mediaclient.viewmodel.utils
 
+import `in`.nakkalites.mediaclient.view.utils.argumentError
+import com.kizitonwose.time.*
 import io.michaelrocks.libphonenumber.android.NumberParseException
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.michaelrocks.libphonenumber.android.Phonenumber
@@ -66,4 +68,18 @@ fun String.parsePhoneNumber(phoneNumberUtil: PhoneNumberUtil): Phonenumber.Phone
         } else ch[resInd++] = ch[i]
     }
     return String(ch, 0, n - cnt)
+}
+
+@Suppress("unused")
+inline fun <reified T : com.kizitonwose.time.TimeUnit> Interval<T>.timeUnit(): java.util.concurrent.TimeUnit {
+    return when (val tClass: Class<T> = T::class.java) {
+        Nanosecond::class.java -> java.util.concurrent.TimeUnit.NANOSECONDS
+        Microsecond::class.java -> java.util.concurrent.TimeUnit.MICROSECONDS
+        Millisecond::class.java -> java.util.concurrent.TimeUnit.MILLISECONDS
+        Second::class.java -> java.util.concurrent.TimeUnit.SECONDS
+        Minute::class.java -> java.util.concurrent.TimeUnit.MINUTES
+        Hour::class.java -> java.util.concurrent.TimeUnit.HOURS
+        Day::class.java -> java.util.concurrent.TimeUnit.DAYS
+        else -> argumentError("Invalid class: $tClass")
+    }
 }

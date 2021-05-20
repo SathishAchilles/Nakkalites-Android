@@ -129,11 +129,18 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     private val callbacks = object : ProfileAddCallbacks {
         override fun onDateClicked() {
             val calendar = Calendar.getInstance()
-            profileAddVm.dob.get()?.let { dob ->
-                val time = dob.split("/").map { it.toInt() }
-                calendar.set(Calendar.YEAR, time[2])
-                calendar.set(Calendar.MONTH, time[1])
-                calendar.set(Calendar.DAY_OF_MONTH, time[0])
+            val dob = profileAddVm.dob.get()
+            val time = dob?.split("/")?.map {
+                try {
+                    it.toInt()
+                } catch (e: NumberFormatException) {
+                    null
+                }
+            }
+            if (time?.filterNotNull()?.size == 3) {
+                time[2]?.let { calendar.set(Calendar.YEAR, it) }
+                time[1]?.let { calendar.set(Calendar.MONTH, it) }
+                time[0]?.let { calendar.set(Calendar.DAY_OF_MONTH, it) }
             }
             val datePicker =
                 MaterialDatePicker.Builder.datePicker()
@@ -143,7 +150,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             datePicker.addOnPositiveButtonClickListener {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = it
-                profileAddVm.dob.set(SimpleDateFormat("dd/MM/yyy", Locale.US).format(cal.time))
+                profileAddVm.dob.set(SimpleDateFormat("dd/MM/yyyy", Locale.US).format(cal.time))
             }
             datePicker.show(supportFragmentManager, "tag")
         }

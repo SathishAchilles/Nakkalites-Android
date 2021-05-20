@@ -11,7 +11,6 @@ import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.NonFatalReportingTree
-import android.R
 import android.app.Application
 import androidx.core.app.NotificationManagerCompat
 import com.freshchat.consumer.sdk.Freshchat

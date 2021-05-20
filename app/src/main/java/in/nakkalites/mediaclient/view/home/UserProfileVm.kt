@@ -85,8 +85,8 @@ class UserProfileVm(val userManager: UserManager, planManager: PlanManager) : Ba
                                 DisplayText.Singular(R.string.view_plans)
                             }
                         )
-                        upgradableViewVisibility.set(true)
                     }
+                    upgradableViewVisibility.set(it.upgradablePlan != null)
                     manageSubscriptionsVisibility.set(user?.plan != null)
                     viewState.value = Event(Result.Success(Unit))
                 },

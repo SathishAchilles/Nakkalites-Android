@@ -105,5 +105,12 @@ Download their new app and watch exclusively.\n\n
     <string name="order_successful">Order Successful.\n\n\nThe Plan will be updated after sometime.</string>
     <string name="order_failed">Order Failed.\n\n\nIf payment was made the Plan will be updated after sometime.</string>
     <string name="free_user">Free User</string>
+    <string name="resend_otp_in_x_secs">Resend OTP in %ds</string>
     <string name="by_clicking_on_continue_or_sign_in_you_are_agreeing_to_nakkalites_s_terms_and_conditions">By Clicking on Continue or Sign in you are agreeing to Nakkalites\'s Terms and conditions</string>
+    <string name="enter_the_correct_otp">Enter the correct OTP</string>
+    <string name="phone_too_many_attempts">This phone number has been used too many times</string>
+    <string name="phone_error_quota_exceeded">There was a problem verifying your phone number</string>
+    <string name="otp_error_code_expired">This code is no longer valid</string>
+    <string name="enter_valid_mobile_number">Enter a valid mobile number</string>
+
 </resources>

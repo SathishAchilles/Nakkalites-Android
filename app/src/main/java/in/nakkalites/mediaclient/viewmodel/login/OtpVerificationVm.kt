@@ -5,23 +5,32 @@ import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.view.utils.Event
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
+import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
+import `in`.nakkalites.mediaclient.viewmodel.utils.PhoneAuthException
+import `in`.nakkalites.mediaclient.viewmodel.utils.timeUnit
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import com.kizitonwose.time.seconds
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
+import java.util.concurrent.ExecutionException
 
 class OtpVerificationVm(val loginDomain: LoginDomain) : BaseViewModel() {
+    private val TOTAL_RESEND_COUNTDOWNS = 60L
     private lateinit var phoneNumber: String
     private lateinit var countryCode: String
     private val loginState = MutableLiveData<Event<Result<User>>>()
     var storedVerificationId: String? = ""
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     val formattedPhoneNumber = ObservableField<String>()
+    val otpErrorText = ObservableField<DisplayText>()
     val otpCodePart1 = ObservableField<String>("")
     val otpCodePart2 = ObservableField<String>("")
     val otpCodePart3 = ObservableField<String>("")
@@ -57,10 +66,36 @@ class OtpVerificationVm(val loginDomain: LoginDomain) : BaseViewModel() {
                 onSuccess = {
                     loginState.value = Event(Result.Success(it))
                 },
-                onError = {
-                    loginState.value = Event(Result.Error<User>(null, it))
+                onError = { error ->
+                    var unwrappedError =
+                        if (error is ExecutionException) error.cause ?: error else error
+                    unwrappedError = if (error is ExecutionException) {
+                        PhoneAuthException.mapFirebaseException(unwrappedError)
+                    } else {
+                        PhoneAuthException.mapFirebaseException(unwrappedError)
+                    }
+                    loginState.value = Event(Result.Error<User>(null, unwrappedError))
                 }
             )
+    }
 
+    fun countdownForResendOtp(): Observable<Int> {
+        val interval = 1.seconds
+        return Observable.intervalRange(
+            0,
+            TOTAL_RESEND_COUNTDOWNS, 0, interval.longValue, interval.timeUnit(),
+            AndroidSchedulers.mainThread()
+        ).map { (TOTAL_RESEND_COUNTDOWNS - it - 1).toInt() }
+    }
+
+    fun onOtpError(error: PhoneAuthException, otp: String?) {
+        val errorMsg = createErrorMessage(error)
+        otpErrorText.set(errorMsg)
+    }
+
+    private fun createErrorMessage(e: PhoneAuthException) = DisplayText.Singular(e.resId)
+
+    fun onOtpSent() {
+        otpErrorText.set(null)
     }
 }

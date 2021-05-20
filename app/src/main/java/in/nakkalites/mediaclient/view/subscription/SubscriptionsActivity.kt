@@ -198,7 +198,6 @@ class SubscriptionsActivity : BaseActivity(), PaymentResultWithDataListener {
         vm.getRazorPayParams()
     }
 
-
     override fun onPaymentSuccess(razorpayPaymentID: String, paymentData: PaymentData?) {
         try {
             trackRazorpaySuccess(vm.selectedSubscriptionPlan?.name)

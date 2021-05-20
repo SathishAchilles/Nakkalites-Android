@@ -12,6 +12,14 @@
         <variable
             name="callbacks"
             type="in.nakkalites.mediaclient.view.login.OtpVerificationCallbacks" />
+
+        <variable
+            name="isResendEnabled"
+            type="Boolean" />
+
+        <variable
+            name="resendOtpText"
+            type="String" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -178,21 +186,40 @@
                         app:layout_constraintTop_toTopOf="@id/otp_part_1" />
 
                     <TextView
+                        android:id="@+id/otp_code_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="16dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@{vm.otpErrorText}"
+                        android:textColor="@color/red"
+                        android:visibility="@{vm.otpErrorText != null}"
+                        app:layout_constraintEnd_toEndOf="@id/verify_mobile"
+                        app:layout_constraintStart_toStartOf="@id/verify_mobile"
+                        app:layout_constraintTop_toBottomOf="@id/otp_part_1"
+                        tools:text="Enter the correct OTP" />
+
+                    <TextView
                         android:id="@+id/didn_t_rece"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="30dp"
+                        android:enabled="@{isResendEnabled}"
                         android:fontFamily="@font/inter_regular"
                         android:lineSpacingExtra="10sp"
-                        app:debounceOnClick="@{() -> callbacks.onResendClick()}"
-                        android:text="@string/didn_t_receive_otp_resend"
-                        android:textColor="@color/white"
+                        android:text="@{resendOtpText}"
+                        android:textColor="@{isResendEnabled ? @color/white : @color/grey_800_2}"
                         android:textSize="14sp"
                         android:translationY="-5.21sp"
+                        app:debounceOnClick="@{() -> callbacks.onResendClick()}"
                         app:layout_constraintEnd_toEndOf="@id/verify_mobile"
                         app:layout_constraintStart_toStartOf="@id/verify_mobile"
-                        app:layout_constraintTop_toBottomOf="@id/otp_part_1" />
+                        app:layout_constraintTop_toBottomOf="@id/otp_code_error"
+                        tools:text="@string/didn_t_receive_otp_resend"
+                        tools:textColor="@color/white" />
 
                     <com.github.ybq.android.spinkit.SpinKitView
                         android:id="@+id/progress_bar"
@@ -201,8 +228,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@color/white"
-                        android:visibility="gone"
                         android:padding="10dp"
+                        android:visibility="gone"
                         app:SpinKit_Color="@color/progress_bar"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -221,11 +248,11 @@
                 android:layout_marginBottom="28dp"
                 android:background="@drawable/blue_button"
                 android:fontFamily="@font/inter_bold"
-                app:debounceOnClick="@{() -> callbacks.onVerifyClick()}"
                 android:text="@string/verify_otp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="19sp" />
+                android:textSize="19sp"
+                app:debounceOnClick="@{() -> callbacks.onVerifyClick()}" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

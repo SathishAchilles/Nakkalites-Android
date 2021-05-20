@@ -15,6 +15,7 @@ import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
+import `in`.nakkalites.mediaclient.viewmodel.utils.PhoneAuthException
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -33,9 +34,12 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 
@@ -47,6 +51,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private var smsBroadcastReceiver: SmsBroadcastReceiver? = null
+    private var resendOtpTextDisposable: Disposable? = null
     private val countryCode: String by lazy {
         intent.getStringExtra(AppConstants.COUNTRY_CODE)!!
     }
@@ -86,11 +91,25 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                     hideLoading()
                     errorHandler(it.throwable) {
                         loge("Login Failure", throwable = it.throwable)
-                        if (it.throwable is NoUserFoundException) {
-                            showError(getString(R.string.generic_error_message))
-                            false
-                        } else {
-                            true
+                        val error = it.throwable
+                        val unwrappedError =
+                            if (error is ExecutionException) error.cause ?: error else error
+                        when {
+                            otpVerificationVm.storedVerificationId != null -> {
+                                otpVerificationVm.onOtpError(
+                                    PhoneAuthException.mapFirebaseException(
+                                        unwrappedError
+                                    ), otpVerificationVm.otpCode
+                                )
+                                true
+                            }
+                            it.throwable is NoUserFoundException -> {
+                                showError(getString(R.string.generic_error_message))
+                                false
+                            }
+                            else -> {
+                                true
+                            }
                         }
                     }
                 }
@@ -99,6 +118,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                 }
             }
         })
+        countdownToEnableResend()
     }
 
     private fun initiateSMSListener() {
@@ -136,7 +156,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
                 // Show a message and update the UI
                 Toast.makeText(
-                    this@OtpVerificationActivity, getString(R.string.otp_verification_failed),
+                    this@OtpVerificationActivity, PhoneAuthException.mapFirebaseException(e).resId,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -150,6 +170,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                 // Save verification ID and resending token so we can use them later
                 otpVerificationVm.storedVerificationId = verificationId
                 otpVerificationVm.resendToken = token
+                otpVerificationVm.onOtpSent()
             }
         }
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
@@ -159,6 +180,20 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
+    }
+
+    private fun countdownToEnableResend() {
+        resendOtpTextDisposable?.dispose()
+        resendOtpTextDisposable = otpVerificationVm.countdownForResendOtp()
+            .map { getString(R.string.resend_otp_in_x_secs, it) }
+            .doOnSubscribe { binding.isResendEnabled = false }
+            .subscribeBy(
+                onNext = { binding.resendOtpText = it },
+                onComplete = {
+                    binding.resendOtpText = getString(R.string.didn_t_receive_otp_resend)
+                    binding.isResendEnabled = true
+                }
+            )
     }
 
     private fun verifyPhoneNumberWithCode(verificationId: String?, code: String) {
@@ -209,6 +244,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     override fun onDestroy() {
         super.onDestroy()
         smsBroadcastReceiver?.run { applicationContext.unregisterReceiver(this) }
+        resendOtpTextDisposable?.dispose()
     }
 
     private fun showLoading() {
