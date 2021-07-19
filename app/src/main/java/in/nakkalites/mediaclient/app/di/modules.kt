@@ -26,6 +26,8 @@ import `in`.nakkalites.mediaclient.viewmodel.subscription.FaqListVm
 import `in`.nakkalites.mediaclient.viewmodel.subscription.ManageSubscriptionVm
 import `in`.nakkalites.mediaclient.viewmodel.subscription.OrderPlacedVm
 import `in`.nakkalites.mediaclient.viewmodel.subscription.SubscriptionsVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.StyleFormatText
+import `in`.nakkalites.mediaclient.viewmodel.utils.StyleFormatTextAdapter
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
@@ -157,6 +159,7 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         Moshi.Builder()
+            .add(StyleFormatText::class.java, StyleFormatTextAdapter().nullSafe())
             .build()
     }
     single {

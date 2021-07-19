@@ -23,7 +23,7 @@ interface UserService {
     fun updateFcmToken(@Body params: StringAnyMap): Completable
 
     @POST(HttpConstants.USER_PROFILE)
-    fun updateUserProfile(@Body params: StringAnyMap): Completable
+    fun updateUserProfile(@Body params: StringAnyMap): Single<UserAddEditResponse>
 
     @GET(HttpConstants.USER_PROFILE)
     fun getUserProfile(): Single<UserResponse>

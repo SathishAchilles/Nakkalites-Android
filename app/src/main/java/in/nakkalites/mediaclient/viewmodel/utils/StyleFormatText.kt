@@ -17,21 +17,15 @@ import androidx.annotation.FontRes
 import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
 import timber.log.Timber
 
 
 class StyleFormatText {
     val plainText: String?
     val displayText: DisplayText?
-    @ColorRes
-    var color: Int? = null
-    @DimenRes
-    var textSize: Int? = null
-    @StyleRes
-    val textAppearanceRes: Int?
+    @ColorRes var color: Int? = null
+    @DimenRes var textSize: Int? = null
+    @StyleRes val textAppearanceRes: Int?
 
     constructor(plainText: String) {
         this.plainText = plainText
@@ -44,21 +38,6 @@ class StyleFormatText {
         this.plainText = null
         this.displayText = displayText
         this.textAppearanceRes = textAppearanceRes
-    }
-
-    companion object {
-        val typeAdapter = object : TypeAdapter<StyleFormatText>() {
-            override fun read(reader: JsonReader): StyleFormatText =
-                StyleFormatText(reader.nextString())
-
-            override fun write(out: JsonWriter, value: StyleFormatText?) {
-                when {
-                    value == null -> out.value(null as String?)
-                    value.plainText != null -> out.value(value.plainText)
-                    else -> throw UnsupportedOperationException()
-                }
-            }
-        }.nullSafe()
     }
 }
 

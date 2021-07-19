@@ -9,4 +9,6 @@ interface LoginViewCallbacks {
     fun onFlagClick()
 
     fun onTnCClick()
+
+    fun onPrivacyPolicyClick()
 }

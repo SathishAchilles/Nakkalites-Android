@@ -49,7 +49,7 @@ Download their new app and watch exclusively.\n\n
     <string name="edit">Edit</string>
     <string name="manage_subscriptions">Manage Subscriptions</string>
     <string name="faqs">FAQs</string>
-    <string name="invite_your_friends">Invite your friends</string>
+    <string name="invite_your_friends">Share with your friends</string>
     <string name="view_plans">View Plans</string>
     <string name="or">or</string>
     <string name="log_in_or_sign_up">Log in or Sign up</string>
@@ -112,5 +112,6 @@ Download their new app and watch exclusively.\n\n
     <string name="phone_error_quota_exceeded">There was a problem verifying your phone number</string>
     <string name="otp_error_code_expired">This code is no longer valid</string>
     <string name="enter_valid_mobile_number">Enter a valid mobile number</string>
-
+<string name="support">Support</string>
+    <string name="read_our_privacy_policy_here">Read our Privacy Policy here</string>
 </resources>

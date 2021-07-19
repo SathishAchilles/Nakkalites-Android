@@ -1,10 +1,7 @@
 package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.app.constants.AppConstants.DEFAULT_TAG_BG_COLOR
-import `in`.nakkalites.mediaclient.data.user.LoginResponse
-import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
-import `in`.nakkalites.mediaclient.data.user.RefreshTokenResponse
-import `in`.nakkalites.mediaclient.data.user.UserService
+import `in`.nakkalites.mediaclient.data.user.*
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Completable
@@ -124,7 +121,7 @@ class UserManager(private val userService: UserService, private val userDataStor
         dob: String?,
         country: String?,
         city: String?
-    ): Completable {
+    ): Single<UserAddEditResponse> {
         val params = mutableMapOf<String, Any>().apply {
             name?.apply { put("name", this) }
             email?.apply { put("email", this) }
@@ -138,6 +135,18 @@ class UserManager(private val userService: UserService, private val userDataStor
             city?.apply { put("city", this) }
         }
         return userService.updateUserProfile(params)
+            .doOnSuccess {
+                val oldUser = getUser()
+                val user = User(
+                    it.id, it.name, it.email, oldUser?.imageUrl,
+                    oldUser?.providerType, it.countryCode, it.phoneNumber,
+                    it.gender, it.dob, it.city, it.country,
+                    oldUser?.plan, oldUser?.upgradablePlan, oldUser?.isFirstLogin ?: false
+                )
+                setUser(user)
+                setAccessToken(it.token?.accessToken)
+                setRefreshToken(it.token?.refreshToken)
+            }
     }
 
     fun getUserProfile() = userService.getUserProfile()

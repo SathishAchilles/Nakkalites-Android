@@ -243,6 +243,12 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 Intent.ACTION_VIEW, Uri.parse(HttpConstants.TERMS_CONDITIONS)
             ).let(::startActivity)
         }
+
+        override fun onPrivacyPolicyClick() {
+            Intent(
+                Intent.ACTION_VIEW, Uri.parse(HttpConstants.PRIVACY_POLICY)
+            ).let(::startActivity)
+        }
     }
 
     private fun goToProfileAdd() {

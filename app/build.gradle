@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 8
+        versionName "2.0"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -96,6 +96,8 @@ dependencies {
     implementation deps.material
     implementation deps.moshi.core
     kapt deps.moshi.codeGen
+    implementation deps.moshi.adapters
+    implementation deps.moshiLazyAdapters
 
     implementation deps.okHttp
     implementation deps.picasso

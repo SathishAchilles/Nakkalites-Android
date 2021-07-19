@@ -87,6 +87,8 @@
     <init>(...);
     <fields>;
 }
+#Moshi adapters
+-keep class com.serjltt.moshi.adapters.** { *; }
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }

@@ -68,7 +68,7 @@ class ProfileAddVm(
             )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                    onComplete = {
+                    onSuccess = {
                         viewState.value = Event(Result.Success(Unit))
                         userManager.setAddProfileShown()
                     },

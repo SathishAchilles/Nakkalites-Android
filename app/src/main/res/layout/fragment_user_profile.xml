@@ -265,19 +265,6 @@
                     android:paddingTop="12dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/contact_us"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:debounceOnClick="@{() -> callbacks.onContactUsClick()}" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_regular"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp"
                     android:text="@string/invite_your_friends"
                     android:textColor="@color/white"
                     android:textSize="16sp"
@@ -308,6 +295,19 @@
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     app:debounceOnClick="@{() -> callbacks.onPrivacyPolicyClick()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/support"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onContactUsClick()}" />
 
                 <ImageView
                     android:layout_width="60dp"

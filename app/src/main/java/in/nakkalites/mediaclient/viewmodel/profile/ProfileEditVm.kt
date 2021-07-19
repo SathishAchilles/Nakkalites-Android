@@ -10,7 +10,6 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.login.CountryCodeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.glyphChecker
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
-import `in`.nakkalites.mediaclient.viewmodel.utils.UserUpdateFailedException
 import `in`.nakkalites.mediaclient.viewmodel.utils.toCamelCase
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
@@ -56,7 +55,7 @@ class ProfileEditVm(val userManager: UserManager) : BaseViewModel() {
         )
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onComplete = {
+                onSuccess = {
                     viewState.value = Event(Result.Success(ProfileEditViewEvent.UpdateSuccess))
                 },
                 onError = { throwable ->

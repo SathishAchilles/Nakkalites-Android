@@ -80,3 +80,16 @@ data class UserEntity(
     @field:Json(name = "plan_uid") val planUid: String?,
 )
 
+@JsonClass(generateAdapter = true)
+data class UserAddEditResponse(
+    @field:Json(name = "id") val id: String,
+    @field:Json(name = "name") val name: String?,
+    @field:Json(name = "email") val email: String?,
+    @field:Json(name = "country_code") val countryCode: String?,
+    @field:Json(name = "mobile") val phoneNumber: String?,
+    @field:Json(name = "gender") val gender: String?,
+    @field:Json(name = "city") val city: String?,
+    @field:Json(name = "dob") val dob: String?,
+    @field:Json(name = "country") val country: String?,
+    @field:Json(name = "token") val token: RefreshTokenResponse?
+)
