@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 8
-        versionName "2.0"
+        versionCode 9
+        versionName "2.1"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
