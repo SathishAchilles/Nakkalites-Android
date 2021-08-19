@@ -27,7 +27,7 @@ class OtpVerificationVm(val loginDomain: LoginDomain) : BaseViewModel() {
     private lateinit var phoneNumber: String
     private lateinit var countryCode: String
     private val loginState = MutableLiveData<Event<Result<User>>>()
-    var storedVerificationId: String? = ""
+    var storedVerificationId: String? = null
     var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     val formattedPhoneNumber = ObservableField<String>()
     val otpErrorText = ObservableField<DisplayText>()
