@@ -22,6 +22,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.firebase.FirebaseException
@@ -53,7 +54,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     private var smsBroadcastReceiver: SmsBroadcastReceiver? = null
     private var resendOtpTextDisposable: Disposable? = null
     private val countryCode: String by lazy {
-        intent.getStringExtra(AppConstants.COUNTRY_CODE)!!
+        intent.getStringExtra(AppConstants.COUNTRY_CODE) ?: AppConstants.AppCountry.DIALING_CODE
     }
     private val phoneNumber: String by lazy {
         intent.getStringExtra(AppConstants.PHONE_NUMBER)!!
@@ -71,12 +72,15 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_otp_verification)
+        if (otpVerificationVm.storedVerificationId == null && savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState)
+        }
         binding.vm = otpVerificationVm
         binding.callbacks = this
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         otpVerificationVm.setArgs(countryCode, phoneNumber)
         initiateSMSListener()
-        startPhoneNumberVerification(countryCode + phoneNumber)
+        startPhoneNumberVerification("$countryCode $phoneNumber")
         otpVerificationVm.viewStates().observe(this, EventObserver {
             when (it) {
                 is Result.Success -> {
@@ -119,6 +123,17 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
             }
         })
         countdownToEnableResend()
+    }
+
+    override fun onSaveInstanceState(@NonNull outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(AppConstants.KEY_VERIFICATION_ID, otpVerificationVm.storedVerificationId)
+    }
+
+    override fun onRestoreInstanceState(@NonNull savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        otpVerificationVm.storedVerificationId =
+            savedInstanceState.getString(AppConstants.KEY_VERIFICATION_ID)
     }
 
     private fun initiateSMSListener() {
