@@ -8,7 +8,7 @@ import `in`.nakkalites.mediaclient.viewmodel.utils.ObservableString
 class CountryCodeVm(private val flagGlyphChecker: (String) -> Boolean) : BaseViewModel() {
 
     companion object {
-        private const val COUNTRY_DATA_DELIMITER = ':'
+        const val COUNTRY_DATA_DELIMITER = ':'
 
         fun formatFlagAndPhoneCode(flag: String?, phoneCodeWithPlus: String): String {
             val phoneCode = phoneCodeWithPlus.trim()
@@ -18,6 +18,8 @@ class CountryCodeVm(private val flagGlyphChecker: (String) -> Boolean) : BaseVie
 
     private val countryData = mutableListOf<String>()
     private val countryDisplayText = mutableListOf<String>()
+    private val countriesList = mutableListOf<String>()
+
     var phoneCode = AppCountry.DIALING_CODE
 
     val flagAndPhoneCode = run {
@@ -26,13 +28,13 @@ class CountryCodeVm(private val flagGlyphChecker: (String) -> Boolean) : BaseVie
         ObservableString(formatFlagAndPhoneCode(flag, AppCountry.DIALING_CODE))
     }
 
-    fun selectCountry(position: Int) {
-        val (phoneCode, isoCode, _) = countryData[position].split(COUNTRY_DATA_DELIMITER)
+    fun selectCountry(countriesList: List<String>, position: Int) {
+        val (phoneCode, isoCode, _) = countriesList[position].split(COUNTRY_DATA_DELIMITER)
         this.phoneCode = "+$phoneCode"
         setFlagAndPhoneCode(isoCode, phoneCode)
     }
 
-    fun getCountriesList(entries: List<String>): List<String> {
+    private fun getCountriesList(entries: Array<String>): List<String> {
         if (countryDisplayText.isNotEmpty()) return countryDisplayText
 
         entries.forEach { entry ->
@@ -62,5 +64,15 @@ class CountryCodeVm(private val flagGlyphChecker: (String) -> Boolean) : BaseVie
         val emoji = String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
         val canShowFlagEmoji = flagGlyphChecker.invoke(emoji)
         return if (canShowFlagEmoji) emoji else null
+    }
+
+    fun getCountriesListForBottomSheet(entries: Array<String>) :List<String>{
+        if (countriesList.isNotEmpty()) {
+            return countriesList
+        }
+        getCountriesList(entries).map { displayText ->
+            countriesList.add(displayText)
+        }
+        return countriesList
     }
 }

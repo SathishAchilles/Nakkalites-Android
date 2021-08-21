@@ -59,8 +59,8 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             handleLayoutVisibility(binding.phoneLayout, user.phoneNumber)
             handleLayoutVisibility(binding.genderLayout, user.gender)
             handleLayoutVisibility(binding.dobLayout, user.dob)
-            handleLayoutVisibility(binding.cityLayout, user.city)
             handleLayoutVisibility(binding.countryLayout, user.country)
+            handleLayoutVisibility(binding.cityLayout, user.city)
             setCurrentField()
             val view = when (profileAddVm.currentField) {
                 ProfileFields.NAME -> binding.nameLayout
@@ -73,7 +73,14 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             }
             binding.viewAnimator.setDisplayedChild(view)
             view.visibility = View.VISIBLE
-            profileAddVm.updateSkipVisibility()
+            if (binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1).id != binding.viewAnimator.getChildAt(
+                    binding.viewAnimator.displayedChild
+                ).id
+            ) {
+                profileAddVm.updateSkipVisibility()
+            } else {
+                profileAddVm.skipVisibility.set(false)
+            }
             showHintIfPhoneLayout()
             showCTAText()
         }
@@ -119,7 +126,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
     private fun showCTAText() {
         val child = binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1)
-        if (child.id != binding.viewAnimator.child.id) {
+        if (child.id != binding.viewAnimator.getChildAt(binding.viewAnimator.displayedChild).id) {
             profileAddVm.nextText.set(DisplayText.Singular(R.string.next))
         } else {
             profileAddVm.nextText.set(DisplayText.Singular(R.string.complete))
@@ -157,19 +164,14 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
         override fun onFlagClicked() {
             val countries = profileAddVm.countryCodeVm
-                .getCountriesList(resources.getStringArray(R.array.country_codes_data).asList())
-            val sheet = CountriesBottomSheet.newInstance(countries)
+                .getCountriesListForBottomSheet(resources.getStringArray(R.array.country_codes_data))
+            val sheet = CountriesBottomSheet.newInstance(countries, true)
             sheet.showAllowingStateLoss(supportFragmentManager)
         }
 
         override fun onCountryClicked() {
-            val countriesList = resources.getStringArray(R.array.country_codes_data)
-                .asList()
-                .map { it.split(":")[2] }
-                .toList()
-            val countries = profileAddVm.countryCodeVm
-                .getCountriesList(countriesList)
-            val sheet = CountriesBottomSheet.newInstance(countries)
+            val countriesList = resources.getStringArray(R.array.country_data).asList()
+            val sheet = CountriesBottomSheet.newInstance(countriesList, false)
             sheet.showAllowingStateLoss(supportFragmentManager)
         }
 
@@ -198,18 +200,17 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     .show()
                 return
             }
-            if (child.id == binding.viewAnimator.child.id) {
+            if (child.id == binding.viewAnimator.getChildAt(binding.viewAnimator.displayedChild).id) {
                 trackProfileAddSaveClicked()
                 profileAddVm.saveProfile()
                 profileAddVm.skipVisibility.set(false)
-                return
             } else {
                 binding.viewAnimator.showNext()
+                setCurrentField()
+                profileAddVm.updateSkipVisibility()
+                showHintIfPhoneLayout()
+                showCTAText()
             }
-            setCurrentField()
-            profileAddVm.updateSkipVisibility()
-            showHintIfPhoneLayout()
-            showCTAText()
         }
 
         override fun onGenderClicked(type: GenderTypes) {
@@ -292,8 +293,14 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         }
     }
 
-    override fun onCountrySelected(position: Int) {
-        profileAddVm.countryCodeVm.selectCountry(position)
+    override fun onCountrySelected(position: Int, withFlags: Boolean) {
+        if (withFlags) {
+            val countriesList = resources.getStringArray(R.array.country_codes_data).asList()
+            profileAddVm.countryCodeVm.selectCountry(countriesList, position)
+        } else {
+            val countriesList = resources.getStringArray(R.array.country_data).asList()
+            profileAddVm.selectCountry(countriesList, position)
+        }
     }
 }
 

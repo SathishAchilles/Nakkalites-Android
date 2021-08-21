@@ -6,13 +6,16 @@ import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.databinding.ActivityOtpVerificationBinding
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.domain.utils.errorHandler
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
+import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
+import `in`.nakkalites.mediaclient.viewmodel.login.LoginUtils
 import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.PhoneAuthException
@@ -49,6 +52,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     private val otpVerificationVm: OtpVerificationVm by viewModel()
     val crashlytics by inject<FirebaseCrashlytics>()
     val analyticsManager by inject<AnalyticsManager>()
+    val userManager by inject<UserManager>()
 
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private var smsBroadcastReceiver: SmsBroadcastReceiver? = null
@@ -80,7 +84,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         otpVerificationVm.setArgs(countryCode, phoneNumber)
         initiateSMSListener()
-        startPhoneNumberVerification("$countryCode $phoneNumber")
+        startPhoneNumberVerification(countryCode + phoneNumber)
         otpVerificationVm.viewStates().observe(this, EventObserver {
             when (it) {
                 is Result.Success -> {
@@ -88,7 +92,11 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                     val user = it.data
                     setupCrashlyticsUserDetails(user)
                     trackUserLoggedIn(user)
-                    goToHome()
+                    if (LoginUtils.shouldShowProfileAddPage(userManager)) {
+                        goToProfileAdd()
+                    } else {
+                        goToHome()
+                    }
                 }
                 is Result.Error -> {
                     trackLoginFailed()
@@ -217,7 +225,6 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         } catch (e: Exception) {
             binding.resendOtpText = getString(R.string.didn_t_receive_otp_resend)
             binding.isResendEnabled = true
-            countdownToEnableResend()
             Toast.makeText(this, getString(R.string.oops_something_went_wrong), Toast.LENGTH_SHORT)
                 .show()
         }
@@ -227,6 +234,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         phoneNumber: String,
         token: PhoneAuthProvider.ForceResendingToken?
     ) {
+        countdownToEnableResend()
         val optionsBuilder = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
@@ -261,7 +269,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     override fun onResendClick() {
         trackResendClicked()
-        resendVerificationCode(phoneNumber, otpVerificationVm.resendToken)
+        resendVerificationCode(countryCode + phoneNumber, otpVerificationVm.resendToken)
     }
 
     override fun onDestroy() {
@@ -331,6 +339,13 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     private fun goToHome() {
         HomeActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
+    }
+
+    private fun goToProfileAdd() {
+        ProfileAddActivity.createIntent(this)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .let { startActivity(it) }

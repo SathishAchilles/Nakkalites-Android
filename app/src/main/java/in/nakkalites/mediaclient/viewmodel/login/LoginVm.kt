@@ -9,7 +9,6 @@ import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import android.graphics.Paint
 import androidx.core.graphics.PaintCompat
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -19,9 +18,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
-class LoginVm(private val loginDomain: LoginDomain, private val phoneNumberUtil: PhoneNumberUtil) : BaseViewModel() {
+class LoginVm(private val loginDomain: LoginDomain, private val phoneNumberUtil: PhoneNumberUtil) :
+    BaseViewModel() {
     private val loginState = MutableLiveData<Event<Result<User>>>()
     val countryCodeVm = CountryCodeVm(flagGlyphChecker = glyphChecker)
 
@@ -33,8 +32,8 @@ class LoginVm(private val loginDomain: LoginDomain, private val phoneNumberUtil:
         if (account != null) {
             loginState.value = Event(Result.Loading())
             disposables += loginDomain.loginViaGoogle(
-                    account.id!!, account.displayName, account.email!!, account.photoUrl
-                )
+                account.id!!, account.displayName, account.email!!, account.photoUrl
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(

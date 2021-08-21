@@ -93,6 +93,10 @@ class ProfileEditVm(val userManager: UserManager) : BaseViewModel() {
                     loge(throwable = throwable, message = "Profile save failed")
                 })
     }
+
+    fun selectCountry(countriesList: List<String>, position: Int) {
+        country.set(countriesList[position])
+    }
 }
 
 sealed class ProfileEditViewEvent {

@@ -33,7 +33,7 @@ class VideoDetailActivity : BaseActivity() {
     private lateinit var binding: ActivityVideoDetailBinding
     val vm by viewModel<VideoDetailVm>()
     val analyticsManager by inject<AnalyticsManager>()
-    private val id : String by lazy {
+    private val id: String by lazy {
         intent.getStringExtra(AppConstants.VIDEO_ID)!!
     }
     private val name by lazy {
@@ -62,10 +62,10 @@ class VideoDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_detail)
+        vm.setArgs(id, name, thumbnail, url)
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         binding.vm = vm
         binding.onPlayClick = onPlayClick
-        vm.setArgs(id, name, thumbnail, url)
         trackVideoDetailPageOpened()
         init()
         vm.viewStates().observe(this, EventObserver {
@@ -149,7 +149,7 @@ class VideoDetailActivity : BaseActivity() {
 
     private val onVideoClick = { vm: VideoVm ->
         openVideoPlayerPage(
-            this,analyticsManager,vm.id, vm.name, vm.thumbnail, vm.url!!, vm.duration,
+            this, analyticsManager, vm.id, vm.name, vm.thumbnail, vm.url!!, vm.duration,
             vm.lastPlayedTime, vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid, vm.planName
         )
         trackVideoClicked(vm.id, vm.name)
@@ -185,11 +185,16 @@ class VideoDetailActivity : BaseActivity() {
     }
 
     private val onPlayClick = { vm: VideoDetailVm ->
-        openVideoPlayerPage(
-            this,analyticsManager, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration,
-            vm.lastPlayedTime, vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid, vm.planName
-        )
-        trackVideoPlayCTAClicked(vm.id!!, vm.name!!)
+        if (vm.id != null && vm.name != null && vm.thumbnail != null && vm.url != null
+            && vm.showAds != null && vm.shouldPlay != null
+        ) {
+            openVideoPlayerPage(
+                this, analyticsManager, vm.id!!, vm.name!!, vm.thumbnail!!, vm.url!!, vm.duration,
+                vm.lastPlayedTime, vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid,
+                vm.planName
+            )
+            trackVideoPlayCTAClicked(vm.id!!, vm.name!!)
+        }
     }
 
     private fun spanSizeLookup(items: ObservableArrayList<BaseModel>) =

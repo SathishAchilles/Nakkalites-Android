@@ -103,4 +103,8 @@ class ProfileAddVm(
     fun setDefaultCountry() {
         country.set(AppConstants.AppCountry.NAME)
     }
+
+    fun selectCountry(countriesList: List<String>, position: Int) {
+        country.set(countriesList[position])
+    }
 }

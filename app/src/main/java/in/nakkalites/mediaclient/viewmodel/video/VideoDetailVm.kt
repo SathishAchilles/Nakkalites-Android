@@ -35,7 +35,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain, planManager:
     var name: String? = null
     var thumbnail: String? = null
     var url: String? = null
-    var hasUrl = ObservableBoolean()
+    val hasUrl = ObservableBoolean(false)
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     var adTimes: List<Long> = listOf()
