@@ -2,21 +2,20 @@ package `in`.nakkalites.mediaclient.app.di
 
 import `in`.nakkalites.mediaclient.data.HttpStatus.LOGOUT
 import `in`.nakkalites.mediaclient.data.HttpStatus.UNAUTHORIZED
-import `in`.nakkalites.mediaclient.domain.login.RefreshTokenCallback
+import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.view.utils.isValidApiUrl
-import io.reactivex.subjects.PublishSubject
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import retrofit2.HttpException
-import java.util.concurrent.CountDownLatch
+import timber.log.Timber
 
 class HeadersInterceptor(
     private val userDataStore: UserDataStore,
-    private val refreshTokenSubject: PublishSubject<RefreshTokenCallback>
+    private val userService: Lazy<UserService>,
 ) : Interceptor {
     private val maxRetries = 3
     private val lock = Any()
@@ -61,9 +60,19 @@ class HeadersInterceptor(
     }
 
     private fun refreshAccessToken() {
-        val countDownLatch = CountDownLatch(1)
-        refreshTokenSubject.onNext(RefreshTokenCallback { countDownLatch.countDown() })
-        countDownLatch.await()
+        try {
+            val refreshToken = userDataStore.getRefreshToken()
+            val headers = HeadersFactory(userDataStore).get()
+            val params = mapOf<String, Any>(
+                "refresh_token" to refreshToken
+            )
+            userService.value.refreshToken(headers, params).blockingGet().let {
+                userDataStore.setAccessToken(it.accessToken)
+                userDataStore.setRefreshToken(it.refreshToken)
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
+        }
     }
 }
 

@@ -7,7 +7,6 @@ import `in`.nakkalites.mediaclient.app.di.netModule
 import `in`.nakkalites.mediaclient.app.di.viewModelModule
 import `in`.nakkalites.mediaclient.app.utils.RxErrorHandler
 import `in`.nakkalites.mediaclient.data.HttpConstants
-import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.NonFatalReportingTree
@@ -18,7 +17,6 @@ import com.freshchat.consumer.sdk.FreshchatConfig
 import com.freshchat.consumer.sdk.FreshchatNotificationConfig
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.plugins.RxJavaPlugins
-import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -55,7 +53,6 @@ class NakkalitesApp : Application() {
                 NonFatalReportingTree(crashlytics)
             }
         )
-        val refreshTokenManager: RefreshTokenManager = get()
         val config = FreshchatConfig(
             "b14443fa-5ba3-4999-9f19-fae0cdce1e40",
             "2664f834-e43e-4eea-b31f-020cf4c47007"

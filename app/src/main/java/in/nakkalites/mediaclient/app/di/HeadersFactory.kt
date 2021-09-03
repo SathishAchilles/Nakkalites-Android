@@ -7,7 +7,7 @@ import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 class HeadersFactory(private val userDataStore: UserDataStore) {
 
     fun get(): Map<String, String> {
-        return mutableMapOf(
+        return mapOf(
             Headers.APP_VERSION to BuildConfig.VERSION_NAME,
             Headers.APP_VERSION_CODE to BuildConfig.VERSION_CODE.toString(),
             Headers.APP_ACCESS_TOKEN to userDataStore.getAccessToken(),

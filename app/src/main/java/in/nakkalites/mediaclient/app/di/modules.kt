@@ -7,7 +7,9 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.subscription.SubscriptionService
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
-import `in`.nakkalites.mediaclient.domain.login.*
+import `in`.nakkalites.mediaclient.domain.login.LoginDomain
+import `in`.nakkalites.mediaclient.domain.login.UserDataStore
+import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.subscription.PlanDataStore
 import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
@@ -142,11 +144,8 @@ fun netModule(serverUrl: String) = module {
     single {
         StethoInterceptorFactory.get(androidContext())
     }
-    single<PublishSubject<RefreshTokenCallback>> {
-        PublishSubject.create<RefreshTokenCallback>()
-    }
     single {
-        val headersInterceptor = HeadersInterceptor(get(), get())
+        val headersInterceptor = HeadersInterceptor(get(), lazy { get() })
         val chuckInterceptor = ChuckInterceptor(androidContext())
         val okHttpClientBuilder = getOkHttpBuilder(
             androidContext(), listOf(headersInterceptor, chuckInterceptor)
@@ -164,7 +163,6 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         Retrofit.Builder()
-            .client(get())
             .baseUrl(serverUrl)
             .addConverterFactory(MoshiConverterFactory.create(get<Moshi>()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
@@ -200,9 +198,6 @@ fun netModule(serverUrl: String) = module {
         DefaultLoadControl.Builder()
             .setBufferDurationsMs(6000, 18000, 500, 3000)
             .createDefaultLoadControl()
-    }
-    single {
-        RefreshTokenManager(get(), get(), get(), get())
     }
     single {
         PhoneNumberUtil.createInstance(androidContext())

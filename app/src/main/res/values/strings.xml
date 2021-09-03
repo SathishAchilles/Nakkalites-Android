@@ -112,6 +112,8 @@ Download their new app and watch exclusively.\n\n
     <string name="phone_error_quota_exceeded">There was a problem verifying your phone number</string>
     <string name="otp_error_code_expired">This code is no longer valid</string>
     <string name="enter_valid_mobile_number">Enter a valid mobile number</string>
-<string name="support">Support</string>
+    <string name="support">Support</string>
     <string name="read_our_privacy_policy_here">Read our Privacy Policy here</string>
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
 </resources>

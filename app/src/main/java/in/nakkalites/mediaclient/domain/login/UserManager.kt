@@ -1,7 +1,10 @@
 package `in`.nakkalites.mediaclient.domain.login
 
 import `in`.nakkalites.mediaclient.app.constants.AppConstants.DEFAULT_TAG_BG_COLOR
-import `in`.nakkalites.mediaclient.data.user.*
+import `in`.nakkalites.mediaclient.data.user.LoginResponse
+import `in`.nakkalites.mediaclient.data.user.LoginUserEntity
+import `in`.nakkalites.mediaclient.data.user.UserAddEditResponse
+import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.domain.models.User
 import android.net.Uri
 import io.reactivex.Completable
@@ -52,20 +55,6 @@ class UserManager(private val userService: UserService, private val userDataStor
         return userService.login(params)
             .doOnSuccess {
                 storeUserAndTokens(it)
-            }
-    }
-
-    fun refreshToken(
-        headers: Map<String, String>,
-        refreshToken: String
-    ): Single<RefreshTokenResponse> {
-        val params = mutableMapOf<String, Any>(
-            "refresh_token" to refreshToken
-        )
-        return userService.refreshToken(headers, params)
-            .doOnSuccess {
-                setAccessToken(it.accessToken)
-                setRefreshToken(it.refreshToken)
             }
     }
 

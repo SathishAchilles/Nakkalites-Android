@@ -24,6 +24,7 @@ import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesDetailVm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -132,7 +133,7 @@ class WebSeriesDetailActivity : BaseActivity() {
 
     private val onEpisodeVideoClick = { vm: SeasonEpisodeItemVm ->
         openVideoPlayerPage(
-            this,analyticsManager,vm.id, vm.title, vm.imageUrl, vm.url!!, vm.durationInMs,
+            this, analyticsManager, vm.id, vm.title, vm.imageUrl, vm.url!!, vm.durationInMs,
             vm.lastPlayedTime, vm.adTimes, vm.showAds!!, vm.shouldPlay!!, vm.planUid, vm.planName
         )
         trackWebseriesEpisodeClicked(vm)
@@ -148,6 +149,28 @@ class WebSeriesDetailActivity : BaseActivity() {
             is WebSeriesDetailItemVm -> {
                 (itemBinding as ItemWebSeriesDetailBinding).vm = vm1
                 itemBinding.callback = callbacks
+                val textView = itemBinding.description
+                textView.viewTreeObserver.addOnPreDrawListener(object :
+                    ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        if (!textView.text.isNullOrEmpty() && textView.lineCount > 0) {
+                            textView.viewTreeObserver.removeOnPreDrawListener(this)
+                            vm1.showDescriptionReadMore(textView.lineCount <= vm1.minLines)
+                        }
+                        return true
+                    }
+                })
+                val textView1 = itemBinding.starring
+                textView1.viewTreeObserver.addOnPreDrawListener(object :
+                    ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        if (!textView1.text.isNullOrEmpty() && textView1.lineCount > 0) {
+                            textView1.viewTreeObserver.removeOnPreDrawListener(this)
+                            vm1.showStarringReadMore(textView1.lineCount <= vm1.minLines)
+                        }
+                        return true
+                    }
+                })
             }
             is SeasonEpisodeItemVm -> {
                 (itemBinding as ItemSeasonEpisodeBinding).transformations =
