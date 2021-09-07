@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="in.nakkalites.mediaclient.viewmodel.login.CountryVm" />
+
+        <variable
+            name="vm"
+            type="CountryVm" />
+
+        <variable
+            name="onCountrySelected"
+            type="kotlin.jvm.functions.Function1&lt;CountryVm,kotlin.Unit&gt;" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:onClick="@{() -> onCountrySelected.invoke(vm)}"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/list_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@{vm.country}"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:text="Title 1" />
+    </RelativeLayout>
+</layout>

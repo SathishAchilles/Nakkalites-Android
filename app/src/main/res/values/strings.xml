@@ -1,7 +1,9 @@
 <resources>
+    <string name="freshchat_file_provider_authority">in.nakkalites.mediaclient.provider</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
-    <string name="all">All</string>
+    <string name="home">Home</string>
     <string name="web_series">Web series</string>
+    <string name="profile">Profile</string>
     <string name="x_episodes">%s - Episodes</string>
     <plurals name="x_season">
         <item quantity="one">%s season</item>
@@ -9,6 +11,7 @@
     </plurals>
     <string name="play_episode_x">Play Episode %s</string>
     <string name="share_sheet_title">Share %s</string>
+    <string name="share_nakkalites">Share Nakkalites to</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="error_network">Some problem in server</string>
     <string name="app_update_dialog_title">Update App</string>
@@ -31,6 +34,9 @@ Download their new app and watch exclusively.\n\n
 Youtube LA illaye…\n\n
 Download their new app and watch exclusively.\n\n
 %s</string>
+    <string name="share_text">Hey… Did you install Nakkalites android app?\n\n
+        Download their new app and watch new alaparaigal video and Back to school 2 exclusively.\n\n
+%s</string>
     <string name="starring">Starring</string>
     <string name="episode_title">%s - %s</string>
     <string name="related_videos">Related Videos</string>
@@ -40,4 +46,72 @@ Download their new app and watch exclusively.\n\n
     <string name="sign_up_intro">Watch our exclusive videos first</string>
     <string name="contact_us">Contact Us</string>
     <string name="oops_something_went_wrong">Oops! Something went wrong.\nPlease Try Again Later</string>
+    <string name="edit">Edit</string>
+    <string name="manage_subscriptions">Manage Subscriptions</string>
+    <string name="faqs">FAQs</string>
+    <string name="invite_your_friends">Share with your friends</string>
+    <string name="view_plans">View Plans</string>
+    <string name="or">or</string>
+    <string name="log_in_or_sign_up">Log in or Sign up</string>
+    <string name="numerals">0123456789</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="we_ll_text_you_the_otp_to_verify">We’ll text you the OTP to verify</string>
+    <string name="continue_text">Continue</string>
+    <string name="verify_mobile_number">Verify mobile number</string>
+    <string name="enter_the_otp_sent_to_x">Enter the OTP Sent to %s</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="didn_t_receive_otp_resend">Didn’t receive OTP? Resend</string>
+    <string name="what_s_your_name">What’s your name?</string>
+    <string name="what_s_your_email">What’s your email?</string>
+    <string name="next">Next</string>
+    <string name="what_s_your_phone_number">What’s your phone number?</string>
+    <string name="what_s_your_gender">What’s your gender?</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="others">Others</string>
+    <string name="what_s_your_dob">What’s your DOB?</string>
+    <string name="what_s_your_country">What’s your Country?</string>
+    <string name="what_s_your_city">What’s your City?</string>
+    <string name="prime">Prime</string>
+    <string name="super_prime">Super Prime</string>
+    <string name="save">Save</string>
+    <string name="your_name">Your Name</string>
+    <string name="email_id">Email Id</string>
+    <string name="gender">Gender</string>
+    <string name="dob">DOB</string>
+    <string name="city">City</string>
+    <string name="country">Country</string>
+
+    <string name="star_superscript"> <sup><small>*</small></sup></string>
+    <string name="select_a_plan_that_s_right_for_you">Select a plan that\'s right for you</string>
+    <string name="current_plan">Current Plan</string>
+    <string name="rupee_placeholder">"₹ %s "</string>
+    <string name="continue_to_payment">Continue to Payment</string>
+    <string name="upgrade_to_x">Upgrade to %s</string>
+    <string name="chat_with_us">Chat With Us</string>
+    <string name="select_country">Select Country</string>
+    <string name="enter_phone_number_error">Please Enter Valid Phone Number to Proceed</string>
+    <string name="otp_read_timeout">OTP Read Timeout</string>
+    <string name="otp_verification_failed">OTP Verification Failed</string>
+    <string name="select_date_of_birth">Select date of birth</string>
+    <string name="complete">Complete</string>
+    <string name="missing_fields">Please Fill the Field to Proceed</string>
+    <string name="email_field_error">Please enter a valid email</string>
+    <string name="rupee_x">₹%s</string>
+    <string name="slash_x">" /%s"</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="payment_success_message">Payment Status will be updated in sometime</string>
+    <string name="order_placed">Place Order</string>
+    <string name="order_successful">Order Successful.\n\n\nThe Plan will be updated after sometime.</string>
+    <string name="order_failed">Order Failed.\n\n\nIf payment was made the Plan will be updated after sometime.</string>
+    <string name="free_user">Free User</string>
+    <string name="resend_otp_in_x_secs">Resend OTP in %ds</string>
+    <string name="by_clicking_on_continue_or_sign_in_you_are_agreeing_to_nakkalites_s_terms_and_conditions">By Clicking on Continue or Sign in you are agreeing to Nakkalites\'s Terms and conditions</string>
+    <string name="enter_the_correct_otp">Enter the correct OTP</string>
+    <string name="phone_too_many_attempts">This phone number has been used too many times</string>
+    <string name="phone_error_quota_exceeded">There was a problem verifying your phone number</string>
+    <string name="otp_error_code_expired">This code is no longer valid</string>
+    <string name="enter_valid_mobile_number">Enter a valid mobile number</string>
+<string name="support">Support</string>
+    <string name="read_our_privacy_policy_here">Read our Privacy Policy here</string>
 </resources>

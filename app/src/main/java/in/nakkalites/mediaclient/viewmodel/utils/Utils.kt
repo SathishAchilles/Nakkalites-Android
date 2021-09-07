@@ -1,5 +1,11 @@
 package `in`.nakkalites.mediaclient.viewmodel.utils
 
+import `in`.nakkalites.mediaclient.view.utils.argumentError
+import com.kizitonwose.time.*
+import io.michaelrocks.libphonenumber.android.NumberParseException
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import io.michaelrocks.libphonenumber.android.Phonenumber
+import timber.log.Timber
 import java.util.*
 
 fun String.formatEn(vararg args: Any?): String = format(Locale.US, *args)
@@ -34,3 +40,46 @@ fun Long.toTimeString(withLiteral: Boolean = false, includeZeros: Boolean = fals
         }
         this
     }.toString()
+
+typealias ObservableString = NonNullObservableField<String>
+
+fun String.parsePhoneNumber(phoneNumberUtil: PhoneNumberUtil): Phonenumber.PhoneNumber? {
+    if (this.isBlank()) return null
+
+    val phoneWithPlus = if (!this.startsWith("+")) "+$this" else this
+    return try {
+        phoneNumberUtil.parse(phoneWithPlus, null)
+    } catch (e: NumberParseException) {
+        Timber.e(e)
+        null
+    }
+}
+
+ fun String.toCamelCase(): String {
+    var cnt = 0
+    val n = length
+    val ch = toCharArray()
+    var resInd = 0
+    for (i in 0 until n) {
+        if (ch[i] == ' ') {
+            cnt++
+            ch[i + 1] = Character.toUpperCase(ch[i + 1])
+            continue
+        } else ch[resInd++] = ch[i]
+    }
+    return String(ch, 0, n - cnt)
+}
+
+@Suppress("unused")
+inline fun <reified T : com.kizitonwose.time.TimeUnit> Interval<T>.timeUnit(): java.util.concurrent.TimeUnit {
+    return when (val tClass: Class<T> = T::class.java) {
+        Nanosecond::class.java -> java.util.concurrent.TimeUnit.NANOSECONDS
+        Microsecond::class.java -> java.util.concurrent.TimeUnit.MICROSECONDS
+        Millisecond::class.java -> java.util.concurrent.TimeUnit.MILLISECONDS
+        Second::class.java -> java.util.concurrent.TimeUnit.SECONDS
+        Minute::class.java -> java.util.concurrent.TimeUnit.MINUTES
+        Hour::class.java -> java.util.concurrent.TimeUnit.HOURS
+        Day::class.java -> java.util.concurrent.TimeUnit.DAYS
+        else -> argumentError("Invalid class: $tClass")
+    }
+}

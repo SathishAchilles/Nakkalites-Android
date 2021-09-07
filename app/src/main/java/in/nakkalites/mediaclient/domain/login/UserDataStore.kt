@@ -54,6 +54,12 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
         }
     }
 
+    fun isAddProfileShown(): Boolean = prefs.getBoolean(PrefsConstants.IS_ADD_PROFILE_SHOWN, false)
+
+    fun setAddProfileShown() {
+        prefs.edit().putBoolean(PrefsConstants.IS_ADD_PROFILE_SHOWN, true).apply()
+    }
+
     fun generateInstanceIdIfNotAvailable() {
         if (!isInstanceIdAvailable()) {
             prefs.edit().putString(PrefsConstants.INSTANCE_ID, generateUnhyphenatedUuid()).apply()

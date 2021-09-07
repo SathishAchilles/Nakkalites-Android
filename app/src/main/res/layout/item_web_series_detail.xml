@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -22,19 +23,58 @@
         android:layout_marginEnd="30dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_regular"
-            android:text="@{vm.webseriesCount}"
-            android:textColor="@color/grey_400_2"
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/plan_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_prime"
+                android:backgroundTint="@{vm.planColorInt}"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:visibility="@{vm.planImg != null}"
+                app:elevation="5dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:src="@{vm.planImg}"
+                    tools:src="@drawable/ic_star" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/inter_bold"
+                    android:paddingStart="5dp"
+                    android:text="@{vm.planName}"
+                    android:textAllCaps="true"
+                    android:textColor="@color/grey_900_2"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular"
+                android:text="@{vm.webseriesCount}"
+                android:textColor="@color/grey_400_2"
+                android:textSize="16sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/blue_button"
+            android:enabled="false"
             android:gravity="center"
             android:onClick="@{() -> callback.onVideoClick(vm.videoVm)}"
             android:orientation="horizontal">

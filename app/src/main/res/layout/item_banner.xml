@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -19,10 +20,9 @@
             type="java.util.List&lt;com.squareup.picasso.Transformation&gt;" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="match_parent"
@@ -34,5 +34,39 @@
             app:fit="@{true}"
             app:imageTransforms="@{transformations}"
             app:imageUrl="@{vm.thumbnail}" />
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/plan_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end|right"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="34dp"
+            android:background="@drawable/bg_prime"
+            android:backgroundTint="@{vm.planColorInt}"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="@{vm.planImg != null}"
+            app:elevation="5dp">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:src="@{vm.planImg}"
+                tools:src="@drawable/ic_star" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:paddingStart="5dp"
+                android:text="@{vm.planName}"
+                android:textAllCaps="true"
+                android:textColor="@color/grey_900_2"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
 </layout>

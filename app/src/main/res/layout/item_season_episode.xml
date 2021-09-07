@@ -63,6 +63,25 @@
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
                 tools:progress="10" />
+            <FrameLayout
+                android:id="@+id/plan_layout"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="top|end|right"
+                android:background="@drawable/bg_prime"
+                android:backgroundTint="@{vm.planColorInt}"
+                android:visibility="@{vm.planImg != null}"
+                app:elevation="5dp">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@{vm.planImg}"
+                    tools:src="@drawable/ic_star" />
+            </FrameLayout>
         </FrameLayout>
 
         <TextView

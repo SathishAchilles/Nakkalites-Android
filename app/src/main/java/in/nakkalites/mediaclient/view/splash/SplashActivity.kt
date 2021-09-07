@@ -11,19 +11,21 @@ import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.BaseActivity
 import `in`.nakkalites.mediaclient.view.home.HomeActivity
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
+import `in`.nakkalites.mediaclient.view.profile.ProfileAddActivity
+import `in`.nakkalites.mediaclient.view.profile.ProfileEditActivity
 import `in`.nakkalites.mediaclient.view.utils.EventObserver
 import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.view.utils.playStoreIntent
+import `in`.nakkalites.mediaclient.viewmodel.login.LoginUtils
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.databinding.DataBindingUtil
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -44,7 +46,13 @@ class SplashActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
         vm.viewStates().observe(this, EventObserver {
             when (it) {
-                is Result.Success -> goToHome()
+                is Result.Success -> {
+                    if (LoginUtils.shouldShowProfileAddPage(userManager)) {
+                        goToProfileAdd()
+                    } else {
+                        goToHome()
+                    }
+                }
                 is Result.Error -> goToLogin()
                 else -> showLoading()
             }
@@ -95,33 +103,24 @@ class SplashActivity : BaseActivity() {
             }
             lastMandatoryVersion > currentVersion -> {
                 // Update App
-                MaterialDialog(this)
-                    .show {
-                        cancelable(false)
-                        noAutoDismiss()
-                        cancelOnTouchOutside(false)
-                        title(R.string.app_update_dialog_title)
-                        message(R.string.mandatory_update_message)
-                        positiveButton(R.string.update_app) { updateApp() }
-                        negativeButton(R.string.cancel) { killApp() }
-                    }
+                MaterialAlertDialogBuilder(this)
+                    .setCancelable(false)
+                    .setTitle(R.string.app_update_dialog_title)
+                    .setMessage(R.string.mandatory_update_message)
+                    .setPositiveButton(R.string.update_app) { _, _ -> updateApp() }
+                    .setNegativeButton(R.string.cancel) { _, _ -> killApp() }
+                    .show()
             }
             lastOptionalVersion > currentVersion -> {
                 // Tell user to update or skip
-                MaterialDialog(this)
-                    .show {
-                        cancelable(true)
-                        cancelOnTouchOutside(true)
-                        title(R.string.app_update_dialog_title)
-                        message(R.string.optional_update_message)
-                        positiveButton(R.string.update_app) { updateApp() }
-                        negativeButton(R.string.skip) {
-                            vm.hasConfigRetrieved = true
-                        }
-                        onDismiss {
-                            vm.hasConfigRetrieved = true
-                        }
-                    }
+                MaterialAlertDialogBuilder(this)
+                    .setCancelable(true)
+                    .setTitle(R.string.app_update_dialog_title)
+                    .setMessage(R.string.optional_update_message)
+                    .setPositiveButton(R.string.update_app) { _, _ -> updateApp() }
+                    .setNegativeButton(R.string.skip) { _, _ -> vm.hasConfigRetrieved = true }
+                    .setOnDismissListener { vm.hasConfigRetrieved = true }
+                    .show()
             }
             else -> {
                 vm.hasConfigRetrieved = true
@@ -146,6 +145,13 @@ class SplashActivity : BaseActivity() {
 
     private fun goToHome() {
         HomeActivity.createIntent(this)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .let { startActivity(it) }
+    }
+
+    private fun goToProfileAdd() {
+        ProfileAddActivity.createIntent(this)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .let { startActivity(it) }

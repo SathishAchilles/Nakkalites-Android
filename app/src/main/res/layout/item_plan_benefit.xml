@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.graphics.Color" />
+
+        <import type="in.nakkalites.mediaclient.R" />
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.viewmodel.subscription.BenefitVm" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginEnd="9dp"
+            android:tint="@{vm.isSelected ? @color/light_blue_800_3 : @color/grey_800_2}"
+            app:srcCompat="@drawable/ic_star"
+            tools:ignore="UseAppTint" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_regular"
+            android:text="@{vm.featureText}"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            tools:text="Exclusive Premium videos and Web series" />
+    </LinearLayout>
+</layout>

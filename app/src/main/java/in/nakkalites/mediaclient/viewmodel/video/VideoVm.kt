@@ -3,7 +3,11 @@ package `in`.nakkalites.mediaclient.viewmodel.video
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
+import `in`.nakkalites.mediaclient.viewmodel.subscription.PlanUtils.getPlanColorInt
+import `in`.nakkalites.mediaclient.viewmodel.subscription.PlanUtils.getPlanIcon
 import androidx.annotation.DimenRes
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 
 class VideoVm(
     video: Video, position: Int = -1, addMarginStart: Boolean = false,
@@ -24,6 +28,12 @@ class VideoVm(
     val duration = video.duration
     val lastPlayedTime = video.lastPlayedTime
     val adTimes = video.adTimes
+    val shouldPlay = video.isPlayable
+    val showAds = video.showAds
+    val planUid = video.plan?.id
+    val planName = video.plan?.name
+    val planImg = ObservableField(getPlanIcon(video.plan))
+    val planColorInt = ObservableInt(getPlanColorInt(video.plan?.colorCode))
 
     @DimenRes
     val marginStart =

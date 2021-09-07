@@ -4,33 +4,35 @@ import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.di.applicationModule
 import `in`.nakkalites.mediaclient.app.di.netModule
-import `in`.nakkalites.mediaclient.app.di.refreshTokenSubjectProperty
 import `in`.nakkalites.mediaclient.app.di.viewModelModule
 import `in`.nakkalites.mediaclient.app.utils.RxErrorHandler
 import `in`.nakkalites.mediaclient.data.HttpConstants
-import `in`.nakkalites.mediaclient.domain.login.RefreshTokenCallback
 import `in`.nakkalites.mediaclient.domain.login.RefreshTokenManager
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.NonFatalReportingTree
 import android.app.Application
+import androidx.core.app.NotificationManagerCompat
+import com.freshchat.consumer.sdk.Freshchat
+import com.freshchat.consumer.sdk.FreshchatConfig
+import com.freshchat.consumer.sdk.FreshchatNotificationConfig
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+
 
 class NakkalitesApp : Application() {
     private val debug = BuildConfig.DEBUG
     val userManager: UserManager by inject()
     val logoutHandler: LogoutHandler by inject()
     val crashlytics: FirebaseCrashlytics by inject()
+    val freshchat: Freshchat by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -54,6 +56,19 @@ class NakkalitesApp : Application() {
             }
         )
         val refreshTokenManager: RefreshTokenManager = get()
+        val config = FreshchatConfig(
+            "b14443fa-5ba3-4999-9f19-fae0cdce1e40",
+            "2664f834-e43e-4eea-b31f-020cf4c47007"
+        )
+        config.domain = "msdk.in.freshchat.com"
+        config.isCameraCaptureEnabled = false
+        config.isGallerySelectionEnabled = false
+        config.isResponseExpectationEnabled = false
+        freshchat.init(config)
+        val notificationConfig = FreshchatNotificationConfig()
+            .setNotificationSoundEnabled(true)
+            .setImportance(NotificationManagerCompat.IMPORTANCE_MAX)
+        freshchat.setNotificationConfig(notificationConfig)
     }
 
     private val serverUrl: String

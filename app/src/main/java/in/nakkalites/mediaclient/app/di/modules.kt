@@ -4,16 +4,30 @@ import `in`.nakkalites.mediaclient.app.StethoHelper
 import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpConstants
+import `in`.nakkalites.mediaclient.data.subscription.SubscriptionService
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.data.videogroup.VideoGroupService
 import `in`.nakkalites.mediaclient.domain.login.*
+import `in`.nakkalites.mediaclient.domain.subscription.PlanDataStore
+import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
+import `in`.nakkalites.mediaclient.view.home.UserProfileVm
 import `in`.nakkalites.mediaclient.view.utils.StethoInterceptorFactory
 import `in`.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm
 import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
+import `in`.nakkalites.mediaclient.viewmodel.login.CountriesSheetVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
+import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
+import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
+import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.FaqListVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.ManageSubscriptionVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.OrderPlacedVm
+import `in`.nakkalites.mediaclient.viewmodel.subscription.SubscriptionsVm
+import `in`.nakkalites.mediaclient.viewmodel.utils.StyleFormatText
+import `in`.nakkalites.mediaclient.viewmodel.utils.StyleFormatTextAdapter
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoDetailVm
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoPlayerVm
 import `in`.nakkalites.mediaclient.viewmodel.videogroup.VideoGroupListVm
@@ -24,6 +38,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.StatFs
 import androidx.preference.PreferenceManager
+import com.freshchat.consumer.sdk.Freshchat
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.LoadControl
 import com.google.android.exoplayer2.database.DatabaseProvider
@@ -40,9 +55,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import okhttp3.Cache
@@ -59,8 +74,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 
-const val refreshTokenSubjectProperty = "RefreshTokenSubjectProperty"
-
 val applicationModule = module {
     single<SharedPreferences> {
         PreferenceManager.getDefaultSharedPreferences(androidContext())
@@ -69,7 +82,13 @@ val applicationModule = module {
         UserDataStore(get(), get())
     }
     single {
+        PlanDataStore(get(), get())
+    }
+    single {
         UserManager(get(), get())
+    }
+    single {
+        PlanManager(get(), get())
     }
     single {
         LoginDomain(get(), get())
@@ -92,19 +111,31 @@ val applicationModule = module {
     single {
         AnalyticsManager(get(), get())
     }
+    single {
+        Freshchat.getInstance(androidContext())
+    }
 }
 
 val viewModelModule = module {
     viewModel { SplashVm(get()) }
-    viewModel { LoginVm(get()) }
-    viewModel { AllVideoGroupsVm(get()) }
-    viewModel { WebSeriesListVm(get()) }
+    viewModel { LoginVm(get(), get()) }
+    viewModel { AllVideoGroupsVm(get(), get()) }
+    viewModel { WebSeriesListVm(get(), get()) }
     viewModel { HomeVm(get(), get(), get()) }
-    viewModel { VideoGroupListVm(get()) }
-    viewModel { WebSeriesDetailVm(get()) }
-    viewModel { VideoDetailVm(get()) }
+    viewModel { VideoGroupListVm(get(), get()) }
+    viewModel { WebSeriesDetailVm(get(), get()) }
+    viewModel { VideoDetailVm(get(), get()) }
     viewModel { VideoPlayerVm(get()) }
     viewModel { WebViewVm() }
+    viewModel { OtpVerificationVm(get()) }
+    viewModel { ProfileAddVm(get(), get()) }
+    viewModel { ProfileEditVm(get()) }
+    viewModel { CountriesSheetVm() }
+    viewModel { UserProfileVm(get(), get()) }
+    viewModel { SubscriptionsVm(get()) }
+    viewModel { ManageSubscriptionVm(get()) }
+    viewModel { FaqListVm(get()) }
+    viewModel { OrderPlacedVm(get()) }
 }
 
 fun netModule(serverUrl: String) = module {
@@ -128,7 +159,7 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
+            .add(StyleFormatText::class.java, StyleFormatTextAdapter().nullSafe())
             .build()
     }
     single {
@@ -142,6 +173,9 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         get<Retrofit>().create(UserService::class.java)
+    }
+    single {
+        get<Retrofit>().create(SubscriptionService::class.java)
     }
     single {
         get<Retrofit>().create(VideoGroupService::class.java)
@@ -169,6 +203,9 @@ fun netModule(serverUrl: String) = module {
     }
     single {
         RefreshTokenManager(get(), get(), get(), get())
+    }
+    single {
+        PhoneNumberUtil.createInstance(androidContext())
     }
 }
 

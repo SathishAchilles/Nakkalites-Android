@@ -87,6 +87,23 @@
     <init>(...);
     <fields>;
 }
+#Moshi adapters
+-keep class com.serjltt.moshi.adapters.** { *; }
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+-keepattributes JavascriptInterface
+-keepattributes *Annotation*
+
+-dontwarn com.razorpay.**
+-keep class com.razorpay.** {*;}
+
+-optimizations !method/inlining/*
+
+-keepclasseswithmembers class * {
+  public void onPayment*(...);
+}
 
 #Moshi Kotlin
 -keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl

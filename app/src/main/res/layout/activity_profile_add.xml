@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm" />
+
+        <variable
+            name="callbacks"
+            type="in.nakkalites.mediaclient.view.profile.ProfileAddCallbacks" />
+
+        <import type="in.nakkalites.mediaclient.view.profile.GenderTypes" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_height="?attr/actionBarSize"
+            app:title=" ">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="28dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:gravity="end"
+                    android:onClick="@{() -> callbacks.onSkipClicked()}"
+                    android:padding="4dp"
+                    android:text="@string/skip"
+                    android:textColor="@color/light_blue_a700_2"
+                    android:textSize="15sp"
+                    android:visibility="@{vm.skipVisibility}" />
+            </FrameLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fitsSystemWindows="true">
+
+                    <in.nakkalites.mediaclient.view.utils.ViewAnimator
+                        android:id="@+id/view_animator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <LinearLayout
+                            android:id="@+id/name_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_regular"
+                                android:text="@string/what_s_your_name"
+                                android:textColor="@color/white"
+                                android:textSize="22sp" />
+
+                            <EditText
+                                android:id="@+id/tv_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginBottom="12dp"
+                                android:background="@drawable/bg_edittext"
+                                android:inputType="text"
+                                android:lineSpacingExtra="16sp"
+                                android:text="@={vm.name}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/email_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/what_s_your_email"
+                                android:textColor="@color/white"
+                                android:textSize="22sp" />
+
+                            <EditText
+                                android:id="@+id/tv_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginBottom="12dp"
+                                android:background="@drawable/bg_edittext"
+                                android:inputType="textEmailAddress"
+                                android:lineSpacingExtra="16sp"
+                                android:text="@={vm.email}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/phone_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_phone"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/what_s_your_phone_number"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <EditText
+                                android:id="@+id/country_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginBottom="14dp"
+                                android:background="@drawable/bg_edittext"
+                                android:cursorVisible="false"
+                                android:drawableRight="@drawable/ic_chevron_down"
+                                android:drawablePadding="4dp"
+                                android:focusable="false"
+                                android:maxHeight="50dp"
+                                android:paddingEnd="16dp"
+                                android:text="@{vm.countryCodeVm.flagAndPhoneCode}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp"
+                                app:debounceOnClick="@{() -> callbacks.onFlagClicked()}"
+                                app:drawableTint="@color/grey_900_2"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_phone"
+                                tools:text="🇮🇳 +91" />
+
+                            <EditText
+                                android:id="@+id/phone_edit_text"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="16dp"
+                                android:background="@drawable/bg_edittext"
+                                android:digits="@string/numerals"
+                                android:hint="@string/phone_number"
+                                android:imeOptions="actionDone"
+                                android:importantForAutofill="no"
+                                android:inputType="phone"
+                                android:maxHeight="50dp"
+                                android:singleLine="true"
+                                android:text="@={vm.phoneNumber}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp"
+                                app:layout_constraintBottom_toBottomOf="@id/country_code"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/country_code"
+                                app:layout_constraintTop_toTopOf="@id/country_code" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/gender_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/tv_gender"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/what_s_your_gender"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/gender_chip_group"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="32dp"
+                                android:layout_marginBottom="16dp"
+                                android:onClick="@{() -> callbacks.onGenderClicked(GenderTypes.MALE)}"
+                                app:chipSpacing="10dp"
+                                app:chipSpacingHorizontal="10dp"
+                                app:chipSpacingVertical="10dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tv_gender"
+                                app:selectionRequired="true"
+                                app:singleSelection="true">
+
+                                <in.nakkalites.mediaclient.view.utils.ChipView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="@{() -> callbacks.onGenderClicked(GenderTypes.FEMALE)}"
+                                    android:padding="10dp"
+                                    android:text="@string/male"
+                                    app:chipEndPadding="10dp"
+                                    app:chipStartPadding="10dp"
+                                    tools:text="Free Size" />
+
+                                <in.nakkalites.mediaclient.view.utils.ChipView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:onClick="@{() -> callbacks.onGenderClicked(GenderTypes.OTHERS)}"
+                                    android:padding="10dp"
+                                    android:text="@string/female"
+                                    app:chipEndPadding="10dp"
+                                    app:chipStartPadding="10dp"
+                                    tools:text="Free Size" />
+
+                                <in.nakkalites.mediaclient.view.utils.ChipView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="10dp"
+                                    android:text="@string/others"
+                                    app:chipEndPadding="10dp"
+                                    app:chipStartPadding="10dp"
+                                    tools:text="Free Size" />
+                            </com.google.android.material.chip.ChipGroup>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dob_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/what_s_your_dob"
+                                android:textColor="@color/white"
+                                android:textSize="22sp" />
+
+                            <EditText
+                                android:id="@+id/tv_dob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginBottom="12dp"
+                                android:background="@drawable/bg_edittext"
+                                android:cursorVisible="false"
+                                android:drawableRight="@drawable/ic_chevron_down"
+                                android:drawablePadding="4dp"
+                                android:focusable="false"
+                                android:inputType="text"
+                                android:lineSpacingExtra="16sp"
+                                android:onClick="@{() -> callbacks.onDateClicked()}"
+                                android:text="@={vm.dob}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp"
+                                app:drawableTint="@color/grey_900_2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/country_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/what_s_your_country"
+                                android:textColor="@color/white"
+                                android:textSize="22sp" />
+
+                            <EditText
+                                android:id="@+id/tv_country"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginBottom="12dp"
+                                android:background="@drawable/bg_edittext"
+                                android:cursorVisible="false"
+                                android:drawableRight="@drawable/ic_chevron_down"
+                                android:drawablePadding="4dp"
+                                android:focusable="false"
+                                android:inputType="text"
+                                android:lineSpacingExtra="16sp"
+                                android:onClick="@{() -> callbacks.onCountryClicked()}"
+                                android:text="@={vm.country}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp"
+                                app:drawableTint="@color/grey_900_2" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/city_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/what_s_your_city"
+                                android:textColor="@color/white"
+                                android:textSize="22sp" />
+
+                            <EditText
+                                android:id="@+id/tv_city"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:layout_marginBottom="12dp"
+                                android:background="@drawable/bg_edittext"
+                                android:inputType="text"
+                                android:lineSpacingExtra="16sp"
+                                android:text="@={vm.city}"
+                                android:textColor="@color/grey_900_2"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+                    </in.nakkalites.mediaclient.view.utils.ViewAnimator>
+                </androidx.core.widget.NestedScrollView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login_cta"
+                    style="@style/PrimarySolid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="28dp"
+                    android:gravity="center"
+                    android:onClick="@{() -> callbacks.onNextClicked()}"
+                    android:padding="16dp"
+                    android:text="@{vm.nextText}"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    tools:text="@string/next" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="parent">
+
+                <com.github.ybq.android.spinkit.SpinKitView
+                    style="@style/SpinKitView.ThreeBounce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:SpinKit_Color="@color/progress_bar" />
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+</layout>

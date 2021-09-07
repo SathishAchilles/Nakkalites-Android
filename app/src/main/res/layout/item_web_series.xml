@@ -20,7 +20,7 @@
             type="java.util.List&lt;com.squareup.picasso.Transformation&gt;" />
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -36,7 +36,39 @@
             android:onClick="@{() -> onWebSeriesClick.invoke(vm)}"
             app:fit="@{true}"
             app:imageTransforms="@{transformations}"
-            app:imageUrl="@{vm.thumbnail}"
-            tools:src="@drawable/ic_launcher_background" />
-    </LinearLayout>
+            app:imageUrl="@{vm.thumbnail}" />
+
+        <LinearLayout
+            android:id="@+id/plan_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end|right"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_prime"
+            android:backgroundTint="@{vm.planColorInt}"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="@{vm.planImg != null}"
+            app:elevation="5dp">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:src="@{vm.planImg}"
+            tools:src="@drawable/ic_star" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/inter_bold"
+            android:paddingStart="5dp"
+            android:text="@{vm.planName}"
+            android:textAllCaps="true"
+            android:textColor="@color/grey_900_2"
+            android:textSize="12sp" />
+        </LinearLayout>
+    </FrameLayout>
 </layout>

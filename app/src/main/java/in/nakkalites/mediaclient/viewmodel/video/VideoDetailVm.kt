@@ -1,6 +1,9 @@
 package `in`.nakkalites.mediaclient.viewmodel.video
 
+import `in`.nakkalites.logging.logd
 import `in`.nakkalites.mediaclient.R
+import `in`.nakkalites.mediaclient.domain.models.Video
+import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
 import `in`.nakkalites.mediaclient.domain.utils.PagingBody
 import `in`.nakkalites.mediaclient.domain.utils.PagingCallback
 import `in`.nakkalites.mediaclient.domain.videogroups.VideoGroupDomain
@@ -19,10 +22,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicBoolean
 
-class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewModel() {
+class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain, planManager: PlanManager) :
+    BaseViewModel() {
+    private var video: Video? = null
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     val items = ObservableArrayList<BaseModel>()
     private val isDataLoading = ObservableBoolean()
@@ -30,19 +35,36 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
     var name: String? = null
     var thumbnail: String? = null
     var url: String? = null
+    var hasUrl = ObservableBoolean()
     var duration: Long? = 0L
     var lastPlayedTime: Long? = 0L
     var adTimes: List<Long> = listOf()
+    var planUid: String? = null
+    var planName: String? = null
+    var shouldPlay: Boolean? = false
+    var showAds: Boolean? = false
     private val isPageLoaded = AtomicBoolean(false)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
+    init {
+        disposables += planManager.getPlanObserver()
+            .filter { it }
+            .observeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onNext = {
+                fetchVideoDetail(id!!)
+                logd("Refresh Page")
+            })
+    }
+
     fun viewStates(): LiveData<Event<Result<Unit>>> = viewState
 
-    fun setArgs(id: String, name: String, thumbnail: String, url: String) {
+    fun setArgs(id: String, name: String, thumbnail: String, url: String?) {
         this.id = id
         this.name = name
         this.thumbnail = thumbnail
         this.url = url
+        hasUrl.set(url != null)
     }
 
     fun loading(): Boolean {
@@ -59,6 +81,7 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
             .compose(RxTransformers.dataLoading(isDataLoading, items))
             .subscribeBy(
                 onSuccess = {
+                    hasUrl.set(video?.url != null)
                     items.addAll(it)
                 },
                 onError = {
@@ -86,9 +109,15 @@ class VideoDetailVm(private val videoGroupDomain: VideoGroupDomain) : BaseViewMo
                     isPageLoaded.set(true)
                 }
                 .map { video ->
+                    this.video = video
                     duration = video.duration
                     lastPlayedTime = video.lastPlayedTime
                     adTimes = video.adTimes
+                    shouldPlay = video.isPlayable
+                    showAds = video.showAds
+                    url = video.url
+                    planUid = video.plan?.id
+                    planName = video.plan?.name
                     video
                 }
                 .map { video ->

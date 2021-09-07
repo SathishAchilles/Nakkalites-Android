@@ -4,10 +4,7 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.utils.StringAnyMap
 import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.HeaderMap
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface UserService {
     @Headers(
@@ -24,4 +21,10 @@ interface UserService {
 
     @POST(HttpConstants.FCM_REFRESH)
     fun updateFcmToken(@Body params: StringAnyMap): Completable
+
+    @POST(HttpConstants.USER_PROFILE)
+    fun updateUserProfile(@Body params: StringAnyMap): Single<UserAddEditResponse>
+
+    @GET(HttpConstants.USER_PROFILE)
+    fun getUserProfile(): Single<UserResponse>
 }

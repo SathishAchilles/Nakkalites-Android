@@ -5,6 +5,7 @@ import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
 import android.content.Context
 import android.content.Intent
+import com.razorpay.Checkout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -15,11 +16,11 @@ class LogoutHandler(private val context: Context, private val userManager: UserM
     private val logoutSubject = PublishSubject.create<Unit>()
 
     @Suppress("unused") // App scope.
-    private val logoutDisposable = logoutSubject.debounce(2, TimeUnit.SECONDS)
+    private val logoutDisposable = logoutSubject.debounce(5, TimeUnit.SECONDS)
         .observeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeBy(onNext = {
-            clearAppData(userManager)
+            clearAppData(context, userManager)
             val intent = LoginActivity.createIntent(context)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             context.startActivity(intent)
@@ -31,8 +32,9 @@ class LogoutHandler(private val context: Context, private val userManager: UserM
         logoutSubject.onNext(Unit)
     }
 
-    private fun clearAppData(userManager: UserManager) {
+    private fun clearAppData(context: Context, userManager: UserManager) {
         userManager.clearAppData()
         userManager.generateInstanceIdIfNotAvailable()
+        Checkout.clearUserData(context)
     }
 }

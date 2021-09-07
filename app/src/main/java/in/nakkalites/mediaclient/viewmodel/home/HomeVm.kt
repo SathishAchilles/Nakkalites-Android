@@ -1,29 +1,27 @@
 package `in`.nakkalites.mediaclient.viewmodel.home
 
+import `in`.nakkalites.logging.logd
+import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.viewmodel.BaseViewModel
 import `in`.nakkalites.mediaclient.viewmodel.webseries.WebSeriesListVm
-import androidx.databinding.ObservableArrayList
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 
 class HomeVm(
-    val userManager: UserManager, private val allVideoGroupsVm: AllVideoGroupsVm,
+    userManager: UserManager, private val allVideoGroupsVm: AllVideoGroupsVm,
     private val webSeriesListVm: WebSeriesListVm
 ) : BaseViewModel() {
 
-    private val tabs: List<HomeTab> = listOf(HomeTab.ALL, HomeTab.WEB_SERIES)
-    internal val pages = ObservableArrayList<BaseViewModel>().apply { addAll(createPages()) }
-    internal val pageTitleRes = tabs.map { it.stringRes }
-    internal var selectedTab: HomeTab = HomeTab.ALL
-
-    private fun createPages(): List<BaseViewModel> = listOf(allVideoGroupsVm, webSeriesListVm)
-
-    fun setSelectedTab(position: Int) {
-        selectedTab = HomeTab.fromPosition(position)
+    init {
+        disposables += userManager.getUserProfile()
+            .observeOn(mainThread())
+            .subscribeBy(
+                onSuccess = { logd(message = "Profile updated") },
+                onError = { throwable ->
+                    loge(throwable = throwable, message = "Profile update failed")
+                })
     }
-
-    fun allVideosGroupsStates() = allVideoGroupsVm.viewStates()
-
-    fun webSeriesStates() = webSeriesListVm.viewStates()
-
 }
 

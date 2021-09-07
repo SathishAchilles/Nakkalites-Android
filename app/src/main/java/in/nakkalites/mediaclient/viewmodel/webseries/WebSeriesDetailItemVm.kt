@@ -4,9 +4,12 @@ import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.domain.models.WebSeries
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
+import `in`.nakkalites.mediaclient.viewmodel.subscription.PlanUtils
 import `in`.nakkalites.mediaclient.viewmodel.utils.DisplayText
 import `in`.nakkalites.mediaclient.viewmodel.utils.formatEn
 import `in`.nakkalites.mediaclient.viewmodel.video.VideoVm
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 
 class WebSeriesDetailItemVm(webSeries: WebSeries) : BaseModel {
     val name = webSeries.name
@@ -27,5 +30,7 @@ class WebSeriesDetailItemVm(webSeries: WebSeries) : BaseModel {
     private val nextVideo: Video? =
         webSeries.nextVideo ?: webSeries.seasons.firstOrNull()?.episodes?.firstOrNull()
     val videoVm: VideoVm? = nextVideo?.let { VideoVm(nextVideo) }
-
+    val planName = webSeries.plan?.name
+    val planImg = ObservableField(PlanUtils.getPlanIcon(webSeries.plan))
+    val planColorInt = ObservableInt(PlanUtils.getPlanColorInt(webSeries.plan?.colorCode))
 }

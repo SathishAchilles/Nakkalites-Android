@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="in.nakkalites.mediaclient.BuildConfig" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.view.home.UserProfileVm" />
+
+        <variable
+            name="callbacks"
+            type="in.nakkalites.mediaclient.view.home.UserProfileCallbacks" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_900_2"
+        tools:context=".view.home.UserProfileFragment">
+
+        <ScrollView
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="42dp">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="72dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="53dp"
+                        android:layout_height="53dp"
+                        android:layout_marginRight="5dp"
+                        android:visibility="@{vm.profileUrl == null ? View.VISIBLE : View.INVISIBLE}"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Rounded"
+                        app:srcCompat="@drawable/ic_user_profile" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="53dp"
+                        android:layout_height="53dp"
+                        android:layout_marginRight="5dp"
+                        app:imageUrl="@{vm.profileUrl}"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Rounded"
+                        tools:src="@drawable/ic_crown" />
+
+                    <FrameLayout
+                        android:id="@+id/plan_layout"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="bottom|end|right"
+                        android:background="@drawable/bg_prime"
+                        android:backgroundTint="@{vm.planColorInt}"
+                        android:visibility="@{vm.planImg != null}"
+                        app:elevation="5dp">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@{vm.planImg}"
+                            tools:src="@drawable/ic_star" />
+                    </FrameLayout>
+                </FrameLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:text="@{vm.name}"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    tools:text="Pavan" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:text="@string/free_user"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="@{vm.planImg == null}" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@drawable/bg_prime"
+                    android:backgroundTint="@{vm.planColorInt}"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:visibility="@{vm.planImg != null}"
+                    app:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
+                        android:src="@{vm.planImg}"
+                        tools:src="@drawable/ic_star" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/inter_bold"
+                        android:paddingStart="5dp"
+                        android:text="@{vm.planName}"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_900_2"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:text="@string/edit"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="18sp"
+                    app:debounceOnClick="@{() -> callbacks.onEditClick()}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@drawable/bg_rounded_rect_grey_6dp"
+                    android:orientation="vertical"
+                    android:paddingLeft="25dp"
+                    android:paddingTop="18dp"
+                    android:paddingRight="25dp"
+                    android:paddingBottom="18dp"
+                    android:visibility="@{vm.upgradableViewVisibility}">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal|top"
+                        android:lineSpacingExtra="11sp"
+                        android:text="@{vm.upgradableMessage}"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        tools:text="Watch Exclusive Premium Videos &amp; Web series for" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_horizontal|top"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal|top"
+                            android:lineSpacingExtra="11sp"
+                            android:text="@{vm.upgradablePrice}"
+                            android:textColor="@color/white"
+                            android:textSize="28sp"
+                            tools:text="₹49" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="11sp"
+                            android:text="@{vm.upgradablePlanFrequency}"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            tools:text=" /month" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:background="@drawable/blue_button"
+                        android:fontFamily="@font/inter_bold"
+                        android:gravity="center"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="12dp"
+                        android:text="@{vm.upgradablePlanCTA}"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        app:debounceOnClick="@{() -> callbacks.onPlanCTAClick()}"
+                        tools:text="@string/view_plans" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/white" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/manage_subscriptions"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:visibility="@{vm.manageSubscriptionsVisibility}"
+                    app:debounceOnClick="@{() -> callbacks.onManageSubscriptionClick()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/faqs"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onFaqClick()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/invite_your_friends"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onShareClick()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/terms_and_conditions"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onTnCClick()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onPrivacyPolicyClick()}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/support"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:debounceOnClick="@{() -> callbacks.onContactUsClick()}" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:alpha="0.8"
+                    app:srcCompat="@drawable/ic_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="@{BuildConfig.VERSION_NAME}"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:visibility="visible"
+            tools:visibility="gone">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                style="@style/SpinKitView.ThreeBounce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/progress_bar" />
+        </FrameLayout>
+    </FrameLayout>
+</layout>
