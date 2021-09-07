@@ -212,7 +212,15 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
     }
 
     private fun verifyPhoneNumberWithCode(verificationId: String?, code: String) {
-        PhoneAuthProvider.getCredential(verificationId!!, code)
+        try {
+            PhoneAuthProvider.getCredential(verificationId!!, code)
+        } catch (e: Exception) {
+            binding.resendOtpText = getString(R.string.didn_t_receive_otp_resend)
+            binding.isResendEnabled = true
+            countdownToEnableResend()
+            Toast.makeText(this, getString(R.string.oops_something_went_wrong), Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun resendVerificationCode(
