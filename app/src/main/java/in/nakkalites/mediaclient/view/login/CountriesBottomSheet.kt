@@ -22,6 +22,9 @@ import java.util.*
 class CountriesBottomSheet : BaseBottomSheetFragment() {
     private var callback: CountriesBottomSheetCallbacks? = null
     private val vm: CountriesSheetVm by viewModel()
+    private val withFlags: Boolean by lazy {
+        requireArguments().getBoolean(FLAGS_INCLUDED)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -49,7 +52,7 @@ class CountriesBottomSheet : BaseBottomSheetFragment() {
     }
 
     private val onCountrySelected = { vm: CountryVm ->
-        callback?.onCountrySelected(vm.index)
+        callback?.onCountrySelected(vm.index, withFlags)
         dismissAllowingStateLoss()
     }
 
@@ -59,15 +62,17 @@ class CountriesBottomSheet : BaseBottomSheetFragment() {
 
     companion object {
         private const val COUNTRY_LIST = "COUNTRY_LIST"
+        private const val FLAGS_INCLUDED = "FLAGS_INCLUDED"
 
-        fun newInstance(countries: List<String>): CountriesBottomSheet {
+        fun newInstance(countries: List<String>, withFlags: Boolean): CountriesBottomSheet {
             val args = Bundle()
-            args.putStringArrayList(COUNTRY_LIST, countries as ArrayList<String>)
+            args.putStringArrayList(COUNTRY_LIST, ArrayList(countries))
+            args.putBoolean(FLAGS_INCLUDED, withFlags)
             return CountriesBottomSheet().apply { arguments = args }
         }
     }
 }
 
 interface CountriesBottomSheetCallbacks {
-    fun onCountrySelected(position: Int)
+    fun onCountrySelected(position: Int, withFlags: Boolean)
 }

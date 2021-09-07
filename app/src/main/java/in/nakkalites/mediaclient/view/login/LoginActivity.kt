@@ -233,8 +233,8 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
         override fun onFlagClick() {
             val countries = vm.countryCodeVm
-                .getCountriesList(resources.getStringArray(R.array.country_codes_data).asList())
-            val sheet = CountriesBottomSheet.newInstance(countries)
+                .getCountriesListForBottomSheet(resources.getStringArray(R.array.country_codes_data))
+            val sheet = CountriesBottomSheet.newInstance(countries, true)
             sheet.showAllowingStateLoss(supportFragmentManager)
         }
 
@@ -300,7 +300,8 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED)
     }
 
-    override fun onCountrySelected(position: Int) {
-        vm.countryCodeVm.selectCountry(position)
+    override fun onCountrySelected(position: Int, withFlags: Boolean) {
+        val countriesList = resources.getStringArray(R.array.country_codes_data).asList()
+        vm.countryCodeVm.selectCountry(countriesList, position)
     }
 }
