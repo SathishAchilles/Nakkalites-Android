@@ -57,7 +57,7 @@ object RxErrorHandler {
 
     private fun throwUncaughtException(throwable: Throwable) {
         val currentThread = Thread.currentThread()
-        currentThread.uncaughtExceptionHandler.uncaughtException(currentThread, throwable)
+        currentThread.uncaughtExceptionHandler?.uncaughtException(currentThread, throwable)
     }
 }
 

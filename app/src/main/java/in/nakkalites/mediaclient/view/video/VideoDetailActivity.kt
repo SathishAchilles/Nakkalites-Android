@@ -22,6 +22,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewTreeObserver
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.GridLayoutManager
@@ -175,6 +176,28 @@ class VideoDetailActivity : BaseActivity() {
                 )
                 itemBinding.seekbar.setOnTouchListener { _, _ -> true }
                 itemBinding.seekbar.thumb.mutate().alpha = 0
+                val textView = itemBinding.description
+                textView.viewTreeObserver.addOnPreDrawListener(object :
+                    ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        if (!textView.text.isNullOrEmpty() && textView.lineCount > 0) {
+                            textView.viewTreeObserver.removeOnPreDrawListener(this)
+                            vm1.showDescriptionReadMore(textView.lineCount <= vm1.minLines)
+                        }
+                        return true
+                    }
+                })
+                val textView1 = itemBinding.starring
+                textView1.viewTreeObserver.addOnPreDrawListener(object :
+                    ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        if (!textView1.text.isNullOrEmpty() && textView1.lineCount > 0) {
+                            textView1.viewTreeObserver.removeOnPreDrawListener(this)
+                            vm1.showStarringReadMore(textView1.lineCount <= vm1.minLines)
+                        }
+                        return true
+                    }
+                })
             }
             is VideoVm -> {
                 (itemBinding as ItemVideoGridBinding).onVideoClick = onVideoClick

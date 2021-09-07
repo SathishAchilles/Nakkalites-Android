@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 12
-        versionName "2.1.3"
+        versionCode 14
+        versionName "2.1.5"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -117,7 +117,6 @@ dependencies {
     implementation deps.koin.viewModel
     implementation deps.spinKit
     implementation deps.stetho.core
-    implementation deps.stetho.okHttp
     implementation deps.stetho.okHttp
     implementation deps.time
 

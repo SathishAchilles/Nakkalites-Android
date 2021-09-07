@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -41,10 +41,10 @@
                 android:focusableInTouchMode="false"
                 android:maxHeight="3dp"
                 android:minHeight="3dp"
-                android:splitTrack="false"
                 android:progress="@{vm.progress}"
                 android:progressBackgroundTint="@color/grey_300"
                 android:progressTint="@color/light_blue_a700_2"
+                android:splitTrack="false"
                 tools:progress="50" />
 
             <TextView
@@ -58,6 +58,7 @@
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/plan_layout"
             android:layout_width="wrap_content"
@@ -105,6 +106,7 @@
             tools:text="Amma Expectation vs Reality" />
 
         <TextView
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -112,10 +114,27 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="20dp"
             android:fontFamily="@font/inter_regular"
+            android:maxLines="@{!vm.descriptionExpanded ? vm.minLines : vm.maxLines}"
             android:text="@{vm.description}"
             android:textColor="@color/grey_500_2"
             android:textSize="14sp"
             tools:text="A romantic video that resembles a typical Tamil love story. Let the romance begin!" />
+
+        <TextView
+            android:id="@+id/read_more_less"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/inter_regular"
+            android:onClick="@{() -> vm.toggleDescriptionExpandClick()}"
+            android:text="@{vm.descriptionExpanded ? @string/read_less : @string/read_more}"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="@{vm.descriptionShowReadMore}"
+            tools:text="@string/read_less" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,6 +149,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/starring"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -137,11 +157,27 @@
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/inter_regular"
             android:lineSpacingExtra="3.9sp"
+            android:maxLines="@{!vm.starringExpanded ? vm.minLines : vm.maxLines}"
             android:text="@{vm.starring}"
             android:textColor="@color/grey_500_2"
             android:textSize="14sp"
             android:textStyle="normal"
             tools:text="Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/inter_regular"
+            android:onClick="@{() -> vm.toggleStarringExpandClick()}"
+            android:text="@{vm.starringExpanded ? @string/read_less : @string/read_more}"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="@{vm.starringShowReadMore}"
+            tools:text="@string/read_less" />
 
         <LinearLayout
             android:layout_width="match_parent"

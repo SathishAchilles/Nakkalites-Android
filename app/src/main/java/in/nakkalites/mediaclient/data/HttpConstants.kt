@@ -10,7 +10,7 @@ object HttpConstants {
     const val VIDEO_GROUP_DETAIL = "v2/video_groups/{video-group-id}"
     const val WEBSERIES_DETAIL = "v2/web_series/{webseries-id}"
     const val VIDEO_DETAIL = "v2/videos/{video-id}"
-    const val VIDEO_TRACK = "v1/videos/{video-id}/track"
+    const val VIDEO_TRACK = "v2/videos/{video-id}/track"
     const val VIDEO_RELATED = "v2/videos/{video-id}/related"
     const val TOKEN_REFRESH = "v1/token/refresh"
     const val FCM_REFRESH = "v1/fcm_token"

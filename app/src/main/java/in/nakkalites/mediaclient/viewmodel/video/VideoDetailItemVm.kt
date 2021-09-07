@@ -4,6 +4,7 @@ import `in`.nakkalites.mediaclient.domain.models.Video
 import `in`.nakkalites.mediaclient.viewmodel.BaseModel
 import `in`.nakkalites.mediaclient.viewmodel.subscription.PlanUtils
 import `in`.nakkalites.mediaclient.viewmodel.utils.toTimeString
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 
@@ -28,4 +29,25 @@ class VideoDetailItemVm(video: Video) : BaseModel {
     val planName = video.plan?.name
     val planImg = ObservableField(PlanUtils.getPlanIcon(video.plan))
     val planColorInt = ObservableInt(PlanUtils.getPlanColorInt(video.plan?.colorCode))
+    val descriptionExpanded = ObservableBoolean(false)
+    val descriptionShowReadMore = ObservableBoolean(false)
+    val starringExpanded = ObservableBoolean(false)
+    val starringShowReadMore = ObservableBoolean(false)
+    val maxLines = Int.MAX_VALUE
+    val minLines = 4
+
+    fun showStarringReadMore(expand: Boolean) {
+        starringShowReadMore.set(!expand)
+    }
+
+    fun toggleStarringExpandClick() {
+        starringExpanded.set(!starringExpanded.get())
+    }
+    fun showDescriptionReadMore(expand: Boolean) {
+        descriptionShowReadMore.set(!expand)
+    }
+
+    fun toggleDescriptionExpandClick() {
+        descriptionExpanded.set(!descriptionExpanded.get())
+    }
 }

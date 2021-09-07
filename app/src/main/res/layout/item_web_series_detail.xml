@@ -124,13 +124,29 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
             android:fontFamily="@font/inter_regular"
+            android:maxLines="@{!vm.descriptionExpanded ? vm.minLines : vm.maxLines}"
             android:text="@{vm.description}"
             android:textColor="@color/grey_500_2"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/read_more_less"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/inter_regular"
+            android:onClick="@{() -> vm.toggleDescriptionExpandClick()}"
+            android:text="@{vm.descriptionExpanded ? @string/read_less : @string/read_more}"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="@{vm.descriptionShowReadMore}"
+            tools:text="@string/read_less" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,16 +160,31 @@
             android:textStyle="normal" />
 
         <TextView
+            android:id="@+id/starring"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/inter_regular"
             android:lineSpacingExtra="3.9sp"
+            android:maxLines="@{!vm.starringExpanded ? vm.minLines : vm.maxLines}"
             android:text="@{vm.starring}"
             android:textColor="@color/grey_500_2"
             android:textSize="14sp"
             android:textStyle="normal"
             tools:text="Sindhu, Nivedhitha, Arun Kumar, Sasi Kumar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/inter_regular"
+            android:onClick="@{() -> vm.toggleStarringExpandClick()}"
+            android:text="@{vm.starringExpanded ? @string/read_less : @string/read_more}"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="@{vm.starringShowReadMore}"
+            tools:text="@string/read_less" />
 
         <View
             android:layout_width="match_parent"
