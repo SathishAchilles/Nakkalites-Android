@@ -17,10 +17,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
-import android.view.KeyEvent
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.android.exoplayer2.LoadControl
@@ -118,6 +115,7 @@ class VideoPlayerActivity : BaseActivity() {
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_video_player)
         binding.vm = vm
