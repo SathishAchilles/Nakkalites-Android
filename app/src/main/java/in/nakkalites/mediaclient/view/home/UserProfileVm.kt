@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.home
 
 import `in`.nakkalites.logging.logd
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.subscription.PlanManager
@@ -38,6 +39,7 @@ class UserProfileVm(val userManager: UserManager, planManager: PlanManager) : Ba
     val upgradablePrice = ObservableField<DisplayText>()
     val upgradablePlanFrequency = ObservableField<DisplayText>()
     val upgradablePlanCTA = ObservableField<DisplayText>()
+    val version = "Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
 
     init {

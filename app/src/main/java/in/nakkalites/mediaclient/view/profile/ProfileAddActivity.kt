@@ -54,28 +54,50 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         binding.callbacks = callbacks
         setupToolbar(binding.toolbar, showHomeAsUp = true, upIsBack = true)
         userManager.getUser()?.let { user ->
-            handleLayoutVisibility(binding.nameLayout, user.name)
-            handleLayoutVisibility(binding.emailLayout, user.email)
-            handleLayoutVisibility(binding.phoneLayout, user.phoneNumber)
-            handleLayoutVisibility(binding.genderLayout, user.gender)
-            handleLayoutVisibility(binding.dobLayout, user.dob)
-            handleLayoutVisibility(binding.countryLayout, user.country)
-            handleLayoutVisibility(binding.cityLayout, user.city)
-            setCurrentField()
-            val view = when (profileAddVm.currentField) {
-                ProfileFields.NAME -> binding.nameLayout
-                ProfileFields.EMAIL -> binding.emailLayout
-                ProfileFields.PHONE -> binding.phoneLayout
-                ProfileFields.GENDER -> binding.genderLayout
-                ProfileFields.DOB -> binding.dobLayout
-                ProfileFields.COUNTRY -> binding.countryLayout
-                ProfileFields.CITY -> binding.cityLayout
+            val isNameAdded = handleLayoutVisibility(binding.nameLayout, user.name)
+            val isEmailAdded = handleLayoutVisibility(binding.emailLayout, user.email)
+            val isPhoneAdded = handleLayoutVisibility(binding.phoneLayout, user.phoneNumber)
+            val isGenderAdded = handleLayoutVisibility(binding.genderLayout, user.gender)
+            val isDobAdded = handleLayoutVisibility(binding.dobLayout, user.dob)
+            val isCountryAdded = handleLayoutVisibility(binding.countryLayout, user.country)
+            val isCityAdded = handleLayoutVisibility(binding.cityLayout, user.city)
+            var view: View? = null
+            when {
+                isNameAdded -> {
+                    profileAddVm.currentField = ProfileFields.NAME
+                    view = binding.nameLayout
+                }
+                isEmailAdded -> {
+                    profileAddVm.currentField = ProfileFields.EMAIL
+                    view = binding.emailLayout
+                }
+                isPhoneAdded -> {
+                    profileAddVm.currentField = ProfileFields.PHONE
+                    view = binding.phoneLayout
+                }
+                isGenderAdded -> {
+                    profileAddVm.currentField = ProfileFields.GENDER
+                    view = binding.genderLayout
+                }
+                isDobAdded -> {
+                    profileAddVm.currentField = ProfileFields.DOB
+                    view = binding.dobLayout
+                }
+                isCountryAdded -> {
+                    profileAddVm.currentField = ProfileFields.COUNTRY
+                    profileAddVm.setDefaultCountry()
+                    view = binding.countryLayout
+                }
+                isCityAdded -> {
+                    profileAddVm.currentField = ProfileFields.CITY
+                    view = binding.cityLayout
+                }
             }
-            binding.viewAnimator.setDisplayedChild(view)
-            view.visibility = View.VISIBLE
-            if (binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1).id != binding.viewAnimator.getChildAt(
-                    binding.viewAnimator.displayedChild
-                ).id
+            view?.let {
+                binding.viewAnimator.setDisplayedChild(it)
+                it.visibility = View.VISIBLE
+            }
+            if (binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1).id != binding.viewAnimator.getChildAt(binding.viewAnimator.displayedChild).id
             ) {
                 profileAddVm.updateSkipVisibility()
             } else {
@@ -112,10 +134,12 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         binding.progressBar.visibility = View.VISIBLE
     }
 
-    private fun handleLayoutVisibility(view: View, value: String?) {
-        if (!value.isNullOrEmpty()) {
+    private fun handleLayoutVisibility(view: View, value: String?): Boolean {
+        val remove = !value.isNullOrEmpty()
+        if (remove) {
             binding.viewAnimator.removeView(view)
         }
+        return !remove
     }
 
     private fun showHintIfPhoneLayout() {

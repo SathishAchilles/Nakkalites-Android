@@ -74,8 +74,9 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain, planManage
 
     fun refreshList() {
         isRefreshing.set(true)
-        items.clear()
         pagingBody.reset()
+        disposables.clear()
+        items.clear()
         fetchWebSeriesList()
     }
 
