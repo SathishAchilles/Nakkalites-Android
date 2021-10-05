@@ -15,6 +15,9 @@ import androidx.core.app.NotificationManagerCompat
 import com.freshchat.consumer.sdk.Freshchat
 import com.freshchat.consumer.sdk.FreshchatConfig
 import com.freshchat.consumer.sdk.FreshchatNotificationConfig
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.android.inject
@@ -31,6 +34,8 @@ class NakkalitesApp : Application() {
     val logoutHandler: LogoutHandler by inject()
     val crashlytics: FirebaseCrashlytics by inject()
     val freshchat: Freshchat by inject()
+    val firebaseAppCheck: FirebaseAppCheck by inject()
+    val safetyNetAppCheckProviderFactory: SafetyNetAppCheckProviderFactory by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -39,6 +44,8 @@ class NakkalitesApp : Application() {
             androidContext(this@NakkalitesApp)
             modules(listOf(applicationModule, viewModelModule, netModule(serverUrl)))
         }
+        FirebaseApp.initializeApp(this)
+        firebaseAppCheck.installAppCheckProviderFactory(safetyNetAppCheckProviderFactory)
         userManager.getUser()?.let {
             crashlytics.setUserId(it.id)
             if (it.email != null) {

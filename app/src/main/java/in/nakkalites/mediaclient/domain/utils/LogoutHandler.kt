@@ -5,6 +5,7 @@ import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.view.login.LoginActivity
 import android.content.Context
 import android.content.Intent
+import com.google.firebase.auth.FirebaseAuth
 import com.razorpay.Checkout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -36,5 +37,6 @@ class LogoutHandler(private val context: Context, private val userManager: UserM
         userManager.clearAppData()
         userManager.generateInstanceIdIfNotAvailable()
         Checkout.clearUserData(context)
+        FirebaseAuth.getInstance().signOut()
     }
 }

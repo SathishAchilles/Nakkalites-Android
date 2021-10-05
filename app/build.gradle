@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 14
-        versionName "2.1.5"
+        versionCode 15
+        versionName "2.1.6"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -67,6 +67,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.kotlin.stdlib
     implementation deps.androidX.appCompat
+    implementation deps.androidX.browser
     implementation deps.androidX.constraintLayout
     implementation deps.androidX.coordinatorlayout
     implementation deps.androidX.core
@@ -74,6 +75,7 @@ dependencies {
     implementation deps.androidX.liveData
     implementation deps.androidX.preferences
     implementation deps.androidX.recyclerView
+    implementation deps.androidX.swiperefreshlayout
     implementation deps.androidX.viewPager
     debugImplementation deps.chuck.library
     releaseImplementation deps.chuck.library_no_op
@@ -87,6 +89,7 @@ dependencies {
     implementation deps.firebase.crashlytics
     implementation deps.firebase.messaging
     implementation deps.firebase.remoteConfig
+    implementation deps.firebase.safetynet
     implementation deps.freshchat
     implementation deps.google.admob
     implementation deps.google.auth

@@ -77,8 +77,9 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain, planManag
 
     fun refreshList() {
         isRefreshing.set(true)
-        items.clear()
         pagingBody.reset()
+        disposables.clear()
+        items.clear()
         fetchVideoGroups()
     }
 

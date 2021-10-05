@@ -10,6 +10,7 @@ ext.versions = [
         appCompat           : '1.2.0',
         auth                : '17.0.0',
         authApiPhone        : '17.4.0',
+        browser             : '1.3.0',
         chuck               : '1.1.0',
         constraintLayout    : '1.1.3',
         coordinatorlayout   : '1.0.0',
@@ -44,6 +45,8 @@ ext.versions = [
         rxBinding           : '3.1.0',
         rxJava              : '2.2.14',
         rxKotlin            : '2.4.0',
+        swiperefreshlayout  : '1.1.0',
+        safetynet           : '16.0.0-beta02',
         spinKit             : '1.4.0',
         stetho              : '1.5.1',
         timber              : '4.7.1',
@@ -53,16 +56,18 @@ ext.versions = [
 
 ext.deps = [
         androidX         : [
-                appCompat        : "androidx.appcompat:appcompat:${versions.appCompat}",
-                constraintLayout : "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
-                coordinatorlayout: "androidx.coordinatorlayout:coordinatorlayout:${versions.coordinatorlayout}",
-                core             : "androidx.core:core-ktx:${versions.androidX}",
-                espressoCore     : "androidx.test.espresso:espresso-core:${versions.espressoCore}",
-                preferences      : "androidx.preference:preference-ktx:${versions.preferences}",
-                viewPager        : "androidx.viewpager2:viewpager2:${versions.viewPager}",
-                viewModel        : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
-                liveData         : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
-                recyclerView     : "androidx.recyclerview:recyclerview:${versions.recyclerView}"
+                appCompat         : "androidx.appcompat:appcompat:${versions.appCompat}",
+                browser           : "androidx.browser:browser:${versions.browser}",
+                constraintLayout  : "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
+                coordinatorlayout : "androidx.coordinatorlayout:coordinatorlayout:${versions.coordinatorlayout}",
+                core              : "androidx.core:core-ktx:${versions.androidX}",
+                espressoCore      : "androidx.test.espresso:espresso-core:${versions.espressoCore}",
+                preferences       : "androidx.preference:preference-ktx:${versions.preferences}",
+                swiperefreshlayout: "androidx.swiperefreshlayout:swiperefreshlayout:${versions.swiperefreshlayout}",
+                viewPager         : "androidx.viewpager2:viewpager2:${versions.viewPager}",
+                viewModel         : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",
+                liveData          : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle}",
+                recyclerView      : "androidx.recyclerview:recyclerview:${versions.recyclerView}"
         ],
         chuck            : [
                 library      : "com.readystatesoftware.chuck:library:${versions.chuck}",
@@ -76,6 +81,7 @@ ext.deps = [
         ],
         firebase         : [
                 analytics   : "com.google.firebase:firebase-analytics-ktx:${versions.firebase}",
+                safetynet   : "com.google.firebase:firebase-appcheck-safetynet:${versions.safetynet}",
                 auth        : "com.google.firebase:firebase-auth-ktx:${versions.firebaseAuth}",
                 crashlytics : "com.google.firebase:firebase-crashlytics:${versions.crashlytics}",
                 remoteConfig: "com.google.firebase:firebase-config:${versions.remoteConfig}",
