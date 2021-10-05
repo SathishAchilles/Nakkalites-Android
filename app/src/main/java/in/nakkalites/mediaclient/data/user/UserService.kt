@@ -4,6 +4,7 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.data.utils.StringAnyMap
 import io.reactivex.Completable
 import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.http.*
 
 interface UserService {
@@ -17,7 +18,7 @@ interface UserService {
     fun refreshToken(
         @HeaderMap headers: Map<String, String>,
         @Body params: StringAnyMap
-    ): Single<RefreshTokenResponse>
+    ): Single<Response<RefreshTokenResponse>>
 
     @POST(HttpConstants.FCM_REFRESH)
     fun updateFcmToken(@Body params: StringAnyMap): Completable
