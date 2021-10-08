@@ -4,18 +4,17 @@ import `in`.nakkalites.mediaclient.data.HttpStatus.LOGOUT
 import `in`.nakkalites.mediaclient.data.HttpStatus.UNAUTHORIZED
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
+import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.utils.isValidApiUrl
+import okhttp3.*
 import okhttp3.Headers.Companion.toHeaders
-import okhttp3.Interceptor
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.Response
 import retrofit2.HttpException
 import timber.log.Timber
 
 class HeadersInterceptor(
     private val userDataStore: UserDataStore,
     private val userService: Lazy<UserService>,
+    private val logoutHandler: Lazy<LogoutHandler>
 ) : Interceptor {
     private val maxRetries = 3
     private val lock = Any()
@@ -67,8 +66,12 @@ class HeadersInterceptor(
                 "refresh_token" to refreshToken
             )
             userService.value.refreshToken(headers, params).blockingGet().let {
-                userDataStore.setAccessToken(it.accessToken)
-                userDataStore.setRefreshToken(it.refreshToken)
+                if (it.isSuccessful) {
+                    userDataStore.setAccessToken(it.body()?.accessToken)
+                    userDataStore.setRefreshToken(it.body()?.refreshToken)
+                } else if (it.code() == LOGOUT) {
+                    logoutHandler.value.logout()
+                }
             }
         } catch (e: Exception) {
             Timber.e(e)
