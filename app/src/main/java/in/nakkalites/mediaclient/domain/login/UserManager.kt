@@ -46,6 +46,27 @@ class UserManager(private val userService: UserService, private val userDataStor
             }
     }
 
+    fun loginViaTruecaller(
+        displayName: String?, email: String?, photoUrl: String?, countryCode: String?,
+        phoneNumber: String?, city: String?, gender: String?
+    ): Single<LoginResponse> {
+        val params = mutableMapOf<String, Any>(
+            "provider_type" to "truecaller"
+        ).apply {
+            displayName?.let { put("name", displayName) }
+            email?.let { put("email", email) }
+            photoUrl?.let { put("photo_url", it) }
+            countryCode?.let { put("country_code", it) }
+            phoneNumber?.let { put("mobile", it) }
+            city?.let { put("city", it) }
+            gender?.let { put("gender", it) }
+        }
+        return userService.login(params)
+            .doOnSuccess {
+                storeUserAndTokens(it)
+            }
+    }
+
     fun loginViaFirebase(countryCode: String, phoneNumber: String): Single<LoginResponse> {
         val params = mutableMapOf<String, Any>(
             "provider_type" to "firebase",

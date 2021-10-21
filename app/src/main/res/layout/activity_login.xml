@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/blue_button"
             android:fontFamily="@font/inter_bold"
             android:onClick="@{() -> callback.onSignInWithPhoneNumberClick()}"
@@ -163,13 +163,13 @@
             android:id="@+id/or"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="12dp"
             android:includeFontPadding="false"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:text="@string/or"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/sign_in_button"
+            app:layout_constraintBottom_toTopOf="@id/truecaller_cta"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -182,6 +182,25 @@
             app:layout_constraintLeft_toRightOf="@id/or"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/or" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/truecaller_cta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/blue_button"
+            android:fontFamily="@font/inter_bold"
+            android:onClick="@{() -> callback.onSignInWithTruecallerClick()}"
+            android:text="@string/continue_with_truecaller"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="19sp"
+            android:visibility="@{vm.showTruecallerButton}"
+            app:layout_constraintBottom_toTopOf="@id/sign_in_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
@@ -220,7 +239,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="12dp"
             android:gravity="center_horizontal"
             android:includeFontPadding="false"
             android:text="@string/read_our_privacy_policy_here"

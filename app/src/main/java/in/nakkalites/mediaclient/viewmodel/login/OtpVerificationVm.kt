@@ -1,5 +1,6 @@
 package `in`.nakkalites.mediaclient.viewmodel.login
 
+import `in`.nakkalites.logging.loge
 import `in`.nakkalites.mediaclient.domain.login.LoginDomain
 import `in`.nakkalites.mediaclient.domain.models.User
 import `in`.nakkalites.mediaclient.view.utils.Event
@@ -91,6 +92,7 @@ class OtpVerificationVm(val loginDomain: LoginDomain) : BaseViewModel() {
     fun onOtpError(error: PhoneAuthException, otp: String?) {
         val errorMsg = createErrorMessage(error)
         otpErrorText.set(errorMsg)
+        loge("onOtpError", throwable = error)
     }
 
     private fun createErrorMessage(e: PhoneAuthException) = DisplayText.Singular(e.resId)

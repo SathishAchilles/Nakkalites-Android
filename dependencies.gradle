@@ -51,6 +51,7 @@ ext.versions = [
         stetho              : '1.5.1',
         timber              : '4.7.1',
         time                : '1.0.3',
+        truecaller          : '2.6.0',
         viewPager           : '1.0.0'
 ]
 
@@ -120,6 +121,7 @@ ext.deps = [
         razorpay         : "com.razorpay:checkout:${versions.razorpay}",
         timber           : "com.jakewharton.timber:timber:${versions.timber}",
         time             : "com.github.kizitonwose.time:time:${versions.time}",
+        truecaller       : "com.truecaller.android.sdk:truecaller-sdk:${versions.truecaller}",
         retrofit         : [
                 core          : "com.squareup.retrofit2:retrofit:${versions.retrofit}",
                 moshiConvertor: "com.squareup.retrofit2:converter-moshi:${versions.retrofit}",

@@ -176,7 +176,8 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                 } else if (e is FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                 }
-
+                trackFirebaseLoginFailed(PhoneAuthException.mapFirebaseExceptionId(e))
+                countdownToEnableResend()
                 // Show a message and update the UI
                 Toast.makeText(
                     this@OtpVerificationActivity, PhoneAuthException.mapFirebaseException(e).resId,
@@ -260,6 +261,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     override fun onOtpTimeout() {
         Toast.makeText(this, getString(R.string.otp_read_timeout), Toast.LENGTH_SHORT).show()
+        trackOtpTimeout()
     }
 
     override fun onVerifyClick() {
@@ -335,6 +337,17 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     private fun trackResendClicked() {
         analyticsManager.logEvent(AnalyticsConstants.Event.RESEND_OTP_CLICKED)
+    }
+
+    private fun trackOtpTimeout() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.OTP_TIMEOUT)
+    }
+
+    private fun trackFirebaseLoginFailed(errorCode: String?) {
+        val bundle = Bundle().apply {
+            errorCode?.let { putString(AnalyticsConstants.Property.ERROR_CODE, errorCode) }
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.FIREBASE_LOGIN_FAILED, bundle)
     }
 
     private fun goToHome() {

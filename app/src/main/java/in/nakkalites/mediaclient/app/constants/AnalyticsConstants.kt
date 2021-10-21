@@ -4,6 +4,8 @@ object AnalyticsConstants {
     object Event {
         const val APP_OPENED = "app_opened"
         const val LOGIN_FAILED = "login_failed"
+        const val TRUECALLER_LOGIN_FAILED = "truecaller_login_failed"
+        const val FIREBASE_LOGIN_FAILED = "firebase_login_failed"
         const val SIGN_UP_CTA_CLICKED = "sign_up_cta_clicked"
         const val WEBSERIES_PAGE_OPENED = "webseries_page_opened"
         const val WEBSERIES_SHARE_CLICKED = "webseries_share_clicked"
@@ -20,6 +22,9 @@ object AnalyticsConstants {
         const val VIDEO_PAUSED = "video_paused"
         const val TAB_OPENED = "%s_tab_clicked"
         const val HOME_VIDEO_GROUP_CLICKED = "home_video_group_clicked"
+        const val TRUECALLER_CTA_CLICKED = "truecaller_cta_clicked"
+        const val TRUECALLER_NOT_PRESENT = "truecaller_not_present"
+        const val GOOGLE_CTA_CLICKED = "google_cta_clicked"
         const val HOME_VIDEO_CLICKED = "home_video_clicked"
         const val BANNER_CLICKED = "banner_clicked"
         const val EMAIL_CLICKED = "email_clicked"
@@ -35,6 +40,7 @@ object AnalyticsConstants {
         const val FAQ_CLICKED = "faq_clicked"
         const val VERIFY_OTP_CLICKED = "verify_otp_clicked"
         const val RESEND_OTP_CLICKED = "resend_otp_clicked"
+        const val OTP_TIMEOUT = "otp_timeout"
         const val PROFILE_ADD_SAVE_CLICKED = "profile_add_save_clicked"
         const val PROFILE_ADD_SUCCESS = "profile_add_success"
         const val PROFILE_ADD_FAILURE = "profile_add_failure"
@@ -86,5 +92,6 @@ object AnalyticsConstants {
         const val BANNER_NAME = "banner_name"
         const val BANNER_TYPE = "banner_type"
         const val ERROR_MESSAGE = "error_message"
+        const val ERROR_CODE = "error_code"
     }
 }

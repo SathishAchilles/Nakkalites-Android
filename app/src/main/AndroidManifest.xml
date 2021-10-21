@@ -4,7 +4,11 @@
     package="in.nakkalites.mediaclient">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-sdk tools:overrideLibrary="com.truecaller.android.sdk" />
+    <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
+    <!--    <uses-permission android:name="android.permission.READ_CALL_LOG"/>-->
+    <!--    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS"/>-->
+    <!--    <uses-permission android:name="android.permission.CALL_PHONE"/>-->
     <application
         android:name=".app.NakkalitesApp"
         android:allowBackup="true"
@@ -14,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:supportsRtl">
         <activity android:name=".view.subscription.OrderPlacedActivity" />
@@ -44,6 +49,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.truecaller.android.sdk.PartnerKey"
+            android:value="@string/truecaller_api_key" />
 
         <meta-data
             android:name="com.google.android.gms.version"

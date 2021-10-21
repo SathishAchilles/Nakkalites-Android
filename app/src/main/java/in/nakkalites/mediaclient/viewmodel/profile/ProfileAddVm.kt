@@ -49,11 +49,7 @@ class ProfileAddVm(
         val user = userManager.getUser()
         if ((name.get() != null || user?.name != null) &&
             (phoneNumber.get() != null || user?.phoneNumber != null) &&
-            (email.get() != null || user?.email != null) &&
-            (gender.get() != null || user?.gender != null) &&
-            (dob.get() != null || user?.dob != null) &&
-            (country.get() != null || user?.country != null) &&
-            (city.get() != null || user?.city != null)
+            (email.get() != null || user?.email != null)
         ) {
             viewState.value = Event(Result.Loading())
             disposables += userManager.updateUserProfile(
@@ -84,7 +80,11 @@ class ProfileAddVm(
 
     fun updateSkipVisibility() {
         val mandatoryList =
-            listOf<ProfileFields>(ProfileFields.NAME, ProfileFields.PHONE, ProfileFields.EMAIL)
+            listOf<ProfileFields>(
+                ProfileFields.NAME,
+                ProfileFields.PHONE_NUMBER,
+                ProfileFields.EMAIL
+            )
         skipVisibility.set(!mandatoryList.contains(currentField))
     }
 
