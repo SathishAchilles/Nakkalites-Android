@@ -14,7 +14,7 @@ abstract class DebounceOnClickListener : View.OnClickListener {
         val currentTimeStamp = System.currentTimeMillis().milliseconds
         lastClickTimeStamp = currentTimeStamp
         if (previousClickTimeStamp == null
-            || (currentTimeStamp - previousClickTimeStamp) > 400.milliseconds) {
+            || (currentTimeStamp - previousClickTimeStamp) > 600.milliseconds) {
             debouncedOnClick(v)
         }
     }

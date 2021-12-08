@@ -14,7 +14,7 @@ import java.util.*
 class UserManager(private val userService: UserService, private val userDataStore: UserDataStore) {
 
     private fun setUser(userEntity: LoginUserEntity) {
-        userDataStore.setUser(User.map(userEntity))
+        setUser(User.map(userEntity))
     }
 
     private fun setUser(user: User) {

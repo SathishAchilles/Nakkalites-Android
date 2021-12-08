@@ -99,7 +99,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                     }
                 }
                 is Result.Error -> {
-                    trackLoginFailed()
+                    trackLoginFailed(it.throwable)
                     hideLoading()
                     errorHandler(it.throwable) {
                         loge("Login Failure", throwable = it.throwable)
@@ -199,7 +199,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         }
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
-            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+            .setTimeout(120L, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(this)                 // Activity (for callback binding)
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
             .build()
@@ -238,7 +238,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         countdownToEnableResend()
         val optionsBuilder = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
-            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+            .setTimeout(120L, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(this)                 // Activity (for callback binding)
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
         if (token != null) {
@@ -327,8 +327,11 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         analyticsManager.logEvent(eventName, bundle)
     }
 
-    private fun trackLoginFailed() {
-        analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED)
+    private fun trackLoginFailed(throwable: Throwable) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsConstants.Property.ERROR_MESSAGE, throwable.message)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED, bundle)
     }
 
     private fun trackVerifyClicked() {
