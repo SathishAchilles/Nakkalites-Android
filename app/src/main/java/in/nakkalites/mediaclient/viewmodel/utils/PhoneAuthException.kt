@@ -10,7 +10,7 @@ sealed class PhoneAuthException(val resId: Int, errorMessage: String?, val error
     class RequestLimitExceededException(errorMessage: String?, errorBody: String? = null) :
         PhoneAuthException(R.string.phone_error_quota_exceeded, errorMessage, errorBody)
     class ResendLimitExceededException(errorMessage: String?, errorBody: String? = null) :
-        PhoneAuthException(R.string.phone_too_many_attempts, errorMessage, errorBody)
+        PhoneAuthException(R.string.phone_error_quota_exceeded, errorMessage, errorBody)
     class InvalidPhoneNumberException(errorMessage: String?, errorBody: String? = null) :
         PhoneAuthException(R.string.enter_valid_mobile_number, errorMessage, errorBody)
     class OtpExpiredException(errorMessage: String?, errorBody: String? = null) :
@@ -38,6 +38,12 @@ sealed class PhoneAuthException(val resId: Int, errorMessage: String?, val error
             }
             is FirebaseTooManyRequestsException -> ResendLimitExceededException(e.message)
             else -> UnknownException(null)
+        }
+
+        fun mapFirebaseExceptionId(e: Throwable?): String? = when(e) {
+            is FirebaseAuthException -> e.errorCode
+            is FirebaseTooManyRequestsException -> e.message
+            else -> null
         }
     }
 }

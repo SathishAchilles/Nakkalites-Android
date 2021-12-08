@@ -57,6 +57,7 @@ Download their new app and watch exclusively.\n\n
     <string name="phone_number">Phone Number</string>
     <string name="we_ll_text_you_the_otp_to_verify">We’ll text you the OTP to verify</string>
     <string name="continue_text">Continue</string>
+    <string name="continue_with_truecaller">Continue With Truecaller</string>
     <string name="verify_mobile_number">Verify mobile number</string>
     <string name="enter_the_otp_sent_to_x">Enter the OTP Sent to %s</string>
     <string name="verify_otp">Verify OTP</string>
@@ -95,7 +96,7 @@ Download their new app and watch exclusively.\n\n
     <string name="otp_verification_failed">OTP Verification Failed</string>
     <string name="select_date_of_birth">Select date of birth</string>
     <string name="complete">Complete</string>
-    <string name="missing_fields">Please Fill the Field to Proceed</string>
+    <string name="missing_fields">Please fill the field to proceed</string>
     <string name="email_field_error">Please enter a valid email</string>
     <string name="rupee_x">₹%s</string>
     <string name="slash_x">" /%s"</string>
@@ -116,4 +117,7 @@ Download their new app and watch exclusively.\n\n
     <string name="read_our_privacy_policy_here">Read our Privacy Policy here</string>
     <string name="read_more">Read More</string>
     <string name="read_less">Read Less</string>
+    <string name="ok">OK</string>
+    <string name="google_play_services_unavailable">Google Play Services unavailable</string>
+    <string name="google_play_services_unavailable_desc">Please make sure you have the latest version of Google Play Services to be able to login to Meesho.</string>
 </resources>

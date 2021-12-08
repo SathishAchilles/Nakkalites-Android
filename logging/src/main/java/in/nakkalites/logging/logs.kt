@@ -63,13 +63,10 @@ inline fun logi(
  */
 inline fun loge(
     message: String,
-    include: Boolean = DEBUG,
     throwable: Throwable? = null,
     vararg args: Any
 ) {
-    if (include) {
-        throwable?.let { Timber.e(it, message, args) } ?: Timber.e(message, args)
-    }
+    throwable?.let { Timber.e(it, message, args) } ?: Timber.e(message, args)
 }
 
 /**

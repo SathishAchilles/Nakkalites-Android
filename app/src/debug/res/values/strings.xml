@@ -4,4 +4,5 @@
     <string name="abmob_key">ca-app-pub-3940256099942544~3347511713</string>
     <string name="abmob_unit_key">ca-app-pub-3940256099942544/5224354917</string>
     <string name="razorpay_api_key">rzp_test_Gh0OvoJNTFoXQM</string>
+    <string name="truecaller_api_key">xpWYL38c5002696c14d51a69175c4b617b5c4</string>
 </resources>

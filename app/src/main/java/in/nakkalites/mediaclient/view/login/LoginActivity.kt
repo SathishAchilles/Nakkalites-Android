@@ -32,16 +32,21 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.credentials.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.truecaller.android.sdk.*
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,10 +62,12 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     val userManager by inject<UserManager>()
     val crashlytics by inject<FirebaseCrashlytics>()
     val phoneNumberUtil by inject<PhoneNumberUtil>()
+    private var isAutoInitiated: Boolean = false
 
     companion object {
         private const val RC_SIGN_IN = 9001
         private const val RESOLVE_HINT = 9002
+        private const val PLAY_SERVICES_REQUEST_CODE = 9003
 
         @JvmStatic
         fun createIntent(ctx: Context) =
@@ -72,6 +79,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         binding.callback = callback
         binding.vm = vm
+        setupTruecallerOptions(false)
         setupGoogleSignInOptions()
         binding.phoneEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -121,6 +129,84 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        TruecallerSDK.clear()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun setupTruecallerOptions(withOtp: Boolean) {
+        val sdkCallback = object : ITrueCallback {
+            override fun onSuccessProfileShared(trueProfile: TrueProfile) {
+                val phoneNumber = trueProfile.phoneNumber.parsePhoneNumber(phoneNumberUtil)
+                vm.loginViaTrueCaller(
+                    trueProfile,
+                    phoneNumber?.countryCode?.let { "+$it" },
+                    phoneNumber?.nationalNumber?.toString()
+                )
+            }
+
+            override fun onFailureProfileShared(trueError: TrueError) {
+                trackTruecallerLoginFailed(trueError.errorType)
+                if (isAutoInitiated) {
+                    isAutoInitiated = false
+                    requestHint()
+                } else {
+                    vm.loginViaTrueCaller(null)
+                }
+            }
+
+            override fun onVerificationRequired(trueError: TrueError?) {
+            }
+
+        }
+        val trueScope = TruecallerSdkScope.Builder(this, sdkCallback)
+            .consentMode(TruecallerSdkScope.CONSENT_MODE_BOTTOMSHEET)
+            .buttonColor(ContextCompat.getColor(this, R.color.colorAccent))
+            .buttonTextColor(ContextCompat.getColor(this, R.color.white))
+            .loginTextPrefix(TruecallerSdkScope.LOGIN_TEXT_PREFIX_TO_GET_STARTED)
+            .loginTextSuffix(TruecallerSdkScope.LOGIN_TEXT_SUFFIX_PLEASE_LOGIN_SIGNUP)
+            .ctaTextPrefix(TruecallerSdkScope.CTA_TEXT_PREFIX_CONTINUE_WITH)
+            .buttonShapeOptions(TruecallerSdkScope.BUTTON_SHAPE_ROUNDED)
+            .privacyPolicyUrl(HttpConstants.PRIVACY_POLICY)
+            .termsOfServiceUrl(HttpConstants.TERMS_CONDITIONS)
+            .footerType(TruecallerSdkScope.FOOTER_TYPE_NONE)
+            .consentTitleOption(TruecallerSdkScope.SDK_CONSENT_TITLE_LOG_IN)
+            .sdkOptions(
+                if (withOtp) {
+                    TruecallerSdkScope.SDK_OPTION_WITH_OTP
+                } else {
+                    TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP
+                }
+            )
+            .build()
+        TruecallerSDK.init(trueScope)
+        vm.showTruecallerButton.set(TruecallerSDK.getInstance().isUsable)
+    }
+
+    private fun startTruecallerLogin() {
+        if (TruecallerSDK.getInstance().isUsable) {
+            vm.showTruecallerButton.set(true)
+            try {
+                TruecallerSDK.getInstance().getUserProfile(this)
+            } catch (e: Exception) {
+                Timber.e(e)
+                requestHint()
+            }
+        } else {
+            trackTruecallerNotPresent()
+            vm.showTruecallerButton.set(false)
+            requestHint()
+        }
+    }
+
     private fun setupCrashlyticsUserDetails(user: User) {
         crashlytics.setUserId(user.id)
         user.email?.let {
@@ -165,7 +251,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             try {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val account = task.getResult(ApiException::class.java)
-                vm.login(account)
+                vm.loginViaGoogle(account)
             } catch (e: Throwable) {
                 logThrowable(e)
                 Snackbar
@@ -175,8 +261,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         } else if (requestCode == RESOLVE_HINT) {
             if (resultCode == RESULT_OK) {
                 val credential = data?.getParcelableExtra(Credential.EXTRA_KEY) as? Credential
-                val phoneNumber =
-                    credential?.let { credential.id.parsePhoneNumber(phoneNumberUtil) }
+                val phoneNumber = credential?.id?.parsePhoneNumber(phoneNumberUtil)
                 val nationalNumber = phoneNumber?.run { nationalNumber.toString() }
                 if (nationalNumber != null) {
                     vm.onHintSelected(phoneNumber)
@@ -186,6 +271,14 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             } else if (resultCode == CredentialsApi.ACTIVITY_RESULT_NO_HINTS_AVAILABLE) {
                 binding.phoneEditText.requestLayout()
                 showSoftKeyboard(binding.phoneEditText)
+            }
+        } else if (requestCode == TruecallerSDK.SHARE_PROFILE_REQUEST_CODE) {
+            setupTruecallerOptions(false)
+            try {
+                TruecallerSDK.getInstance()
+                    .onActivityResultObtained(this, requestCode, resultCode, data)
+            } catch (e: Exception) {
+                Timber.e(e)
             }
         }
     }
@@ -198,8 +291,12 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             .requestProfile()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-        binding.signInButton.setOnClickListener { callback.onSignUpClick() }
-        requestHint()
+        binding.signInButton.setOnClickListener {
+            trackGoogleCTAClicked()
+            callback.onSignUpClick()
+        }
+        isAutoInitiated = true
+        startTruecallerLogin()
     }
 
     private fun setGoogleButtonText(signInButton: SignInButton, buttonText: String) {
@@ -222,13 +319,63 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             val nationalNumber = vm.phoneNumber?.nationalNumber
             val enteredPhoneNumber = binding.phoneEditText.text
             if (nationalNumber != null || enteredPhoneNumber.isNotEmpty()) {
-                OtpVerificationActivity.createIntent(
-                    this@LoginActivity, vm.countryCodeVm.phoneCode,
-                    nationalNumber?.toString() ?: enteredPhoneNumber.toString()
-                ).also { startActivity(it) }
+                if (isPlayServicesAvailable(this@LoginActivity)) {
+                    OtpVerificationActivity.createIntent(
+                        this@LoginActivity, vm.countryCodeVm.phoneCode,
+                        nationalNumber?.toString() ?: enteredPhoneNumber.toString()
+                    ).also { startActivity(it) }
+//                } else if (vm.countryCodeVm.phoneCode == "+91") {
+//                    setupTruecallerOptions(withOtp = true)
+//                    val apiCallback = object : VerificationCallback {
+//                        override fun onRequestSuccess(
+//                            requestCode: Int,
+//                            extras: VerificationDataBundle?
+//                        ) {
+//                            if (requestCode == VerificationCallback.TYPE_MISSED_CALL_INITIATED) {
+//                                extras?.getString(VerificationDataBundle.KEY_TTL)
+//
+//                            }
+//                            if (requestCode == VerificationCallback.TYPE_MISSED_CALL_RECEIVED) {
+//
+//                            }
+//                            if (requestCode == VerificationCallback.TYPE_OTP_INITIATED) {
+//                                extras?.getString(VerificationDataBundle.KEY_TTL)
+//
+//                            }
+//                            if (requestCode == VerificationCallback.TYPE_OTP_RECEIVED) {
+//
+//                            }
+//                            if (requestCode == VerificationCallback.TYPE_VERIFICATION_COMPLETE) {
+//
+//                            }
+//                            if (requestCode == VerificationCallback.TYPE_PROFILE_VERIFIED_BEFORE) {
+//
+//                            }
+//                        }
+//
+//                        override fun onRequestFailure(p0: Int, p1: TrueException) {
+//                        }
+//
+//                    }
+//                    TruecallerSDK.getInstance().requestVerification(
+//                        "IN",
+//                        nationalNumber?.toString() ?: enteredPhoneNumber.toString(),
+//                        apiCallback,
+//                        this@LoginActivity
+//                    )
+                } else {
+                    showPlayServicesUnavailableDialog()
+                }
             } else {
                 showError(getString(R.string.enter_phone_number_error))
             }
+        }
+
+        override fun onSignInWithTruecallerClick() {
+            trackTruecallerCTAClicked()
+            setupTruecallerOptions(false)
+            isAutoInitiated = false
+            startTruecallerLogin()
         }
 
         override fun onFlagClick() {
@@ -300,8 +447,45 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED)
     }
 
+    private fun trackTruecallerLoginFailed(errorCode: Int) {
+        val bundle = Bundle().apply {
+            putInt(Property.ERROR_CODE, errorCode)
+        }
+        analyticsManager.logEvent(AnalyticsConstants.Event.TRUECALLER_LOGIN_FAILED, bundle)
+    }
+
+    private fun trackTruecallerNotPresent() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.TRUECALLER_NOT_PRESENT)
+    }
+
+    private fun trackTruecallerCTAClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.TRUECALLER_CTA_CLICKED)
+    }
+
+    private fun trackGoogleCTAClicked() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.GOOGLE_CTA_CLICKED)
+    }
+
     override fun onCountrySelected(position: Int, withFlags: Boolean) {
         val countriesList = resources.getStringArray(R.array.country_codes_data).asList()
         vm.countryCodeVm.selectCountry(countriesList, position)
     }
+
+    fun showPlayServicesUnavailableDialog() {
+        val googleApiAvailability = GoogleApiAvailability.getInstance()
+        val status = googleApiAvailability.isGooglePlayServicesAvailable(this)
+        if (googleApiAvailability.isUserResolvableError(status)) {
+            googleApiAvailability.getErrorDialog(this, status, PLAY_SERVICES_REQUEST_CODE).show()
+        } else {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.google_play_services_unavailable)
+                .setMessage(R.string.google_play_services_unavailable_desc)
+                .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
+    }
+
+    fun isPlayServicesAvailable(context: Context) =
+        GoogleApiAvailability.getInstance()
+            .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
 }

@@ -22,19 +22,19 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
             when (mStatus?.statusCode) {
                 CommonStatusCodes.SUCCESS -> {
                     val message = extras[SmsRetriever.EXTRA_SMS_MESSAGE] as String?
-                    if (otpReceiveInterface != null) {
+                    if (otpReceiveInterface != null && message != null) {
                         val pattern = Pattern.compile("\\d{6}")
                         val matcher = pattern.matcher(message)
                         if (matcher.find()) {
                             otpReceiveInterface?.onOtpReceived(matcher.group(0))
                         }
+                    } else {
+                        otpReceiveInterface?.onOtpTimeout()
                     }
                 }
                 CommonStatusCodes.TIMEOUT -> {
                     // Waiting for SMS timed out (5 minutes)
-                    if (otpReceiveInterface != null) {
-                        otpReceiveInterface?.onOtpTimeout()
-                    }
+                    otpReceiveInterface?.onOtpTimeout()
                 }
             }
         }

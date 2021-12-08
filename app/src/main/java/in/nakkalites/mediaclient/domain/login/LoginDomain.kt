@@ -21,12 +21,31 @@ class LoginDomain(private val userManager: UserManager, val moshi: Moshi) : Base
             }
     }
 
+    fun loginViaTruecaller(
+        displayName: String?, email: String?, photoUrl: String?, countryCode: String?,
+        phoneNumber: String?, city: String?, gender: String?
+    ): Single<User> {
+
+        return userManager.loginViaTruecaller(
+           displayName, email, photoUrl, countryCode, phoneNumber, city, gender
+        )
+            .map { it.user }
+            .map {
+                User(
+                    it.id, it.name, it.email, it.imageUrl, it.providerType, it.countryCode,
+                    it.country, it.gender, it.dob, it.city, it.country
+                )
+            }
+    }
+
     fun loginViaFirebaseOtp(countryCode: String, phoneNumber: String): Single<User> {
         return userManager.loginViaFirebase(countryCode, phoneNumber)
             .map { it.user }
             .map {
-                User(it.id, it.name, it.email, it.imageUrl, it.providerType, it.countryCode,
-                    it.country, it.gender, it.dob, it.city, it.country)
+                User(
+                    it.id, it.name, it.email, it.imageUrl, it.providerType, it.countryCode,
+                    it.country, it.gender, it.dob, it.city, it.country
+                )
             }
     }
 }

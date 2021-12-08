@@ -38,6 +38,8 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     val userManager by inject<UserManager>()
     val phoneNumberUtil by inject<PhoneNumberUtil>()
     val analyticsManager by inject<AnalyticsManager>()
+    private var totalCount = 0
+    private var currentPagePos = 1
 
     companion object {
         private const val RESOLVE_HINT = 9002
@@ -72,7 +74,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     view = binding.emailLayout
                 }
                 isPhoneAdded -> {
-                    profileAddVm.currentField = ProfileFields.PHONE
+                    profileAddVm.currentField = ProfileFields.PHONE_NUMBER
                     view = binding.phoneLayout
                 }
                 isGenderAdded -> {
@@ -93,12 +95,18 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     view = binding.cityLayout
                 }
             }
+            if (isNameAdded) totalCount++
+            if (isEmailAdded) totalCount++
+            if (isPhoneAdded) totalCount++
+            if (isGenderAdded) totalCount++
+            if (isDobAdded) totalCount++
+            if (isCountryAdded) totalCount++
+            if (isCityAdded) totalCount++
             view?.let {
                 binding.viewAnimator.setDisplayedChild(it)
                 it.visibility = View.VISIBLE
             }
-            if (binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1).id != binding.viewAnimator.getChildAt(binding.viewAnimator.displayedChild).id
-            ) {
+            if (totalCount != 1) {
                 profileAddVm.updateSkipVisibility()
             } else {
                 profileAddVm.skipVisibility.set(false)
@@ -143,17 +151,16 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     }
 
     private fun showHintIfPhoneLayout() {
-        if (profileAddVm.currentField == ProfileFields.PHONE) {
+        if (profileAddVm.currentField == ProfileFields.PHONE_NUMBER) {
             requestHint()
         }
     }
 
     private fun showCTAText() {
-        val child = binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1)
-        if (child.id != binding.viewAnimator.getChildAt(binding.viewAnimator.displayedChild).id) {
-            profileAddVm.nextText.set(DisplayText.Singular(R.string.next))
-        } else {
+        if (totalCount == currentPagePos) {
             profileAddVm.nextText.set(DisplayText.Singular(R.string.complete))
+        } else {
+            profileAddVm.nextText.set(DisplayText.Singular(R.string.next))
         }
     }
 
@@ -204,17 +211,18 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         }
 
         override fun onNextClicked() {
-            val child = binding.viewAnimator.getChildAt(binding.viewAnimator.childCount - 1)
             val emailText = binding.tvEmail.text.toString()
-            if ((profileAddVm.currentField == ProfileFields.NAME && binding.tvName.text.toString()
-                    .trim().isEmpty())
-                || (profileAddVm.currentField == ProfileFields.PHONE && binding.phoneEditText.text.toString()
-                    .trim().isEmpty())
-                || (profileAddVm.currentField == ProfileFields.EMAIL && emailText.trim().isEmpty()
-                        && validateEmail(emailText))
+            if ((profileAddVm.currentField == ProfileFields.NAME
+                        && binding.tvName.text.toString().trim().isEmpty())
+                || (profileAddVm.currentField == ProfileFields.PHONE_NUMBER
+                        && binding.phoneEditText.text.toString().trim().isEmpty())
+                || (profileAddVm.currentField == ProfileFields.EMAIL && !validateEmail(emailText))
             ) {
                 val errorMessage =
-                    if ((profileAddVm.currentField == ProfileFields.EMAIL && validateEmail(emailText))) {
+                    if ((profileAddVm.currentField == ProfileFields.EMAIL && !validateEmail(
+                            emailText
+                        ))
+                    ) {
                         R.string.email_field_error
                     } else {
                         R.string.missing_fields
@@ -224,11 +232,12 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     .show()
                 return
             }
-            if (child.id == binding.viewAnimator.getChildAt(binding.viewAnimator.displayedChild).id) {
+            if (currentPagePos == totalCount) {
                 trackProfileAddSaveClicked()
                 profileAddVm.saveProfile()
                 profileAddVm.skipVisibility.set(false)
             } else {
+                currentPagePos += 1
                 binding.viewAnimator.showNext()
                 setCurrentField()
                 profileAddVm.updateSkipVisibility()
@@ -263,7 +272,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 profileAddVm.currentField = ProfileFields.EMAIL
             }
             binding.phoneLayout.id -> {
-                profileAddVm.currentField = ProfileFields.PHONE
+                profileAddVm.currentField = ProfileFields.PHONE_NUMBER
             }
             binding.genderLayout.id -> {
                 profileAddVm.currentField = ProfileFields.GENDER
@@ -329,7 +338,7 @@ class ProfileAddActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 }
 
 enum class ProfileFields {
-    NAME, EMAIL, PHONE, GENDER, DOB, COUNTRY, CITY
+    NAME, EMAIL, PHONE_NUMBER, GENDER, DOB, COUNTRY, CITY
 }
 
 enum class GenderTypes {
