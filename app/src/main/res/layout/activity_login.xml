@@ -17,8 +17,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@{@drawable/bg_sign_up}">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_sign_up"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -140,11 +149,11 @@
             android:layout_marginBottom="12dp"
             android:background="@drawable/blue_button"
             android:fontFamily="@font/inter_bold"
-            android:onClick="@{() -> callback.onSignInWithPhoneNumberClick()}"
             android:text="@string/continue_text"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="19sp"
+            app:debounceOnClick="@{() -> callback.onSignInWithPhoneNumberClick()}"
             app:layout_constraintBottom_toTopOf="@id/or"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -192,12 +201,12 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/blue_button"
             android:fontFamily="@font/inter_bold"
-            android:onClick="@{() -> callback.onSignInWithTruecallerClick()}"
             android:text="@string/continue_with_truecaller"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="19sp"
             android:visibility="@{vm.showTruecallerButton}"
+            app:debounceOnClick="@{() -> callback.onSignInWithTruecallerClick()}"
             app:layout_constraintBottom_toTopOf="@id/sign_in_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
