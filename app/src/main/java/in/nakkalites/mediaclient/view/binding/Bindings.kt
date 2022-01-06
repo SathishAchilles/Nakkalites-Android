@@ -41,6 +41,7 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 import org.jetbrains.annotations.NotNull
+import timber.log.Timber
 
 
 object Bindings {
@@ -58,14 +59,14 @@ object Bindings {
 
     @JvmStatic
     @BindingAdapter(
-        value = ["imageUrl", "imageUri", "fit", "resizeWidth",
-            "resizeHeight", "centerCrop", "centerInside", "imageTransforms", "bitmapConfig"],
-        requireAll = false
+            value = ["imageUrl", "imageUri", "fit", "resizeWidth",
+                "resizeHeight", "centerCrop", "centerInside", "imageTransforms", "bitmapConfig"],
+            requireAll = false
     )
     fun ImageView.bindLoadImage(
-        url: String?, uri: Uri?, fit: Boolean, resizeWidth: Int?, resizeHeight: Int?,
-        centerCrop: Boolean, centerInside: Boolean, transforms: List<Transformation>?,
-        bitmapConfig: Bitmap.Config?
+            url: String?, uri: Uri?, fit: Boolean, resizeWidth: Int?, resizeHeight: Int?,
+            centerCrop: Boolean, centerInside: Boolean, transforms: List<Transformation>?,
+            bitmapConfig: Bitmap.Config?
     ) {
         if (url == null && uri == null) {
             return
@@ -101,9 +102,9 @@ object Bindings {
     }
 
     @BindingMethods(
-        BindingMethod(
-            type = TabLayout::class, attribute = "onTabSelect", method = "addOnTabSelectedListener"
-        )
+            BindingMethod(
+                    type = TabLayout::class, attribute = "onTabSelect", method = "addOnTabSelectedListener"
+            )
     )
     class TabLayoutBindingAdapter
 
@@ -135,30 +136,30 @@ object Bindings {
 
     @JvmStatic
     @BindingAdapter(
-        value = ["android:drawableLeft", "android:drawableTop", "android:drawableRight", "android:drawableBottom", "android:drawableTint"],
-        requireAll = false
+            value = ["android:drawableLeft", "android:drawableTop", "android:drawableRight", "android:drawableBottom", "android:drawableTint"],
+            requireAll = false
     )
     fun TextView.bindCompoundDrawables(
-        left: Drawable?, top: Drawable?, right: Drawable?, bottom: Drawable?, @ColorInt color: Int
+            left: Drawable?, top: Drawable?, right: Drawable?, bottom: Drawable?, @ColorInt color: Int
     ) {
         val input =
-            arrayOf(left, top, right, bottom)
+                arrayOf(left, top, right, bottom)
         val output: Array<Drawable?> =
-            input.map { drawable -> tintDrawable(drawable, color) }.toTypedArray()
+                input.map { drawable -> tintDrawable(drawable, color) }.toTypedArray()
         setCompoundDrawablesWithIntrinsicBounds(output[0], output[1], output[2], output[3])
     }
 
     @JvmStatic
     @BindingAdapter(
-        value = ["android:drawableLeft", "android:drawableTop", "android:drawableRight", "android:drawableBottom", "android:drawableTint"],
-        requireAll = false
+            value = ["android:drawableLeft", "android:drawableTop", "android:drawableRight", "android:drawableBottom", "android:drawableTint"],
+            requireAll = false
     )
     fun TextView.bindCompoundDrawablesRes(
-        left: Int, top: Int, right: Int, bottom: Int, @ColorInt color: Int
+            left: Int, top: Int, right: Int, bottom: Int, @ColorInt color: Int
     ) {
         bindCompoundDrawables(
-            getDrawable(context, left), getDrawable(context, top),
-            getDrawable(context, right), getDrawable(context, bottom), color
+                getDrawable(context, left), getDrawable(context, top),
+                getDrawable(context, right), getDrawable(context, bottom), color
         )
     }
 
@@ -229,27 +230,27 @@ object Bindings {
      * support-v7 version of [androidx.databinding.adapters.ToolbarBindingAdapter]
      */
     @BindingMethods(
-        BindingMethod(
-            type = Toolbar::class,
-            attribute = "android:onMenuItemClick",
-            method = "setOnMenuItemClickListener"
-        ),
-        BindingMethod(
-            type = Toolbar::class,
-            attribute = "android:onNavigationClick",
-            method = "setNavigationOnClickListener"
-        )
+            BindingMethod(
+                    type = Toolbar::class,
+                    attribute = "android:onMenuItemClick",
+                    method = "setOnMenuItemClickListener"
+            ),
+            BindingMethod(
+                    type = Toolbar::class,
+                    attribute = "android:onNavigationClick",
+                    method = "setNavigationOnClickListener"
+            )
     )
     class ToolbarV7BindingAdapter
 
     @JvmStatic
     @BindingAdapter(value = ["entries", "enabled", "onItemClick"], requireAll = false)
     fun AppCompatSpinner.bindAdapter(
-        items: List<Pair<String, String>>, enabled: Boolean,
-        onItemClick: (@NotNull Pair<String, String>) -> Unit
+            items: List<Pair<String, String>>, enabled: Boolean,
+            onItemClick: (@NotNull Pair<String, String>) -> Unit
     ) {
         val adapter = ArrayAdapter<String>(
-            this.context, R.layout.spinner_item_selected, items.map { it.second })
+                this.context, R.layout.spinner_item_selected, items.map { it.second })
         adapter.setDropDownViewResource(R.layout.spinner_drop_down_item)
         isEnabled = enabled
         isClickable = enabled
@@ -260,7 +261,7 @@ object Bindings {
             }
 
             override fun onItemSelected(
-                parent: AdapterView<*>, view: View?, position: Int, id: Long
+                    parent: AdapterView<*>, view: View?, position: Int, id: Long
             ) {
                 onItemClick.invoke(items[position])
             }
@@ -280,7 +281,7 @@ object Bindings {
     @JvmStatic
     @BindingAdapter(value = ["appendStarSuperScript"], requireAll = false)
     fun TextView.bindStarSuperScriptText(
-        isAppend: Boolean?
+            isAppend: Boolean?
     ) {
         val value = text?.toString()
         if (isAppend != null && isAppend && value != null) {
@@ -289,14 +290,14 @@ object Bindings {
             val starSuperScript = context.getString(R.string.star_superscript)
             val spannable = SpannableStringBuilder("$value $starSuperScript")
             spannable.setSpan(
-                SuperscriptSpan(),
-                spannable.length - 1,
-                spannable.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                    SuperscriptSpan(),
+                    spannable.length - 1,
+                    spannable.length,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE
             )
             spannable.setSpan(
-                ForegroundColorSpan(Color.parseColor("#00559e")),
-                spannable.length - 1, spannable.length, 0
+                    ForegroundColorSpan(Color.parseColor("#00559e")),
+                    spannable.length - 1, spannable.length, 0
             )
             text = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 Html.fromHtml(value + starSuperScript, Html.FROM_HTML_MODE_LEGACY)
@@ -311,7 +312,7 @@ object Bindings {
     @JvmStatic
     @BindingAdapter(value = ["adapter"])
     fun <T> setAutoCompleteTextViewAdapter(
-        view: AppCompatAutoCompleteTextView, @Nullable adapter: ArrayAdapter<T>
+            view: AppCompatAutoCompleteTextView, @Nullable adapter: ArrayAdapter<T>
     ) {
         view.setAdapter(adapter)
     }
@@ -319,20 +320,20 @@ object Bindings {
     @JvmStatic
     @BindingAdapter("suggestions")
     fun setSuggestions(
-        view: AppCompatAutoCompleteTextView,
-        @Nullable suggestions: Collection<DisplayText?>?
+            view: AppCompatAutoCompleteTextView,
+            @Nullable suggestions: Collection<DisplayText?>?
     ) {
         @LayoutRes val layoutId: Int = R.layout.simple_spinner_dropdown
         @IdRes val textViewId: Int = R.id.text
         if (suggestions != null) {
             val list = suggestions.map { res -> res?.getText(view.resources) }
             val arrayAdapter: ArrayAdapter<String?> = ArrayAdapter<String?>(
-                view.context, layoutId, textViewId, ArrayList(list)
+                    view.context, layoutId, textViewId, ArrayList(list)
             )
             view.setAdapter(arrayAdapter)
         } else {
             val emptyAdapter: ArrayAdapter<String?> = ArrayAdapter<String?>(
-                view.context, layoutId, textViewId, ArrayList()
+                    view.context, layoutId, textViewId, ArrayList()
             )
             view.setAdapter(emptyAdapter)
         }
@@ -341,13 +342,13 @@ object Bindings {
 
     @JvmStatic
     @BindingAdapter(
-        value = ["entries", "entryLayout", "entryViewProvider", "entryBinder", "shouldAppendEntries"],
-        requireAll = false
+            value = ["entries", "entryLayout", "entryViewProvider", "entryBinder", "shouldAppendEntries"],
+            requireAll = false
     )
     fun <T : BaseViewModel> bindViewGroupEntries(
-        viewGroup: ViewGroup, entries: List<T>?, entryLayout: Int,
-        entryProvider: ViewProvider?, entryBinder: ViewModelBinder?,
-        shouldAppendEntries: Boolean
+            viewGroup: ViewGroup, entries: List<T>?, entryLayout: Int,
+            entryProvider: ViewProvider?, entryBinder: ViewModelBinder?,
+            shouldAppendEntries: Boolean
     ) {
         require(!(entryLayout <= 0 && entryProvider == null))
         if (entries == null) return
@@ -355,12 +356,12 @@ object Bindings {
         if (shouldAppendEntries) {
             val entriesToAppend = entries.subList(viewGroup.childCount, entries.size)
             bindEntries(
-                viewGroup,
-                entriesToAppend,
-                entryLayout,
-                entryProvider,
-                entryBinder,
-                inflater
+                    viewGroup,
+                    entriesToAppend,
+                    entryLayout,
+                    entryProvider,
+                    entryBinder,
+                    inflater
             )
         } else {
             viewGroup.removeAllViews()
@@ -369,14 +370,14 @@ object Bindings {
     }
 
     private fun <T : BaseViewModel> bindEntries(
-        viewGroup: ViewGroup, entries: List<T>, entryLayout: Int,
-        entryProvider: ViewProvider?, entryBinder: ViewModelBinder?,
-        inflater: LayoutInflater
+            viewGroup: ViewGroup, entries: List<T>, entryLayout: Int,
+            entryProvider: ViewProvider?, entryBinder: ViewModelBinder?,
+            inflater: LayoutInflater
     ) {
         for (entry in entries) {
             val layoutId = entryProvider?.getView(entry) ?: entryLayout
             val binding = DataBindingUtil
-                .inflate<ViewDataBinding>(inflater, layoutId, viewGroup, false)
+                    .inflate<ViewDataBinding>(inflater, layoutId, viewGroup, false)
             defaultBinder.bind(binding, entry)
             entryBinder?.bind(binding, entry)
             binding.executePendingBindings()
@@ -387,9 +388,11 @@ object Bindings {
     @JvmStatic
     @BindingAdapter("debounceOnClick")
     fun View.bindDebounceOnClick(debounceOnClickRunnable: Runnable?) {
+        Timber.e("$id bindDebounceOnClick $debounceOnClickRunnable")
         if (debounceOnClickRunnable == null) return
         setOnClickListener(object : DebounceOnClickListener() {
             override fun debouncedOnClick(v: View) {
+                Timber.e("$id bindDebounceOnClick")
                 debounceOnClickRunnable.run()
             }
         })

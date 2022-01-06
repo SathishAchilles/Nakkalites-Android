@@ -23,23 +23,24 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
 class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain, planManager: PlanManager) :
-    BaseViewModel() {
+        BaseViewModel() {
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     val isRefreshing = ObservableBoolean()
     val items = ObservableArrayList<BaseModel>()
     private val isLoading = ObservableBoolean()
     private val viewState = MutableLiveData<Event<Result<Unit?>>>()
+    val showErrorPage = ObservableBoolean()
 
     init {
         disposables += planManager.getPlanObserver()
-            .filter { it }
-            .observeOn(Schedulers.io())
-            .observeOn(mainThread())
-            .subscribeBy(onNext = {
-                pagingBody.reset()
-                fetchVideoGroups()
-                logd("Refresh Page")
-            })
+                .filter { it }
+                .observeOn(Schedulers.io())
+                .observeOn(mainThread())
+                .subscribeBy(onNext = {
+                    pagingBody.reset()
+                    fetchVideoGroups()
+                    logd("Refresh Page")
+                })
     }
 
     fun viewStates(): LiveData<Event<Result<Unit?>>> = viewState
@@ -50,32 +51,35 @@ class AllVideoGroupsVm(private val videoGroupDomain: VideoGroupDomain, planManag
 
     internal fun fetchVideoGroups() {
         disposables += videoGroupDomain.getAllVideoGroups(pagingBody)
-            .doAfterSuccess {
-                pagingBody.onNextPage(it.second.size, it.third)
-            }
-            .map {
-                (if (it.first.isNotEmpty()) listOf(BannersVm(it.first)) else listOf()) +
-                        it.second.map { videoGroup ->
-                            VideoGroupVm(videoGroup)
-                        }
-            }
-            .map { handleEmptyPage(it.toMutableList()) }
-            .observeOn(mainThread())
-            .compose(RxTransformers.dataLoading(isLoading, items))
-            .doFinally { isRefreshing.set(false) }
-            .subscribeBy(
-                onSuccess = {
-                    items.addAll(it)
-                },
-                onError = {
-                    viewState.value = Event(Result.Error(Unit, throwable = it))
+                .doOnSubscribe { showErrorPage.set(false) }
+                .doAfterSuccess {
+                    pagingBody.onNextPage(it.second.size, it.third)
                 }
-            )
+                .map {
+                    (if (it.first.isNotEmpty()) listOf(BannersVm(it.first)) else listOf()) +
+                            it.second.map { videoGroup -> VideoGroupVm(videoGroup) }
+                }
+                .map { handleEmptyPage(it.toMutableList()) }
+                .observeOn(mainThread())
+                .compose(RxTransformers.dataLoading(isLoading, items))
+                .doFinally { isRefreshing.set(false) }
+                .subscribeBy(
+                        onSuccess = {
+                            items.addAll(it)
+                        },
+                        onError = {
+                            viewState.value = Event(Result.Error(Unit, throwable = it))
+                            if (pagingBody.isFirstPage()) {
+                                showErrorPage.set(true)
+                            }
+                        }
+                )
     }
 
     fun loading() = isLoading.get()
 
     fun refreshList() {
+        showErrorPage.set(false)
         isRefreshing.set(true)
         pagingBody.reset()
         disposables.clear()

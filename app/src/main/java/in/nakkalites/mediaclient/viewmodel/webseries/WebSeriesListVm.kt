@@ -28,6 +28,7 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain, planManage
     private val isLoading = ObservableBoolean()
     private var pagingBody: PagingBody = PagingBody(pagingCallback = null)
     private val viewState = MutableLiveData<Event<Result<Unit>>>()
+    val showErrorPage = ObservableBoolean()
 
     init {
         disposables += planManager.getPlanObserver()
@@ -49,7 +50,8 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain, planManage
 
     internal fun fetchWebSeriesList() {
         disposables += videoGroupDomain.getWebSeriesList(pagingBody)
-            .doAfterSuccess {
+                .doOnSubscribe { showErrorPage.set(false) }
+                .doAfterSuccess {
                 pagingBody.onNextPage(it.first.size, it.second)
             }
             .map {
@@ -66,6 +68,9 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain, planManage
                 },
                 onError = {
                     viewState.value = Event(Result.Error(Unit, throwable = it))
+                    if (pagingBody.isFirstPage()) {
+                        showErrorPage.set(true)
+                    }
                 }
             )
     }
@@ -73,6 +78,7 @@ class WebSeriesListVm(private val videoGroupDomain: VideoGroupDomain, planManage
     fun loading() = isLoading.get()
 
     fun refreshList() {
+        showErrorPage.set(false)
         isRefreshing.set(true)
         pagingBody.reset()
         disposables.clear()

@@ -5,7 +5,9 @@ import `in`.nakkalites.mediaclient.app.constants.AppConstants
 import `in`.nakkalites.mediaclient.app.di.applicationModule
 import `in`.nakkalites.mediaclient.app.di.netModule
 import `in`.nakkalites.mediaclient.app.di.viewModelModule
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.app.utils.RxErrorHandler
+import `in`.nakkalites.mediaclient.app.utils.Tls12SocketUtil
 import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
@@ -35,9 +37,11 @@ class NakkalitesApp : Application() {
     val crashlytics: FirebaseCrashlytics by inject()
     val freshchat: Freshchat by inject()
     val firebaseAppCheck: FirebaseAppCheck by inject()
+    val analyticsManager: AnalyticsManager by inject()
     val safetyNetAppCheckProviderFactory: SafetyNetAppCheckProviderFactory by inject()
 
     override fun onCreate() {
+        val tls12Status: Pair<Boolean, String?> = Tls12SocketUtil.enable(this)
         super.onCreate()
         startKoin {
             androidLogger()
@@ -46,6 +50,8 @@ class NakkalitesApp : Application() {
         }
         FirebaseApp.initializeApp(this)
         firebaseAppCheck.installAppCheckProviderFactory(safetyNetAppCheckProviderFactory)
+        if (!tls12Status.first)
+            Tls12SocketUtil.trackProviderInstallFailed(tls12Status.second, analyticsManager)
         userManager.getUser()?.let {
             crashlytics.setUserId(it.id)
             if (it.email != null) {

@@ -117,6 +117,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
                             }
                             it.throwable is NoUserFoundException -> {
                                 showError(getString(R.string.generic_error_message))
+                                Timber.e("error ${it.throwable.localizedMessage}")
                                 false
                             }
                             else -> {
@@ -199,7 +200,10 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         }
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
-            .setTimeout(120L, TimeUnit.SECONDS) // Timeout and unit
+            .setTimeout(
+                otpVerificationVm.TOTAL_RESEND_COUNTDOWNS,
+                TimeUnit.SECONDS
+            ) // Timeout and unit
             .setActivity(this)                 // Activity (for callback binding)
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
             .build()
@@ -238,7 +242,9 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         countdownToEnableResend()
         val optionsBuilder = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
-            .setTimeout(120L, TimeUnit.SECONDS) // Timeout and unit
+            .setTimeout(
+                otpVerificationVm.TOTAL_RESEND_COUNTDOWNS, TimeUnit.SECONDS
+            ) // Timeout and unit
             .setActivity(this)                 // Activity (for callback binding)
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
         if (token != null) {

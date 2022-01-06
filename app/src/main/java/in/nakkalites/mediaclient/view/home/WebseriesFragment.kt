@@ -55,6 +55,8 @@ class WebseriesFragment : BaseFragment() {
             vm.refreshList()
         }
         binding.isRefreshing = vm.isRefreshing
+        binding.vm = vm
+        binding.onWebseriesAllVideosPageRetry = refreshPage
         vm.viewStates().observe(requireActivity(), EventObserver {
             if (it is Result.Error) {
                 activity?.errorHandler(it.throwable)
@@ -66,6 +68,9 @@ class WebseriesFragment : BaseFragment() {
         return binding.root
     }
 
+    private val refreshPage = {
+        vm.refreshList()
+    }
 
     private val webSeriesViewProvider = ViewProviders.wrapSequentially(
         progressViewProvider(), dummyViewProvider(), viewProvider { vm1: BaseModel ->

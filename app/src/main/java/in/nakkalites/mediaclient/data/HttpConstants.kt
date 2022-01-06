@@ -2,8 +2,8 @@ package `in`.nakkalites.mediaclient.data
 
 object HttpConstants {
     const val TIMEOUT: Long = 30
-    const val BASE_URL_DEV: String = "https://nakkalites-dev.herokuapp.com/api/"
-    const val BASE_URL_PROD: String = "https://nakkalites-prod.herokuapp.com/api/"
+    const val BASE_URL_PROD: String = "https://nakkalites-dev.herokuapp.com/api/"
+    const val BASE_URL_DEV: String = "https://prod.nakkalites.in/api/"
     const val LOGIN = "v1/users/sign_in"
     const val VIDEO_GROUPS = "v2/video_groups"
     const val WEBSERIES = "v2/web_series"

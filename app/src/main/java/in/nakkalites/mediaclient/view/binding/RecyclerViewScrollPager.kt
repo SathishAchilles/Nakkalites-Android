@@ -45,10 +45,8 @@ class RecyclerViewScrollPager(
             .debounce(PAGINATION_DEBOUNCE_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .filter { event ->
-                !isDataLoading() && !hasPagingFinished && isScrollingTowardsEnd(
-                    event,
-                    layoutManager
-                )
+                !isDataLoading() && !hasPagingFinished
+                        && isScrollingTowardsEnd(event, layoutManager)
             }
             .subscribe { loadNextPage.run() }
     }

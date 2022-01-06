@@ -5,6 +5,14 @@
     <data>
 
         <variable
+            name="vm"
+            type="in.nakkalites.mediaclient.viewmodel.home.AllVideoGroupsVm" />
+
+        <variable
+            name="onAllVideosPageRetry"
+            type="kotlin.jvm.functions.Function0&lt;kotlin.Unit&gt;" />
+
+        <variable
             name="isRefreshing"
             type="androidx.databinding.ObservableBoolean" />
     </data>
@@ -46,6 +54,45 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     app:hasFixedSize="@{true}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="@{vm.showErrorPage}">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        app:debounceOnClick="@{() -> onAllVideosPageRetry.invoke()}"
+                        app:srcCompat="@drawable/ic_baseline_tv_off_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium"
+                        android:gravity="center_horizontal"
+                        android:text="@string/oops_something_went_wrong"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="30dp"
+                        android:background="@drawable/blue_button"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/retry"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="19sp"
+                        app:debounceOnClick="@{() -> onAllVideosPageRetry.invoke()}" />
+                </LinearLayout>
             </FrameLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
