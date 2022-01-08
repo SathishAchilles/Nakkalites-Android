@@ -71,8 +71,8 @@
                         android:layout_height="36dp"
                         android:layout_gravity="center"
                         android:onClick="@{() -> onPlayClick.invoke(vm)}"
-                        android:src="@drawable/ic_play_arrow_black_24dp"
-                        android:visibility="@{vm.hasUrl}" />
+                        android:visibility="@{vm.hasUrl}"
+                        app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
 
                 </FrameLayout>
 

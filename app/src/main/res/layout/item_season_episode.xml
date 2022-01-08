@@ -42,16 +42,19 @@
                 android:layout_height="72dp"
                 app:imageTransforms="@{transformations}"
                 app:imageUrl="@{vm.imageUrl}" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/video_overlay_gradient"
-                android:visibility="visible"/>
+                android:visibility="visible" />
+
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_play_arrow_black_24dp" />
+                app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
@@ -63,13 +66,14 @@
                 android:progressDrawable="@drawable/bg_progress_bar"
                 android:visibility="@{vm.showProgress}"
                 tools:progress="10" />
+
             <FrameLayout
                 android:id="@+id/plan_layout"
                 android:layout_width="19dp"
                 android:layout_height="19dp"
+                android:layout_gravity="top|end|right"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_gravity="top|end|right"
                 android:background="@drawable/bg_prime"
                 android:backgroundTint="@{vm.planColorInt}"
                 android:visibility="@{vm.planImg != null}"
