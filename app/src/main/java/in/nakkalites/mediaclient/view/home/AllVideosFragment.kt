@@ -39,13 +39,13 @@ class AllVideosFragment : BaseFragment() {
     val analyticsManager by inject<AnalyticsManager>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentAllVideosBinding.inflate(inflater)
         val recyclerView = binding.recyclerView
         val scrollPager = RecyclerViewScrollPager(
-            this, { recyclerView }, Runnable { vm.fetchVideoGroups() }, { vm.loading() }, false
+                this, { recyclerView }, Runnable { vm.fetchVideoGroups() }, { vm.loading() }, false
         )
         val linearLayoutManager = LinearLayoutManager(requireContext())
         val viewAdapter = RecyclerViewAdapter(vm.items, videoGroupViewProvider, videoGroupVmBinder)
@@ -61,6 +61,8 @@ class AllVideosFragment : BaseFragment() {
             vm.refreshList()
         }
         binding.isRefreshing = vm.isRefreshing
+        binding.vm = vm
+        binding.onAllVideosPageRetry = refreshPage
         vm.viewStates().observe(requireActivity(), EventObserver {
             if (it is Result.Error) {
                 activity?.errorHandler(it.throwable)
@@ -71,15 +73,15 @@ class AllVideosFragment : BaseFragment() {
     }
 
     private val videoGroupViewProvider = ViewProviders.wrapSequentially(
-        ViewProviders.progressViewProvider(),
-        ViewProviders.dummyViewProvider(),
-        ViewProviders.videoGroupItemViewProvider(),
-        viewProvider { vm1: BaseModel ->
-            when (vm1) {
-                is BannersVm -> R.layout.item_banners
-                else -> argumentError()
-            }
-        })
+            ViewProviders.progressViewProvider(),
+            ViewProviders.dummyViewProvider(),
+            ViewProviders.videoGroupItemViewProvider(),
+            viewProvider { vm1: BaseModel ->
+                when (vm1) {
+                    is BannersVm -> R.layout.item_banners
+                    else -> argumentError()
+                }
+            })
 
     private val videoGroupVmBinder = viewModelBinder { itemBinding, vm1 ->
         when (vm1) {
@@ -87,7 +89,7 @@ class AllVideosFragment : BaseFragment() {
                 val viewPager: ViewPager = (itemBinding as ItemBannersBinding).viewPager
                 if (viewPager.adapter == null) {
                     viewPager.adapter = BindingPagerAdapter<BaseModel>(
-                        vm1.items, bannerProvider, bannerBinder
+                            vm1.items, bannerProvider, bannerBinder
                     )
                 }
                 viewPager.clipToPadding = false
@@ -95,7 +97,7 @@ class AllVideosFragment : BaseFragment() {
                 viewPager.offscreenPageLimit = 2
                 val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
                 val currentItemHorizontalMarginPx =
-                    resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
+                        resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
                 val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
                 val pageTransformer = ViewPager.PageTransformer { page: View, position: Float ->
                     page.translationX = -pageTranslationX * position
@@ -108,16 +110,20 @@ class AllVideosFragment : BaseFragment() {
             }
             is VideoGroupVm -> {
                 ViewModelBinders.mapViewGroupVmBinding(
-                    requireContext(), onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250),
-                    true, onVideoGroupClick
+                        requireContext(), onVideoClick, itemBinding, vm1, dpToPx(150), dpToPx(250),
+                        true, onVideoGroupClick
                 )
             }
         }
     }
 
+    private val refreshPage = {
+        vm.refreshList()
+    }
+
     private val onVideoGroupClick = { vm: VideoGroupVm ->
         startActivity(
-            VideoGroupListActivity.createIntent(requireContext(), vm.id, vm.name, vm.category)
+                VideoGroupListActivity.createIntent(requireContext(), vm.id, vm.name, vm.category)
         )
         trackVideoGroupClicked(vm.id, vm.name)
     }
@@ -146,15 +152,15 @@ class AllVideosFragment : BaseFragment() {
                 BannerType.VIDEO -> {
                     vm.videoVm?.let { videoVm ->
                         openVideoDetailPage(
-                            requireContext(), videoVm.id, videoVm.name, videoVm.thumbnail,
-                            videoVm.url
+                                requireContext(), videoVm.id, videoVm.name, videoVm.thumbnail,
+                                videoVm.url
                         )
                     }
                 }
             }
             trackBannerClicked(
-                vm.id, vm.name, type, vm.videoVm?.id, vm.videoVm?.name, vm.webSeriesVm?.id,
-                vm.webSeriesVm?.name
+                    vm.id, vm.name, type, vm.videoVm?.id, vm.videoVm?.name, vm.webSeriesVm?.id,
+                    vm.webSeriesVm?.name
             )
         }
     }
@@ -162,7 +168,7 @@ class AllVideosFragment : BaseFragment() {
     private val onWebSeriesClick = { vm1: WebSeriesVm ->
         trackWebseriesClicked(vm1.id, vm1.name)
         startActivity(
-            WebSeriesDetailActivity.createIntent(requireContext(), vm1.id, vm1.name, vm1.thumbnail)
+                WebSeriesDetailActivity.createIntent(requireContext(), vm1.id, vm1.name, vm1.thumbnail)
         )
     }
 
@@ -183,8 +189,8 @@ class AllVideosFragment : BaseFragment() {
     }
 
     private fun trackBannerClicked(
-        id: String, name: String, type: BannerType, videoId: String?, videoName: String?,
-        webSeriesId: String?, webSeriesName: String?
+            id: String, name: String, type: BannerType, videoId: String?, videoName: String?,
+            webSeriesId: String?, webSeriesName: String?
     ) {
         val bundle = Bundle().apply {
             if (type == BannerType.VIDEO) {

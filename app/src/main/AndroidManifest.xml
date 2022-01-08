@@ -21,28 +21,55 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:supportsRtl">
-        <activity android:name=".view.subscription.OrderPlacedActivity" />
-        <activity android:name=".view.subscription.FaqActivity" />
-        <activity android:name=".view.subscription.ManageSubscriptionActivity" />
-        <activity android:name=".view.subscription.SubscriptionsActivity" />
-        <activity android:name=".view.profile.ProfileEditActivity" />
+        <activity
+            android:name=".view.subscription.OrderPlacedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.subscription.FaqActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.subscription.ManageSubscriptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.subscription.SubscriptionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.profile.ProfileEditActivity"
+            android:exported="false" />
         <activity
             android:name=".view.profile.ProfileAddActivity"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".view.login.OtpVerificationActivity"
+            android:exported="false"
             android:parentActivityName=".view.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.webview.WebViewActivity" />
+        <activity
+            android:name=".view.webview.WebViewActivity"
+            android:exported="false" />
         <activity
             android:name=".view.video.VideoPlayerActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".view.video.VideoDetailActivity" />
-        <activity android:name=".view.webseries.WebSeriesDetailActivity" />
-        <activity android:name=".view.videogroup.VideoGroupListActivity" />
-        <activity android:name=".view.home.HomeActivity" />
-        <activity android:name=".view.login.LoginActivity" />
-        <activity android:name=".view.splash.SplashActivity">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false" />
+        <activity
+            android:name=".view.video.VideoDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.webseries.WebSeriesDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.videogroup.VideoGroupListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.home.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.splash.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -81,9 +108,10 @@
 
         <receiver
             android:name=".view.login.SmsBroadcastReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVE" />
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
 

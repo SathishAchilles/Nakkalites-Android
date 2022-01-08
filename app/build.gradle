@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 18
-        versionName "2.1.9"
+        versionCode 19
+        versionName "2.2"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -111,7 +111,6 @@ dependencies {
     implementation deps.retrofit.rxJavaAdapter
     implementation deps.rx.core
     implementation deps.rx.android
-    implementation deps.rx.binding
     implementation deps.rx.bindingRecyclerView
     implementation deps.rx.kotlin
     implementation deps.koin.core

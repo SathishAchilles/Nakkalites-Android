@@ -55,6 +55,7 @@ object AnalyticsConstants {
         const val RAZORPAY_FAILURE = "razorpay_failure"
         const val PLAN_ORDER_FETCH_SUCCESS = "plan_order_fetch_success"
         const val PLAN_ORDER_FETCH_FAILURE = "plan_order_fetch_failure"
+        const val OPENSSL_INSTALL_FAILED = "openssl_install_failed"
     }
 
     object Property {
@@ -93,5 +94,6 @@ object AnalyticsConstants {
         const val BANNER_TYPE = "banner_type"
         const val ERROR_MESSAGE = "error_message"
         const val ERROR_CODE = "error_code"
+        const val OPENSSL_ERROR_MESSAGE = "openssl_error_message"
     }
 }
