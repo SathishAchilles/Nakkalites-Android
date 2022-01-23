@@ -17,6 +17,7 @@ import `in`.nakkalites.mediaclient.view.utils.Result
 import `in`.nakkalites.mediaclient.view.utils.getTimeStampForAnalytics
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginUtils
 import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
+import `in`.nakkalites.mediaclient.viewmodel.login.TOTAL_RESEND_COUNTDOWNS
 import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.PhoneAuthException
 import android.content.Context
@@ -201,7 +202,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(
-                otpVerificationVm.TOTAL_RESEND_COUNTDOWNS,
+                TOTAL_RESEND_COUNTDOWNS,
                 TimeUnit.SECONDS
             ) // Timeout and unit
             .setActivity(this)                 // Activity (for callback binding)
@@ -243,7 +244,7 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
         val optionsBuilder = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(
-                otpVerificationVm.TOTAL_RESEND_COUNTDOWNS, TimeUnit.SECONDS
+                TOTAL_RESEND_COUNTDOWNS, TimeUnit.SECONDS
             ) // Timeout and unit
             .setActivity(this)                 // Activity (for callback binding)
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks

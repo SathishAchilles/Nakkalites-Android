@@ -25,16 +25,17 @@ import `in`.nakkalites.mediaclient.viewmodel.utils.NoUserFoundException
 import `in`.nakkalites.mediaclient.viewmodel.utils.parsePhoneNumber
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.credentials.*
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -47,14 +48,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.truecaller.android.sdk.*
+import com.truecaller.android.sdk.clients.VerificationCallback
+import com.truecaller.android.sdk.clients.VerificationDataBundle
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 
-class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
+class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
+    TruecallerVerificationBottomSheetListener, OtpReceivedInterface {
 
+    private var apiCallback: VerificationCallback? = null
     private lateinit var binding: ActivityLoginBinding
     private lateinit var googleSignInClient: GoogleSignInClient
     val vm: LoginVm by viewModel()
@@ -63,6 +68,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     val crashlytics by inject<FirebaseCrashlytics>()
     val phoneNumberUtil by inject<PhoneNumberUtil>()
     private var isAutoInitiated: Boolean = false
+    private var sheet: TruecallerVerificationBottomSheet? = null
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -132,6 +138,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     override fun onDestroy() {
         super.onDestroy()
         TruecallerSDK.clear()
+        smsBroadcastReceiver?.run { applicationContext.unregisterReceiver(this) }
     }
 
     override fun onRequestPermissionsResult(
@@ -151,6 +158,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     phoneNumber?.countryCode?.let { "+$it" },
                     phoneNumber?.nationalNumber?.toString()
                 )
+                Timber.e("onSuccessProfileShared")
             }
 
             override fun onFailureProfileShared(trueError: TrueError) {
@@ -159,11 +167,22 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                     isAutoInitiated = false
                     requestHint()
                 } else {
-                    vm.loginViaTrueCaller(null)
+                    vm.onTruecallerLoginFailure()
                 }
+                Timber.e("onFailureProfileShared")
             }
 
             override fun onVerificationRequired(trueError: TrueError?) {
+                Timber.e("onVerificationRequired ${trueError?.errorType}")
+                requestHint()
+                trackTruecallerLoginFailed(trueError?.errorType ?: -1)
+                Snackbar
+                    .make(
+                        binding.root,
+                        getString(R.string.truecaller_verfication_required),
+                        Snackbar.LENGTH_SHORT
+                    )
+                    .show()
             }
 
         }
@@ -190,6 +209,22 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         TruecallerSDK.init(trueScope)
         vm.showTruecallerButton.set(TruecallerSDK.getInstance().isUsable)
     }
+
+
+    private fun initiateSMSListener() {
+        smsBroadcastReceiver = SmsBroadcastReceiver()
+        smsBroadcastReceiver?.setOnOtpListeners(this)
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION)
+        applicationContext.registerReceiver(smsBroadcastReceiver, intentFilter)
+        startSMSListener()
+    }
+
+    private fun startSMSListener() {
+        val mClient = SmsRetriever.getClient(this)
+        mClient.startSmsRetriever()
+    }
+
 
     private fun startTruecallerLogin() {
         if (TruecallerSDK.getInstance().isUsable) {
@@ -218,7 +253,9 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     }
 
     private fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Snackbar
+            .make(binding.root, message, Snackbar.LENGTH_SHORT)
+            .show()
     }
 
     private fun showLoading() {
@@ -273,7 +310,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 showSoftKeyboard(binding.phoneEditText)
             }
         } else if (requestCode == TruecallerSDK.SHARE_PROFILE_REQUEST_CODE) {
-            setupTruecallerOptions(false)
+            setupTruecallerOptions(true)
             try {
                 TruecallerSDK.getInstance()
                     .onActivityResultObtained(this, requestCode, resultCode, data)
@@ -309,6 +346,8 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         }
     }
 
+    private var smsBroadcastReceiver: SmsBroadcastReceiver? = null
+
     private val callback = object : LoginViewCallbacks {
         override fun onSignUpClick() {
             startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
@@ -319,52 +358,24 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
             val nationalNumber = vm.phoneNumber?.nationalNumber
             val enteredPhoneNumber = binding.phoneEditText.text
             if (nationalNumber != null || enteredPhoneNumber.isNotEmpty()) {
-                if (isPlayServicesAvailable(this@LoginActivity)) {
-                    OtpVerificationActivity.createIntent(
-                        this@LoginActivity, vm.countryCodeVm.phoneCode,
-                        nationalNumber?.toString() ?: enteredPhoneNumber.toString()
-                    ).also { startActivity(it) }
-//                } else if (vm.countryCodeVm.phoneCode == "+91") {
-//                    setupTruecallerOptions(withOtp = true)
-//                    val apiCallback = object : VerificationCallback {
-//                        override fun onRequestSuccess(
-//                            requestCode: Int,
-//                            extras: VerificationDataBundle?
-//                        ) {
-//                            if (requestCode == VerificationCallback.TYPE_MISSED_CALL_INITIATED) {
-//                                extras?.getString(VerificationDataBundle.KEY_TTL)
-//
-//                            }
-//                            if (requestCode == VerificationCallback.TYPE_MISSED_CALL_RECEIVED) {
-//
-//                            }
-//                            if (requestCode == VerificationCallback.TYPE_OTP_INITIATED) {
-//                                extras?.getString(VerificationDataBundle.KEY_TTL)
-//
-//                            }
-//                            if (requestCode == VerificationCallback.TYPE_OTP_RECEIVED) {
-//
-//                            }
-//                            if (requestCode == VerificationCallback.TYPE_VERIFICATION_COMPLETE) {
-//
-//                            }
-//                            if (requestCode == VerificationCallback.TYPE_PROFILE_VERIFIED_BEFORE) {
-//
-//                            }
-//                        }
-//
-//                        override fun onRequestFailure(p0: Int, p1: TrueException) {
-//                        }
-//
-//                    }
-//                    TruecallerSDK.getInstance().requestVerification(
-//                        "IN",
-//                        nationalNumber?.toString() ?: enteredPhoneNumber.toString(),
-//                        apiCallback,
-//                        this@LoginActivity
-//                    )
-                } else {
-                    showPlayServicesUnavailableDialog()
+                when {
+                    vm.countryCodeVm.phoneCode == "+91" -> {
+                        setupTruecallerOptions(false)
+                        if (TruecallerSDK.getInstance().isUsable) {
+                            startTruecallerLogin()
+                        } else {
+                            initTruecallerLogin(nationalNumber, enteredPhoneNumber)
+                        }
+                    }
+                    isPlayServicesAvailable(this@LoginActivity) -> {
+                        OtpVerificationActivity.createIntent(
+                            this@LoginActivity, vm.countryCodeVm.phoneCode,
+                            nationalNumber?.toString() ?: enteredPhoneNumber.toString()
+                        ).also { startActivity(it) }
+                    }
+                    else -> {
+                        showPlayServicesUnavailableDialog()
+                    }
                 }
             } else {
                 showError(getString(R.string.enter_phone_number_error))
@@ -396,6 +407,130 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 Intent.ACTION_VIEW, Uri.parse(HttpConstants.PRIVACY_POLICY)
             ).let(::startActivity)
         }
+    }
+
+    private fun getPhoneNumber(): String {
+        val nationalNumber = vm.phoneNumber?.nationalNumber
+        val enteredPhoneNumber = binding.phoneEditText.text
+        return nationalNumber?.toString() ?: enteredPhoneNumber.toString()
+    }
+
+    private fun initTruecallerLogin(nationalNumber: Long?, enteredPhoneNumber: Editable) {
+        setupTruecallerOptions(withOtp = true)
+        apiCallback = object : VerificationCallback {
+            override fun onRequestSuccess(
+                requestCode: Int, bundle: VerificationDataBundle?
+            ) {
+                when (requestCode) {
+                    VerificationCallback.TYPE_MISSED_CALL_INITIATED -> {
+                        Timber.e(
+                            "Missed call initiated with TTL : " + bundle?.getString(
+                                VerificationDataBundle.KEY_TTL
+                            )
+                        )
+                        // Show calling screen
+                        sheet?.dismissAllowingStateLoss()
+                        val timeout =
+                            bundle?.getString(VerificationDataBundle.KEY_TTL)?.toLongOrNull()
+                                ?.times(1000)
+                        sheet = TruecallerVerificationBottomSheet.newInstance(
+                            VerificationType.CALL,
+                            vm.countryCodeVm.phoneCode,
+                            nationalNumber?.toString() ?: enteredPhoneNumber.toString(),
+                            timeout
+                        )
+                        sheet?.showAllowingStateLoss(supportFragmentManager)
+                    }
+                    VerificationCallback.TYPE_MISSED_CALL_RECEIVED -> {
+                        Timber.e("Missed call received")
+                        sheet?.dismissAllowingStateLoss()
+                        val trueProfile = TrueProfile.Builder("New", "User").build()
+                        TruecallerSDK.getInstance()
+                            .verifyMissedCall(trueProfile, this)
+                        vm.loginViaTrueCaller(
+                            null, countryCode = vm.countryCodeVm.phoneCode,
+                            nationalNumber = getPhoneNumber()
+                        )
+                    }
+                    VerificationCallback.TYPE_OTP_INITIATED -> {
+                        Timber.e(
+                            "OTP initiated with TTL : " + bundle?.getString(
+                                VerificationDataBundle.KEY_TTL
+                            )
+                        )
+                        initiateSMSListener()
+                        sheet?.dismissAllowingStateLoss()
+                        val timeout =
+                            bundle?.getString(VerificationDataBundle.KEY_TTL)?.toLongOrNull()
+                                ?.times(1000)
+                        sheet = TruecallerVerificationBottomSheet.newInstance(
+                            VerificationType.OTP,
+                            vm.countryCodeVm.phoneCode,
+                            nationalNumber?.toString() ?: enteredPhoneNumber.toString(),
+                            timeout
+                        )
+                        sheet?.showAllowingStateLoss(supportFragmentManager)
+                    }
+                    VerificationCallback.TYPE_OTP_RECEIVED -> {
+                        Timber.e("OTP received")
+                        val otp = bundle?.getString(VerificationDataBundle.KEY_OTP)
+                        otp?.let {
+                            sheet?.dismissAllowingStateLoss()
+                            val trueProfile = TrueProfile.Builder("New", "User").build()
+                            TruecallerSDK.getInstance()
+                                .verifyOtp(trueProfile, it, this)
+                            // Show OTP screen
+                            vm.loginViaTrueCaller(
+                                null, countryCode = vm.countryCodeVm.phoneCode,
+                                nationalNumber = getPhoneNumber()
+                            )
+                        }
+                    }
+                    VerificationCallback.TYPE_PROFILE_VERIFIED_BEFORE -> {
+                        Timber.e(
+                            "Profile verified for your app before: " + bundle?.profile?.firstName
+                                    + " and access token: " + bundle?.profile?.accessToken
+                        )
+                        vm.loginViaTrueCaller(
+                            bundle?.profile, countryCode = vm.countryCodeVm.phoneCode,
+                            nationalNumber = getPhoneNumber()
+                        )
+                    }
+                    else -> {
+                        Timber.e(
+                            "Success: Verified with " + bundle?.getString(
+                                VerificationDataBundle.KEY_ACCESS_TOKEN
+                            )
+                        )
+                        vm.loginViaTrueCaller(
+                            bundle?.profile, countryCode = vm.countryCodeVm.phoneCode,
+                            nationalNumber = getPhoneNumber()
+                        )
+                    }
+                }
+            }
+
+            override fun onRequestFailure(requestCode: Int, trueError: TrueException) {
+                Timber.e(
+                    "onRequestFailure: " + trueError.exceptionType + "\n" + trueError.exceptionMessage
+                )
+                trackTruecallerLoginFailed(trueError.exceptionType, trueError.exceptionMessage)
+                if (isAutoInitiated) {
+                    isAutoInitiated = false
+                    requestHint()
+                } else {
+                    vm.onTruecallerLoginFailure()
+                }
+            }
+
+        }
+        Timber.e("phone number ${getPhoneNumber()}")
+        TruecallerSDK.getInstance().requestVerification(
+            "IN",
+            nationalNumber?.toString() ?: enteredPhoneNumber.toString(),
+            apiCallback!!,
+            this@LoginActivity
+        )
     }
 
     private fun goToProfileAdd() {
@@ -447,9 +582,10 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         analyticsManager.logEvent(AnalyticsConstants.Event.LOGIN_FAILED)
     }
 
-    private fun trackTruecallerLoginFailed(errorCode: Int) {
+    private fun trackTruecallerLoginFailed(errorCode: Int, exceptionMessage: String? = null) {
         val bundle = Bundle().apply {
             putInt(Property.ERROR_CODE, errorCode)
+            putString(Property.ERROR_MESSAGE, exceptionMessage)
         }
         analyticsManager.logEvent(AnalyticsConstants.Event.TRUECALLER_LOGIN_FAILED, bundle)
     }
@@ -485,7 +621,36 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
         }
     }
 
+    private fun trackOtpTimeout() {
+        analyticsManager.logEvent(AnalyticsConstants.Event.OTP_TIMEOUT)
+    }
+
     fun isPlayServicesAvailable(context: Context) =
         GoogleApiAvailability.getInstance()
             .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+
+    override fun onOtpSubmitted(otp: String) {
+        apiCallback?.let {
+            sheet?.dismissAllowingStateLoss()
+            val trueProfile = TrueProfile.Builder("New", "User").build()
+            TruecallerSDK.getInstance()
+                .verifyOtp(trueProfile, otp, it)
+            vm.loginViaTrueCaller(
+                null, countryCode = vm.countryCodeVm.phoneCode,
+                nationalNumber = getPhoneNumber()
+            )
+        }
+    }
+
+    override fun onOtpReceived(otp: String?) {
+        if (otp != null) {
+            vm.otpCode = otp
+            onOtpSubmitted(otp)
+        }
+    }
+
+    override fun onOtpTimeout() {
+        showError(getString(R.string.otp_read_timeout))
+        trackOtpTimeout()
+    }
 }

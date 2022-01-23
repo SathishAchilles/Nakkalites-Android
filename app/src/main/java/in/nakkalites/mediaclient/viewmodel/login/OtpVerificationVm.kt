@@ -24,7 +24,6 @@ import timber.log.Timber
 import java.util.concurrent.ExecutionException
 
 class OtpVerificationVm(val loginDomain: LoginDomain) : BaseViewModel() {
-    val TOTAL_RESEND_COUNTDOWNS = 120L
     private lateinit var phoneNumber: String
     private lateinit var countryCode: String
     private val loginState = MutableLiveData<Event<Result<User>>>()
