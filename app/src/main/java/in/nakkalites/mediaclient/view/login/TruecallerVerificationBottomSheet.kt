@@ -7,12 +7,15 @@ import `in`.nakkalites.mediaclient.view.BaseBottomSheetFragment
 import `in`.nakkalites.mediaclient.view.utils.commitAllowingStateLoss
 import `in`.nakkalites.mediaclient.viewmodel.login.TOTAL_RESEND_COUNTDOWNS
 import `in`.nakkalites.mediaclient.viewmodel.login.TruecallerVerificationVm
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,16 +42,46 @@ class TruecallerVerificationBottomSheet : BaseBottomSheetFragment(),
         requireArguments().getSerializable(VERIFICATION_TYPE) as VerificationType
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+//    ): View {
+//        binding =
+//            FragmentTruecallerVerificationBottomsheetBinding.inflate(LayoutInflater.from(context))
+//        binding.vm = vm
+//        binding.callbacks = this
+//        vm.setArgs(countryCode, phoneNumber, verificationType, timeout)
+//        Handler().postDelayed({
+//            val a: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
+//            a.repeatCount = Animation.INFINITE
+//            binding.loaderImageView.startAnimation(a)
+//
+//        }, 1000)
+//        countdownToEnableResend()
+//        return binding.root
+//    }
+
+//    override fun getTheme(): Int {
+//        return R.style.AppBottomSheetDialogTheme
+//    }
+//
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//        return BottomSheetDialog(requireContext(), theme)
+//    }
+
+    override fun setupDialog(dialog: Dialog, style: Int) {
         binding =
             FragmentTruecallerVerificationBottomsheetBinding.inflate(LayoutInflater.from(context))
+        dialog.setCanceledOnTouchOutside(false)
         binding.vm = vm
         binding.callbacks = this
         vm.setArgs(countryCode, phoneNumber, verificationType, timeout)
+        Handler().postDelayed({
+            val a: Animation = AnimationUtils.loadAnimation(context, R.anim.zoom_out)
+            a.repeatCount = Animation.INFINITE
+            binding.loaderImageView.startAnimation(a)
+        }, 1000)
         countdownToEnableResend()
-        return binding.root
+        dialog.setContentView(binding.root)
     }
 
     override fun onAttach(context: Context) {
@@ -93,10 +126,15 @@ class TruecallerVerificationBottomSheet : BaseBottomSheetFragment(),
                 putLong(TIMEOUT, timeout ?: TOTAL_RESEND_COUNTDOWNS)
             }
 
-            return TruecallerVerificationBottomSheet().apply { arguments = args }
+            val sheet = TruecallerVerificationBottomSheet().apply { arguments = args }
+            sheet.isCancelable = false
+            return sheet
         }
     }
 
+    fun onOTPTimeout() {
+        vm.showClose.set(true)
+    }
 
     override fun onOtpSubmitted(otp: String) {
         vm.otpCode = otp

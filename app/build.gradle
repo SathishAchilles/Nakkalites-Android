@@ -34,6 +34,14 @@ android {
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    bundle {
+        density {
+            enableSplit true
+        }
+        abi {
+            enableSplit true
+        }
+    }
     buildTypes {
         debug {
             minifyEnabled false

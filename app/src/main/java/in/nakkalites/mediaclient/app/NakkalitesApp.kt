@@ -52,6 +52,7 @@ class NakkalitesApp : MultiDexApplication() {
         }
         FirebaseApp.initializeApp(this)
         firebaseAppCheck.installAppCheckProviderFactory(safetyNetAppCheckProviderFactory)
+        userManager.generateInstanceIdIfNotAvailable()
         if (!tls12Status.first)
             Tls12SocketUtil.trackProviderInstallFailed(tls12Status.second, analyticsManager)
         userManager.getUser()?.let {

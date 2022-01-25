@@ -15,6 +15,7 @@ const val TOTAL_RESEND_COUNTDOWNS = 120L
 class TruecallerVerificationVm : BaseViewModel() {
     private var timeout :Long = TOTAL_RESEND_COUNTDOWNS
     val showCallerView = ObservableBoolean()
+    val showClose = ObservableBoolean(false)
     val formattedPhoneNumber = ObservableField<String>()
     val otpErrorText = ObservableField<DisplayText>()
     val otpCodePart1 = ObservableField("")

@@ -158,7 +158,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                     phoneNumber?.countryCode?.let { "+$it" },
                     phoneNumber?.nationalNumber?.toString()
                 )
-                Timber.e("onSuccessProfileShared")
+                Timber.d("onSuccessProfileShared")
             }
 
             override fun onFailureProfileShared(trueError: TrueError) {
@@ -169,20 +169,15 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                 } else {
                     vm.onTruecallerLoginFailure()
                 }
-                Timber.e("onFailureProfileShared")
+                Timber.e("onFailureProfileShared trueError=${trueError.errorType}")
+                showError(getString(R.string.generic_error_message))
             }
 
             override fun onVerificationRequired(trueError: TrueError?) {
-                Timber.e("onVerificationRequired ${trueError?.errorType}")
+                Timber.e("onVerificationRequired trueError=${trueError?.errorType}")
                 requestHint()
                 trackTruecallerLoginFailed(trueError?.errorType ?: -1)
-                Snackbar
-                    .make(
-                        binding.root,
-                        getString(R.string.truecaller_verfication_required),
-                        Snackbar.LENGTH_SHORT
-                    )
-                    .show()
+                showError(getString(R.string.truecaller_verfication_required))
             }
 
         }
@@ -207,7 +202,10 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             )
             .build()
         TruecallerSDK.init(trueScope)
-        vm.showTruecallerButton.set(TruecallerSDK.getInstance().isUsable)
+        if (!withOtp && !vm.isTruecallerBtnSet) {
+            vm.isTruecallerBtnSet = true
+            vm.showTruecallerButton.set(TruecallerSDK.getInstance().isUsable)
+        }
     }
 
 
@@ -228,7 +226,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
 
     private fun startTruecallerLogin() {
         if (TruecallerSDK.getInstance().isUsable) {
-            vm.showTruecallerButton.set(true)
+//            vm.showTruecallerButton.set(true)
             try {
                 TruecallerSDK.getInstance().getUserProfile(this)
             } catch (e: Exception) {
@@ -237,7 +235,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             }
         } else {
             trackTruecallerNotPresent()
-            vm.showTruecallerButton.set(false)
+//            vm.showTruecallerButton.set(false)
             requestHint()
         }
     }
@@ -423,7 +421,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             ) {
                 when (requestCode) {
                     VerificationCallback.TYPE_MISSED_CALL_INITIATED -> {
-                        Timber.e(
+                        Timber.d(
                             "Missed call initiated with TTL : " + bundle?.getString(
                                 VerificationDataBundle.KEY_TTL
                             )
@@ -442,7 +440,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                         sheet?.showAllowingStateLoss(supportFragmentManager)
                     }
                     VerificationCallback.TYPE_MISSED_CALL_RECEIVED -> {
-                        Timber.e("Missed call received")
+                        Timber.d("Missed call received")
                         sheet?.dismissAllowingStateLoss()
                         val trueProfile = TrueProfile.Builder("New", "User").build()
                         TruecallerSDK.getInstance()
@@ -453,7 +451,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                         )
                     }
                     VerificationCallback.TYPE_OTP_INITIATED -> {
-                        Timber.e(
+                        Timber.d(
                             "OTP initiated with TTL : " + bundle?.getString(
                                 VerificationDataBundle.KEY_TTL
                             )
@@ -472,7 +470,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                         sheet?.showAllowingStateLoss(supportFragmentManager)
                     }
                     VerificationCallback.TYPE_OTP_RECEIVED -> {
-                        Timber.e("OTP received")
+                        Timber.d("OTP received")
                         val otp = bundle?.getString(VerificationDataBundle.KEY_OTP)
                         otp?.let {
                             sheet?.dismissAllowingStateLoss()
@@ -487,7 +485,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                         }
                     }
                     VerificationCallback.TYPE_PROFILE_VERIFIED_BEFORE -> {
-                        Timber.e(
+                        Timber.d(
                             "Profile verified for your app before: " + bundle?.profile?.firstName
                                     + " and access token: " + bundle?.profile?.accessToken
                         )
@@ -497,7 +495,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                         )
                     }
                     else -> {
-                        Timber.e(
+                        Timber.d(
                             "Success: Verified with " + bundle?.getString(
                                 VerificationDataBundle.KEY_ACCESS_TOKEN
                             )
@@ -515,6 +513,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                     "onRequestFailure: " + trueError.exceptionType + "\n" + trueError.exceptionMessage
                 )
                 trackTruecallerLoginFailed(trueError.exceptionType, trueError.exceptionMessage)
+                showError(getString(R.string.generic_error_message))
                 if (isAutoInitiated) {
                     isAutoInitiated = false
                     requestHint()
@@ -524,7 +523,6 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             }
 
         }
-        Timber.e("phone number ${getPhoneNumber()}")
         TruecallerSDK.getInstance().requestVerification(
             "IN",
             nationalNumber?.toString() ?: enteredPhoneNumber.toString(),
@@ -652,5 +650,6 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
     override fun onOtpTimeout() {
         showError(getString(R.string.otp_read_timeout))
         trackOtpTimeout()
+        sheet?.onOTPTimeout()
     }
 }
