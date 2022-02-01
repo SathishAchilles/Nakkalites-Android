@@ -52,8 +52,8 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.appcheck.FirebaseAppCheck
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
+//import com.google.firebase.appcheck.FirebaseAppCheck
+//import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -103,12 +103,12 @@ val applicationModule = module {
     single {
         FirebaseRemoteConfig.getInstance()
     }
-    single {
-        FirebaseAppCheck.getInstance()
-    }
-    single {
-        SafetyNetAppCheckProviderFactory.getInstance()
-    }
+//    single {
+//        FirebaseAppCheck.getInstance()
+//    }
+//    single {
+//        SafetyNetAppCheckProviderFactory.getInstance()
+//    }
     single {
         LogoutHandler(get(), get())
     }

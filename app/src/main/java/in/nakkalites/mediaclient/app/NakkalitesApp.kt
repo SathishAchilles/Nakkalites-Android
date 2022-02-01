@@ -13,19 +13,22 @@ import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.NonFatalReportingTree
 import android.app.Application
+import android.content.Context
 import androidx.core.app.NotificationManagerCompat
 import com.freshchat.consumer.sdk.Freshchat
 import com.freshchat.consumer.sdk.FreshchatConfig
 import com.freshchat.consumer.sdk.FreshchatNotificationConfig
+import com.google.android.play.core.splitcompat.SplitCompat
 import com.google.firebase.FirebaseApp
-import com.google.firebase.appcheck.FirebaseAppCheck
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
+//import com.google.firebase.appcheck.FirebaseAppCheck
+//import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -36,20 +39,20 @@ class NakkalitesApp : Application() {
     val logoutHandler: LogoutHandler by inject()
     val crashlytics: FirebaseCrashlytics by inject()
     val freshchat: Freshchat by inject()
-    val firebaseAppCheck: FirebaseAppCheck by inject()
+//    val firebaseAppCheck: FirebaseAppCheck by inject()
     val analyticsManager: AnalyticsManager by inject()
-    val safetyNetAppCheckProviderFactory: SafetyNetAppCheckProviderFactory by inject()
+//    val safetyNetAppCheckProviderFactory: SafetyNetAppCheckProviderFactory by inject()
 
     override fun onCreate() {
         val tls12Status: Pair<Boolean, String?> = Tls12SocketUtil.enable(this)
         super.onCreate()
         startKoin {
-            androidLogger()
+            androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@NakkalitesApp)
             modules(listOf(applicationModule, viewModelModule, netModule(serverUrl)))
         }
         FirebaseApp.initializeApp(this)
-        firebaseAppCheck.installAppCheckProviderFactory(safetyNetAppCheckProviderFactory)
+//        firebaseAppCheck.installAppCheckProviderFactory(safetyNetAppCheckProviderFactory)
         if (!tls12Status.first)
             Tls12SocketUtil.trackProviderInstallFailed(tls12Status.second, analyticsManager)
         userManager.getUser()?.let {
@@ -87,4 +90,9 @@ class NakkalitesApp : Application() {
         } else {
             HttpConstants.BASE_URL_PROD
         }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        SplitCompat.install(this)
+    }
 }

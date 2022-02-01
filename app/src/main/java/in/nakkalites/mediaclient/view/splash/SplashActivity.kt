@@ -46,11 +46,12 @@ class SplashActivity : BaseActivity() {
         vm.viewStates().observe(this, EventObserver {
             when (it) {
                 is Result.Success -> {
-                    if (LoginUtils.shouldShowProfileAddPage(userManager)) {
-                        goToProfileAdd()
-                    } else {
-                        goToHome()
-                    }
+                    goToLogin()
+//                    if (LoginUtils.shouldShowProfileAddPage(userManager)) {
+//                        goToProfileAdd()
+//                    } else {
+//                        goToHome()
+//                    }
                 }
                 is Result.Error -> goToLogin()
                 else -> showLoading()

@@ -19,7 +19,7 @@ ext.versions = [
         espressoCore        : '3.2.0',
         exoplayer           : '2.10.4',
         crashlyticsPlugin   : '2.3.0',
-        firebase            : '17.5.0',
+        firebaseAnalytics   : '17.5.0',
         firebaseAuth        : '20.0.3',
         freshchat           : '4.3.3',
         googleDesign        : "28.0.0",
@@ -31,7 +31,7 @@ ext.versions = [
         lifecycle           : '2.1.0',
         material            : '1.2.1',
         messaging           : '20.2.0',
-        moshi               : '1.12.0',
+        moshi               : '1.13.0',
         moshiLazyAdapters   : '2.2',
         okHttp              : '4.2.1',
         picasso             : '2.71828',
@@ -81,7 +81,7 @@ ext.deps = [
                 ui       : "com.google.android.exoplayer:exoplayer-ui:${versions.exoplayer}"
         ],
         firebase         : [
-                analytics   : "com.google.firebase:firebase-analytics-ktx:${versions.firebase}",
+                analytics   : "com.google.firebase:firebase-analytics-ktx:${versions.firebaseAnalytics}",
                 safetynet   : "com.google.firebase:firebase-appcheck-safetynet:${versions.safetynet}",
                 auth        : "com.google.firebase:firebase-auth-ktx:${versions.firebaseAuth}",
                 crashlytics : "com.google.firebase:firebase-crashlytics:${versions.crashlytics}",

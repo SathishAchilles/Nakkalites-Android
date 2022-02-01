@@ -1,2 +1,3 @@
 include ':app', ':logging'
 rootProject.name='Nakkalites'
+include ':dynamicfeature2'

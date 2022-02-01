@@ -51,11 +51,6 @@
 #
 # We can't _just_ keep the defaults constructor because Proguard/R8's spec doesn't allow wildcard
 # matching preceding parameters.
--keepnames class kotlin.jvm.internal.DefaultConstructorMarker
--keepclassmembers @com.squareup.moshi.JsonClass @kotlin.Metadata class * {
-    synthetic <init>(...);
-}
-
 # Retain generated JsonAdapters if annotated type is retained.
 -if @com.squareup.moshi.JsonClass class *
 -keep class <1>JsonAdapter {
@@ -103,13 +98,6 @@
 
 -keepclasseswithmembers class * {
   public void onPayment*(...);
-}
-
-#Moshi Kotlin
--keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl
-
--keepclassmembers class kotlin.Metadata {
-    public <methods>;
 }
 
 #RxJava

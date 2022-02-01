@@ -13,7 +13,7 @@ buildscript {
     dependencies {
         classpath deps.gradle.android
         classpath deps.gradle.googleServices
-        classpath deps.gradle.kotlin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
         classpath deps.gradle.crashlytics
         classpath deps.gradle.koin
     }

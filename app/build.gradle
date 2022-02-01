@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 20
-        versionName "2.2.1"
+        versionCode 21
+        versionName "2.2.2"
         vectorDrawables.useSupportLibrary = true
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -35,7 +35,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            shrinkResources false
             debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix ' debug'
@@ -44,7 +43,6 @@ android {
         }
         release {
             minifyEnabled true
-            shrinkResources true
             debuggable false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -59,6 +57,11 @@ android {
     }
     buildFeatures {
         dataBinding = true
+    }
+    dynamicFeatures = [':dynamicfeature2']
+
+    kapt {
+        correctErrorTypes true
     }
 }
 
@@ -77,6 +80,7 @@ dependencies {
     implementation deps.androidX.recyclerView
     implementation deps.androidX.swiperefreshlayout
     implementation deps.androidX.viewPager
+    implementation 'com.google.android.play:core-ktx:1.6.4'
     debugImplementation deps.chuck.library
     releaseImplementation deps.chuck.library_no_op
     implementation deps.dotsIndicator
@@ -89,7 +93,7 @@ dependencies {
     implementation deps.firebase.crashlytics
     implementation deps.firebase.messaging
     implementation deps.firebase.remoteConfig
-    implementation deps.firebase.safetynet
+//    implementation deps.firebase.safetynet
     implementation deps.freshchat
     implementation deps.google.admob
     implementation deps.google.auth

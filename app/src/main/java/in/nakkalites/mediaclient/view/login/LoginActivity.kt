@@ -2,6 +2,7 @@ package `in`.nakkalites.mediaclient.view.login
 
 import `in`.nakkalites.logging.logThrowable
 import `in`.nakkalites.logging.loge
+import `in`.nakkalites.mediaclient.BuildConfig
 import `in`.nakkalites.mediaclient.R
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
 import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants.Property
@@ -44,6 +45,10 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.SplitInstallRequest
+import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
+import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.truecaller.android.sdk.*
@@ -52,6 +57,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+const val STORAGE_MODULE = "dynamicfeature2"
 
 class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
 
@@ -63,6 +69,33 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     val crashlytics by inject<FirebaseCrashlytics>()
     val phoneNumberUtil by inject<PhoneNumberUtil>()
     private var isAutoInitiated: Boolean = false
+    private var sessionId = 0
+    private val splitInstallManager by lazy {
+        SplitInstallManagerFactory.create(this)
+    }
+
+    private val listener = SplitInstallStateUpdatedListener { state ->
+        if (state.sessionId() == sessionId) {
+            when (state.status()) {
+                SplitInstallSessionStatus.FAILED -> {
+                    Timber.d("Module install failed with ${state.errorCode()}")
+                    Toast.makeText(
+                        getApplication(),
+                        "Module install failed with ${state.errorCode()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                SplitInstallSessionStatus.INSTALLED -> {
+                    Toast.makeText(
+                        getApplication(),
+                        "Storage module installed successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> Timber.d("Status: ${state.status()}")
+            }
+        }
+    }
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -127,11 +160,23 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
                 }
             }
         })
+        splitInstallManager.registerListener(listener)
+        if (isStorageInstalled()) {
+            val intent = Intent()
+            intent.setClassName(BuildConfig.APPLICATION_ID, "com.example.dynamicfeature2.DM1Activity")
+            startActivity(intent)
+        } else {
+            requestStorageInstall()
+            Snackbar.make(binding.root, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .show()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         TruecallerSDK.clear()
+        splitInstallManager.unregisterListener(listener)
+
     }
 
     override fun onRequestPermissionsResult(
@@ -488,4 +533,31 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks {
     fun isPlayServicesAvailable(context: Context) =
         GoogleApiAvailability.getInstance()
             .isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+
+    private fun isStorageInstalled() =
+        if (BuildConfig.DEBUG) true else splitInstallManager.installedModules.contains(
+            STORAGE_MODULE
+        )
+
+    private fun requestStorageInstall() {
+        Toast.makeText(getApplication(), "Requesting storage module install", Toast.LENGTH_SHORT)
+            .show()
+        val request =
+            SplitInstallRequest
+                .newBuilder()
+                .addModule(STORAGE_MODULE)
+                .build()
+
+        splitInstallManager
+            .startInstall(request)
+            .addOnSuccessListener { id -> sessionId = id }
+            .addOnFailureListener { exception ->
+                Timber.e("Error installing module: " + exception)
+                Toast.makeText(
+                    getApplication(),
+                    "Error requesting module install",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
 }

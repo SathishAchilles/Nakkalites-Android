@@ -121,4 +121,5 @@ Download their new app and watch exclusively.\n\n
     <string name="google_play_services_unavailable">Google Play Services unavailable</string>
     <string name="google_play_services_unavailable_desc">Please make sure you have the latest version of Google Play Services to be able to login to Meesho.</string>
     <string name="retry">Retry</string>
+    <string name="title_dynamicfeature2">New Module</string>
 </resources>
