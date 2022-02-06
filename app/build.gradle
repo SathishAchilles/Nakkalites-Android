@@ -26,7 +26,7 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 21
+        versionCode 22
         versionName "2.2.2"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
