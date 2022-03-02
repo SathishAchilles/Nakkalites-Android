@@ -5,6 +5,7 @@ object AnalyticsConstants {
         const val APP_OPENED = "app_opened"
         const val LOGIN_FAILED = "login_failed"
         const val TRUECALLER_LOGIN_FAILED = "truecaller_login_failed"
+        const val TRUECALLER_LOGIN_VERIFICATION_REQUIRED = "truecaller_login_verification_required"
         const val FIREBASE_LOGIN_FAILED = "firebase_login_failed"
         const val SIGN_UP_CTA_CLICKED = "sign_up_cta_clicked"
         const val WEBSERIES_PAGE_OPENED = "webseries_page_opened"

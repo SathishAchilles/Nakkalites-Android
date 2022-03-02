@@ -150,6 +150,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
     }
 
     private fun setupTruecallerOptions(withOtp: Boolean) {
+        TruecallerSDK.clear()
         val sdkCallback = object : ITrueCallback {
             override fun onSuccessProfileShared(trueProfile: TrueProfile) {
                 val phoneNumber = trueProfile.phoneNumber.parsePhoneNumber(phoneNumberUtil)
@@ -176,7 +177,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             override fun onVerificationRequired(trueError: TrueError?) {
                 Timber.e("onVerificationRequired trueError=${trueError?.errorType}")
                 requestHint()
-                trackTruecallerLoginFailed(trueError?.errorType ?: -1)
+                trackTruecallerLoginVerificationRequired(trueError?.errorType ?: -1)
                 showError(getString(R.string.truecaller_verfication_required))
             }
 
@@ -586,6 +587,18 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             putString(Property.ERROR_MESSAGE, exceptionMessage)
         }
         analyticsManager.logEvent(AnalyticsConstants.Event.TRUECALLER_LOGIN_FAILED, bundle)
+    }
+
+    private fun trackTruecallerLoginVerificationRequired(
+        errorCode: Int, exceptionMessage: String? = null
+    ) {
+        val bundle = Bundle().apply {
+            putInt(Property.ERROR_CODE, errorCode)
+            putString(Property.ERROR_MESSAGE, exceptionMessage)
+        }
+        analyticsManager.logEvent(
+            AnalyticsConstants.Event.TRUECALLER_LOGIN_VERIFICATION_REQUIRED, bundle
+        )
     }
 
     private fun trackTruecallerNotPresent() {
