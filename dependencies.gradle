@@ -33,6 +33,7 @@ ext.versions = [
         messaging           : '20.2.0',
         moshi               : '1.12.0',
         moshiLazyAdapters   : '2.2',
+        multiDex            : '2.0.1',
         okHttp              : '4.2.1',
         picasso             : '2.71828',
         playServices        : '17.0.0',
@@ -145,5 +146,6 @@ ext.deps = [
         ],
         moshiLazyAdapters: "com.serjltt.moshi:moshi-lazy-adapters:${versions.moshiLazyAdapters}",
         okHttp           : "com.squareup.okhttp3:okhttp:${versions.okHttp}",
-        dotsIndicator    : "com.romandanylyk:pageindicatorview:${versions.dotsIndicator}"
+        dotsIndicator    : "com.romandanylyk:pageindicatorview:${versions.dotsIndicator}",
+        multiDex         : "androidx.multidex:multidex:${versions.multiDex}",
 ]

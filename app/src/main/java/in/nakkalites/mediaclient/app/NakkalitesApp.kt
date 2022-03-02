@@ -12,8 +12,10 @@ import `in`.nakkalites.mediaclient.data.HttpConstants
 import `in`.nakkalites.mediaclient.domain.login.UserManager
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.NonFatalReportingTree
-import android.app.Application
+import android.content.Context
 import androidx.core.app.NotificationManagerCompat
+import androidx.multidex.MultiDex
+import androidx.multidex.MultiDexApplication
 import com.freshchat.consumer.sdk.Freshchat
 import com.freshchat.consumer.sdk.FreshchatConfig
 import com.freshchat.consumer.sdk.FreshchatNotificationConfig
@@ -30,7 +32,7 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 
 
-class NakkalitesApp : Application() {
+class NakkalitesApp : MultiDexApplication() {
     private val debug = BuildConfig.DEBUG
     val userManager: UserManager by inject()
     val logoutHandler: LogoutHandler by inject()
@@ -50,6 +52,7 @@ class NakkalitesApp : Application() {
         }
         FirebaseApp.initializeApp(this)
         firebaseAppCheck.installAppCheckProviderFactory(safetyNetAppCheckProviderFactory)
+        userManager.generateInstanceIdIfNotAvailable()
         if (!tls12Status.first)
             Tls12SocketUtil.trackProviderInstallFailed(tls12Status.second, analyticsManager)
         userManager.getUser()?.let {
@@ -87,4 +90,9 @@ class NakkalitesApp : Application() {
         } else {
             HttpConstants.BASE_URL_PROD
         }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 }

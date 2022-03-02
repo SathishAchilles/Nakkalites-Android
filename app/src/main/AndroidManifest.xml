@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="in.nakkalites.mediaclient">
+    package="in.nakkalites.mediaclient" >
+
+    <uses-sdk tools:overrideLibrary="com.truecaller.android.sdk" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-sdk tools:overrideLibrary="com.truecaller.android.sdk" />
-    <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
-    <!--    <uses-permission android:name="android.permission.READ_CALL_LOG"/>-->
-    <!--    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS"/>-->
-    <!--    <uses-permission android:name="android.permission.CALL_PHONE"/>-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:name=".app.NakkalitesApp"
         android:allowBackup="true"
@@ -20,7 +22,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:supportsRtl">
+        tools:replace="android:supportsRtl" >
         <activity
             android:name=".view.subscription.OrderPlacedActivity"
             android:exported="false" />
@@ -69,7 +71,7 @@
             android:exported="false" />
         <activity
             android:name=".view.splash.SplashActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -80,14 +82,13 @@
         <meta-data
             android:name="com.truecaller.android.sdk.PartnerKey"
             android:value="@string/truecaller_api_key" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <service
             android:name=".app.services.MyFirebaseMessagingService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -109,7 +110,7 @@
         <receiver
             android:name=".view.login.SmsBroadcastReceiver"
             android:exported="true"
-            android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
+            android:permission="com.google.android.gms.auth.api.phone.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
@@ -119,7 +120,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/freshchat_file_provider_paths" />

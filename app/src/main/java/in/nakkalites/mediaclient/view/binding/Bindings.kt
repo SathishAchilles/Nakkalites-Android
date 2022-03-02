@@ -41,7 +41,6 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 import org.jetbrains.annotations.NotNull
-import timber.log.Timber
 
 
 object Bindings {
@@ -388,11 +387,9 @@ object Bindings {
     @JvmStatic
     @BindingAdapter("debounceOnClick")
     fun View.bindDebounceOnClick(debounceOnClickRunnable: Runnable?) {
-        Timber.e("$id bindDebounceOnClick $debounceOnClickRunnable")
         if (debounceOnClickRunnable == null) return
         setOnClickListener(object : DebounceOnClickListener() {
             override fun debouncedOnClick(v: View) {
-                Timber.e("$id bindDebounceOnClick")
                 debounceOnClickRunnable.run()
             }
         })

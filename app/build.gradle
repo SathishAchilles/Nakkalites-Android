@@ -26,11 +26,21 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 21
-        versionName "2.2.1.1"
+        versionCode 22
+        versionName "2.2.2"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        multiDexKeepProguard file('../multidex-keep.pro')
         vectorDrawables.generatedDensities = [] // do not generate pngs from vector-drawables
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    bundle {
+        density {
+            enableSplit true
+        }
+        abi {
+            enableSplit true
+        }
     }
     buildTypes {
         debug {
@@ -101,6 +111,7 @@ dependencies {
     kapt deps.moshi.codeGen
     implementation deps.moshi.adapters
     implementation deps.moshiLazyAdapters
+    implementation deps.multiDex
 
     implementation deps.okHttp
     implementation deps.picasso

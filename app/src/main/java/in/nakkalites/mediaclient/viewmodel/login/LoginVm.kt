@@ -23,9 +23,11 @@ import io.reactivex.schedulers.Schedulers
 
 class LoginVm(private val loginDomain: LoginDomain, private val phoneNumberUtil: PhoneNumberUtil) :
     BaseViewModel() {
+    var otpCode: String? = null
     private val loginState = MutableLiveData<Event<Result<User>>>()
     val countryCodeVm = CountryCodeVm(flagGlyphChecker = glyphChecker)
     val showTruecallerButton = ObservableBoolean(false)
+    var isTruecallerBtnSet = false
 
     var phoneNumber: Phonenumber.PhoneNumber? = null
 
@@ -57,12 +59,11 @@ class LoginVm(private val loginDomain: LoginDomain, private val phoneNumberUtil:
         countryCode: String? = null,
         nationalNumber: String? = null
     ) {
-        if (account != null) {
             loginState.value = Event(Result.Loading())
             disposables += loginDomain.loginViaTruecaller(
-                account.firstName?.plus(" ")?.plus(account.lastName ?: ""),
-                account.email, account.avatarUrl, countryCode, nationalNumber,
-                account.city, account.gender
+                account?.firstName?.plus(" ")?.plus(account.lastName ?: ""),
+                account?.email, account?.avatarUrl, countryCode, nationalNumber,
+                account?.city, account?.gender
             )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -74,9 +75,10 @@ class LoginVm(private val loginDomain: LoginDomain, private val phoneNumberUtil:
                         loginState.value = Event(Result.Error<User>(null, it))
                     }
                 )
-        } else {
-            loginState.value = Event(Result.Error<User>(null, NoUserFoundException()))
-        }
+    }
+
+    fun onTruecallerLoginFailure() {
+        loginState.value = Event(Result.Error<User>(null, NoUserFoundException()))
     }
 
     fun onHintSelected(phoneNumber: Phonenumber.PhoneNumber) {

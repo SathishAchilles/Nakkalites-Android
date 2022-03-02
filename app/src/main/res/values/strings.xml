@@ -121,4 +121,8 @@ Download their new app and watch exclusively.\n\n
     <string name="google_play_services_unavailable">Google Play Services unavailable</string>
     <string name="google_play_services_unavailable_desc">Please make sure you have the latest version of Google Play Services to be able to login to Meesho.</string>
     <string name="retry">Retry</string>
+    <string name="truecaller_verfication_required">"No compatible client available</string>
+    <string name="please_wait_while_we_verify_you_nno_need_to_pick_up_the_call">Please wait while we verify you…\nNo need to pick up the call</string>
+    <string name="retry_timer">retry again in %d seconds</string>
+
 </resources>

@@ -68,7 +68,8 @@ class UserDataStore(private val prefs: SharedPreferences, private val moshi: Mos
 
     fun getInstanceIdOrEmpty() = prefs.getStringOrEmpty(PrefsConstants.INSTANCE_ID)
 
-    private fun isInstanceIdAvailable() = prefs.contains(PrefsConstants.INSTANCE_ID)
+    private fun isInstanceIdAvailable() =
+        prefs.contains(PrefsConstants.INSTANCE_ID) && getInstanceIdOrEmpty().isNotEmpty()
 
     fun clearAppData() = prefs.edit().clear().apply()
 }

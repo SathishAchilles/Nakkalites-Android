@@ -21,6 +21,7 @@ import `in`.nakkalites.mediaclient.viewmodel.home.HomeVm
 import `in`.nakkalites.mediaclient.viewmodel.login.CountriesSheetVm
 import `in`.nakkalites.mediaclient.viewmodel.login.LoginVm
 import `in`.nakkalites.mediaclient.viewmodel.login.OtpVerificationVm
+import `in`.nakkalites.mediaclient.viewmodel.login.TruecallerVerificationVm
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileAddVm
 import `in`.nakkalites.mediaclient.viewmodel.profile.ProfileEditVm
 import `in`.nakkalites.mediaclient.viewmodel.splash.SplashVm
@@ -146,6 +147,7 @@ val viewModelModule = module {
     viewModel { ManageSubscriptionVm(get()) }
     viewModel { FaqListVm(get()) }
     viewModel { OrderPlacedVm(get()) }
+    viewModel { TruecallerVerificationVm() }
 }
 
 fun netModule(serverUrl: String) = module {
