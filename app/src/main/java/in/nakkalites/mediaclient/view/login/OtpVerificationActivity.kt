@@ -297,9 +297,9 @@ class OtpVerificationActivity : BaseActivity(), OtpReceivedInterface, OtpVerific
 
     private fun setupCrashlyticsUserDetails(user: User) {
         crashlytics.setUserId(user.id)
-        user.email?.let {
-            crashlytics.setCustomKey(AppConstants.USER_EMAIL, it)
-        }
+//        user.email?.let {
+//            crashlytics.setCustomKey(AppConstants.USER_EMAIL, it)
+//        }
     }
 
     private fun showError(message: String) {

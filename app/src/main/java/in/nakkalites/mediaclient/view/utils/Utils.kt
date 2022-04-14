@@ -33,10 +33,12 @@ inline fun <reified T> Retrofit.create(): T {
     return create(T::class.java)
 }
 
-private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.herokuapp\\.com\$") }
+private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.onrender\\.com\$") }
+private val Request.apiRegex1: Regex by lazy { Regex("^[\\w.-]+\\.nakkalites\\.app\$") }
+private val Request.apiRegex2: Regex by lazy { Regex("^[\\w.-]+\\.nakkalites\\.in\$") }
 
 fun Request.isValidApiUrl(): Boolean {
-    return apiRegex.matches(url.host)
+    return apiRegex.matches(url.host) || apiRegex1.matches(url.host) || apiRegex2.matches(url.host)
 }
 
 val VALID_EMAIL_ADDRESS_REGEX: Pattern =
@@ -120,7 +122,8 @@ fun commitAllowingStateLoss(fragment: Fragment, fm: FragmentManager, tag: String
 fun Phonenumber.PhoneNumber.getIsoCode(phoneNumberUtil: PhoneNumberUtil) =
     phoneNumberUtil.getRegionCodeForCountryCode(this.countryCode)
 
-fun Phonenumber.PhoneNumber.getNumberWithCountryCode() = "+${this.countryCode}${this.nationalNumber}"
+fun Phonenumber.PhoneNumber.getNumberWithCountryCode() =
+    "+${this.countryCode}${this.nationalNumber}"
 
 
 fun showSoftKeyboard(view: View) {
