@@ -57,6 +57,7 @@ object AnalyticsConstants {
         const val PLAN_ORDER_FETCH_SUCCESS = "plan_order_fetch_success"
         const val PLAN_ORDER_FETCH_FAILURE = "plan_order_fetch_failure"
         const val OPENSSL_INSTALL_FAILED = "openssl_install_failed"
+        const val _401_CODE_RECEIVED = "error_code_401_received"
     }
 
     object Property {
@@ -96,5 +97,8 @@ object AnalyticsConstants {
         const val ERROR_MESSAGE = "error_message"
         const val ERROR_CODE = "error_code"
         const val OPENSSL_ERROR_MESSAGE = "openssl_error_message"
+        const val XO = "xo"
+        const val OX = "ox"
+        const val API_ENDPOINT = "api_endpoint"
     }
 }

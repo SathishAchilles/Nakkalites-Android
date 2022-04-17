@@ -59,7 +59,6 @@ class SplashActivity : BaseActivity() {
         trackAppOpened()
         fetchConfig()
         updateFcmToken()
-        vm.updateViewState()
     }
 
     override fun onResume() {
@@ -99,6 +98,7 @@ class SplashActivity : BaseActivity() {
         when {
             currentVersion >= latestVersion -> {
                 vm.hasConfigRetrieved = true
+                vm.updateViewState()
             }
             lastMandatoryVersion > currentVersion -> {
                 // Update App
@@ -123,6 +123,7 @@ class SplashActivity : BaseActivity() {
             }
             else -> {
                 vm.hasConfigRetrieved = true
+                vm.updateViewState()
             }
         }
     }

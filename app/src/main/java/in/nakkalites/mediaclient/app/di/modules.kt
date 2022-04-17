@@ -154,7 +154,8 @@ fun netModule(serverUrl: String) = module {
         StethoInterceptorFactory.get(androidContext())
     }
     single {
-        val headersInterceptor = HeadersInterceptor(get(), lazy { get() }, lazy { get() })
+        val headersInterceptor =
+            HeadersInterceptor(get(), lazy { get() }, lazy { get() }, lazy { get() })
         val chuckInterceptor = ChuckInterceptor(androidContext())
         val okHttpClientBuilder = getOkHttpBuilder(
             androidContext(), listOf(headersInterceptor, chuckInterceptor)
