@@ -150,6 +150,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
     }
 
     private fun setupTruecallerOptions(withOtp: Boolean) {
+        TruecallerSDK.clear()
         val sdkCallback = object : ITrueCallback {
             override fun onSuccessProfileShared(trueProfile: TrueProfile) {
                 val phoneNumber = trueProfile.phoneNumber.parsePhoneNumber(phoneNumberUtil)
@@ -169,6 +170,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
                 } else {
                     vm.onTruecallerLoginFailure()
                 }
+                isFailureShownInAutoPrompt = true
                 Timber.e("onFailureProfileShared trueError=${trueError.errorType}")
                 showError(getString(R.string.generic_error_message))
             }
@@ -176,7 +178,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             override fun onVerificationRequired(trueError: TrueError?) {
                 Timber.e("onVerificationRequired trueError=${trueError?.errorType}")
                 requestHint()
-                trackTruecallerLoginFailed(trueError?.errorType ?: -1)
+                trackTruecallerLoginVerificationRequired(trueError?.errorType ?: -1)
                 showError(getString(R.string.truecaller_verfication_required))
             }
 
@@ -242,12 +244,12 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
 
     private fun setupCrashlyticsUserDetails(user: User) {
         crashlytics.setUserId(user.id)
-        user.email?.let {
-            crashlytics.setCustomKey(AppConstants.USER_EMAIL, it)
-        }
-        user.phoneNumber?.let {
-            crashlytics.setCustomKey(AppConstants.USER_PHONE, it)
-        }
+//        user.email?.let {
+//            crashlytics.setCustomKey(AppConstants.USER_EMAIL, it)
+//        }
+//        user.phoneNumber?.let {
+//            crashlytics.setCustomKey(AppConstants.USER_PHONE, it)
+//        }
     }
 
     private fun showError(message: String) {
@@ -345,7 +347,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
     }
 
     private var smsBroadcastReceiver: SmsBroadcastReceiver? = null
-
+    private var isFailureShownInAutoPrompt = false
     private val callback = object : LoginViewCallbacks {
         override fun onSignUpClick() {
             startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
@@ -355,28 +357,34 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
         override fun onSignInWithPhoneNumberClick() {
             val nationalNumber = vm.phoneNumber?.nationalNumber
             val enteredPhoneNumber = binding.phoneEditText.text
-            if (nationalNumber != null || enteredPhoneNumber.isNotEmpty()) {
-                when {
-                    vm.countryCodeVm.phoneCode == "+91" -> {
-                        setupTruecallerOptions(false)
-                        if (TruecallerSDK.getInstance().isUsable) {
-                            startTruecallerLogin()
-                        } else {
-                            initTruecallerLogin(nationalNumber, enteredPhoneNumber)
-                        }
+            val isPlayServicesAvailable = isPlayServicesAvailable(this@LoginActivity)
+            when {
+                vm.countryCodeVm.phoneCode == "+91" -> {
+                    if (isFailureShownInAutoPrompt) {
+                        isFailureShownInAutoPrompt = false
+                        startTruecallerLogin()
+                    } else if (nationalNumber != null || enteredPhoneNumber.isNotEmpty()) {
+                        initTruecallerLogin(nationalNumber, enteredPhoneNumber)
+                    } else {
+                        showError(getString(R.string.enter_phone_number_error))
                     }
-                    isPlayServicesAvailable(this@LoginActivity) -> {
+                }
+                isPlayServicesAvailable -> {
+                    if (nationalNumber != null || enteredPhoneNumber.isNotEmpty()) {
                         OtpVerificationActivity.createIntent(
                             this@LoginActivity, vm.countryCodeVm.phoneCode,
                             nationalNumber?.toString() ?: enteredPhoneNumber.toString()
                         ).also { startActivity(it) }
-                    }
-                    else -> {
-                        showPlayServicesUnavailableDialog()
+                    } else {
+                        showError(getString(R.string.enter_phone_number_error))
                     }
                 }
-            } else {
-                showError(getString(R.string.enter_phone_number_error))
+                !isPlayServicesAvailable -> {
+                    showPlayServicesUnavailableDialog()
+                }
+                else -> {
+                    showError(getString(R.string.enter_phone_number_error))
+                }
             }
         }
 
@@ -384,6 +392,7 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             trackTruecallerCTAClicked()
             setupTruecallerOptions(false)
             isAutoInitiated = false
+            isFailureShownInAutoPrompt = false
             startTruecallerLogin()
         }
 
@@ -586,6 +595,18 @@ class LoginActivity : BaseActivity(), CountriesBottomSheetCallbacks,
             putString(Property.ERROR_MESSAGE, exceptionMessage)
         }
         analyticsManager.logEvent(AnalyticsConstants.Event.TRUECALLER_LOGIN_FAILED, bundle)
+    }
+
+    private fun trackTruecallerLoginVerificationRequired(
+        errorCode: Int, exceptionMessage: String? = null
+    ) {
+        val bundle = Bundle().apply {
+            putInt(Property.ERROR_CODE, errorCode)
+            putString(Property.ERROR_MESSAGE, exceptionMessage)
+        }
+        analyticsManager.logEvent(
+            AnalyticsConstants.Event.TRUECALLER_LOGIN_VERIFICATION_REQUIRED, bundle
+        )
     }
 
     private fun trackTruecallerNotPresent() {

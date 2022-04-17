@@ -57,9 +57,9 @@ class NakkalitesApp : MultiDexApplication() {
             Tls12SocketUtil.trackProviderInstallFailed(tls12Status.second, analyticsManager)
         userManager.getUser()?.let {
             crashlytics.setUserId(it.id)
-            if (it.email != null) {
-                crashlytics.setCustomKey(AppConstants.USER_EMAIL, it.email)
-            }
+//            if (it.email != null) {
+//                crashlytics.setCustomKey(AppConstants.USER_EMAIL, it.email)
+//            }
         }
         RxJavaPlugins.setErrorHandler(RxErrorHandler.create()) // only for UndeliverableExceptions
         Timber.plant(

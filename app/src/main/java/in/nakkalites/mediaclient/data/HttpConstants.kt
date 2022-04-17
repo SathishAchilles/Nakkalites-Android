@@ -1,9 +1,11 @@
 package `in`.nakkalites.mediaclient.data
 
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+
 object HttpConstants {
     const val TIMEOUT: Long = 30
-    const val BASE_URL_DEV: String = "https://nakkalites-dev.herokuapp.com/api/"
-    const val BASE_URL_PROD: String = "https://nakkalites-prod.herokuapp.com/api/"
+    const val BASE_URL_DEV: String = "https://dev.nakkalites.in/api/"
+    const val BASE_URL_PROD: String = "https://www.nakkalites.app/api/"
     const val LOGIN = "v1/users/sign_in"
     const val VIDEO_GROUPS = "v2/video_groups"
     const val WEBSERIES = "v2/web_series"
@@ -28,4 +30,14 @@ object HttpStatus {
     const val SUCCESS = 200
     const val UNAUTHORIZED = 401
     const val LOGOUT = 423
+}
+
+object HttpMethod {
+    const val GET = "GET"
+    const val POST = "POST"
+}
+
+object MIME {
+    val JSON = "application/json; charset=UTF-8".toMediaTypeOrNull()
+    val TEXT = "application/txt; charset=UTF-8".toMediaTypeOrNull()
 }
