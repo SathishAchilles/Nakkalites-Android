@@ -11,6 +11,8 @@ import android.content.pm.ActivityInfo
 import android.graphics.Point
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -22,6 +24,7 @@ import com.squareup.picasso.Transformation
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.michaelrocks.libphonenumber.android.Phonenumber
 import okhttp3.Request
+import okio.ByteString.Companion.encodeUtf8
 import retrofit2.Retrofit
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -34,7 +37,7 @@ inline fun <reified T> Retrofit.create(): T {
 }
 
 private val Request.apiRegex: Regex by lazy { Regex("^[\\w.-]+\\.onrender\\.com\$") }
-private val Request.apiRegex1: Regex by lazy { Regex("^[\\w.-]+\\.nakkalites\\.app\$") }
+private val Request.apiRegex1: Regex by lazy { Regex("^nakkalites\\.app\$") }
 private val Request.apiRegex2: Regex by lazy { Regex("^[\\w.-]+\\.nakkalites\\.in\$") }
 
 fun Request.isValidApiUrl(): Boolean {
@@ -131,3 +134,10 @@ fun showSoftKeyboard(view: View) {
         .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
+
+fun runOnUiThread(runnable: Runnable) {
+    Handler(Looper.getMainLooper())
+        .post(runnable)
+}
+
+fun String.md5Base64() = this.encodeUtf8().md5().base64()

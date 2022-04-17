@@ -1,20 +1,29 @@
 package `in`.nakkalites.mediaclient.app.di
 
+import `in`.nakkalites.mediaclient.app.constants.AnalyticsConstants
+import `in`.nakkalites.mediaclient.app.manager.AnalyticsManager
 import `in`.nakkalites.mediaclient.data.HttpStatus.LOGOUT
 import `in`.nakkalites.mediaclient.data.HttpStatus.UNAUTHORIZED
 import `in`.nakkalites.mediaclient.data.user.UserService
 import `in`.nakkalites.mediaclient.domain.login.UserDataStore
 import `in`.nakkalites.mediaclient.domain.utils.LogoutHandler
 import `in`.nakkalites.mediaclient.view.utils.isValidApiUrl
-import okhttp3.*
+import `in`.nakkalites.mediaclient.view.utils.md5Base64
+import `in`.nakkalites.mediaclient.view.utils.runOnUiThread
+import android.os.Bundle
 import okhttp3.Headers.Companion.toHeaders
+import okhttp3.Interceptor
+import okhttp3.Protocol
+import okhttp3.Request
+import okhttp3.Response
 import retrofit2.HttpException
 import timber.log.Timber
 
 class HeadersInterceptor(
     private val userDataStore: UserDataStore,
     private val userService: Lazy<UserService>,
-    private val logoutHandler: Lazy<LogoutHandler>
+    private val logoutHandler: Lazy<LogoutHandler>,
+    private val analyticsManager: Lazy<AnalyticsManager>,
 ) : Interceptor {
     private val maxRetries = 3
     private val lock = Any()
@@ -26,7 +35,12 @@ class HeadersInterceptor(
         var response = chain.proceed(rewriteHeaders(origRequest))
         var count = 1
         while (count < maxRetries) {
-            if (response.code != UNAUTHORIZED) return response
+            if (response.code == UNAUTHORIZED) {
+                val url = response.request.url
+                track401Received(url.encodedPath)
+            } else {
+                return response
+            }
             synchronized(lock) {
                 try {
                     if (isTokenRefreshAlready(response.request)) return@synchronized
@@ -37,6 +51,7 @@ class HeadersInterceptor(
                     }
                 }
             }
+            response.close()
             response = chain.proceed(rewriteHeaders(origRequest))
             count++
         }
@@ -76,6 +91,17 @@ class HeadersInterceptor(
         } catch (e: Exception) {
             Timber.e(e)
         }
+    }
+
+    private fun track401Received(encodedPath: String) = runOnUiThread {
+        val eventName = AnalyticsConstants.Event._401_CODE_RECEIVED
+        val properties = Bundle().apply {
+            putString(AnalyticsConstants.Property.XO, userDataStore.getAccessToken().md5Base64())
+            putString(AnalyticsConstants.Property.OX, userDataStore.getRefreshToken().md5Base64())
+            putString(AnalyticsConstants.Property.INSTANCE_ID, userDataStore.getInstanceIdOrEmpty())
+            putString(AnalyticsConstants.Property.API_ENDPOINT, encodedPath)
+        }
+        analyticsManager.value.logEvent(eventName, properties)
     }
 }
 

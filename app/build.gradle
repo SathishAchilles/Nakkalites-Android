@@ -26,8 +26,8 @@ android {
         applicationId "in.nakkalites.mediaclient"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 23
-        versionName "2.2.3"
+        versionCode 24
+        versionName "2.2.4"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         multiDexKeepProguard file('../multidex-keep.pro')
